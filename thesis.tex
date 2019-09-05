@@ -1,22 +1,26 @@
-%% Le lingue utilizzate, che verranno passate come opzioni al pacchetto babel. Come sempre, l'ultima indicata sarï¿½ quella primaria.
-%% Se si utilizzano una o piï¿½ lingue diverse da "italian" o "english", leggere le istruzioni in fondo.
+%% Le lingue utilizzate, che verranno passate come opzioni al pacchetto babel. Come sempre, l'ultima indicata sarà quella primaria.
+%% Se si utilizzano una o più lingue diverse da "italian" o "english", leggere le istruzioni in fondo.
 \def\thudbabelopt{english}
 %% Valori ammessi per target: bach (tesi triennale), mst (tesi magistrale), phd (tesi di dottorato).
-\documentclass[target=bach]{thud}[2019/10/17]
+\documentclass[target=bach]{thud}[2014/03/11]
 
 %% --- Informazioni sulla tesi ---
 %% Per tutti i tipi di tesi
-\title{Design and implementation of a Language Server for the Jolie programming languageâ€‹ }
+\title{Design and implementation of a Language Server for the Jolie programming language}
 \author{Eros Fabrici}
 \course{Tecnologie Web e Multimediali}
 \supervisor{Prof.\ Marino Miculan}
 %% Altri campi disponibili: \reviewer, \tutor, \chair, \date (anno accademico, calcolato in automatico).
-%% Con \supervisor, \cosupervisor, \reviewer e \tutor si possono indicare piï¿½ nomi separati da \and.
+%% Con \supervisor, \cosupervisor, \reviewer e \tutor si possono indicare più nomi separati da \and.
 %% Per le sole tesi di dottorato
+%%\phdnumber{313}
+%%\cycle{XXVIII}
+%%\contacts{Via della Sintassi Astratta, 0/1\\65536 Gigatera --- Italia\\+39 0123 456789\\\texttt{http://www.example.com}\\\texttt{inbox@example.com}}
+%%\rights{Tutti i diritti riservati a me stesso e basta.}
 %% Campi obbligatori: \title, \author e \course.
 
 %% --- Pacchetti consigliati ---
-%% hyperref: Regola le impostazioni della creazione del PDF... piÃ¹ tante altre cose.
+%% hyperref: Regola le impostazioni della creazione del PDF... più tante altre cose.
 %% tocbibind: Inserisce nell'indice anche la lista delle figure, la bibliografia, ecc.
 
 %% --- Stili di pagina disponibili (comando \pagestyle) ---
@@ -53,32 +57,18 @@ Nunc ac dignissim ipsum, quis pulvinar elit. Mauris congue nec leo ornare lobort
 \mainmatter
 
 %% Parte
-%% La suddivisione in parti ï¿½ opzionale; talvolta sono sufficienti i capitoli.
-\part{Parte}
+%% La suddivisione in parti è opzionale; talvolta sono sufficienti i capitoli.
+\part{Introduction}
 
 %% Capitolo
-\chapter{Capitolo}
-In hac habitasse platea dictumst. Vestibulum consectetur dictum pellentesque. Suspendisse nunc neque, commodo ac imperdiet nec, sollicitudin vitae libero. Donec bibendum vel nunc vitae pharetra. In vel volutpat odio, et interdum dui. Duis mauris ligula, congue eget molestie at, tincidunt nec diam. Nam vitae eros nec arcu suscipit vehicula. Aliquam consectetur imperdiet elit, eget pretium arcu fringilla at. Maecenas \cite{Knu86} sed libero pulvinar, mattis tortor vel, fermentum enim.
+\chapter{Introduction}
+%%Problem: implementing advance IDE functionalities for the Jolie language to be added in Microsoft Vs-code and similar
 
 %% Sezione
 \section{Sezione}
-Donec pulvinar neque non lectus vulputate pellentesque. Quisque rutrum arcu velit, in feugiat sapien posuere vel. Praesent metus orci, aliquam ac cursus eget, fermentum a nisl. Etiam eu augue lacus. Nam nisi sapien, mattis sed vehicula non, pellentesque at quam. Sed euismod, dolor nec commodo lobortis, erat erat ultricies eros, bibendum dictum nulla felis in dui. Nulla blandit ultrices arcu, vitae lacinia tellus tempor sit amet. Nulla non tincidunt dolor. In eget luctus sem, sed elementum ligula. Proin elementum adipiscing sem, sit amet ultricies nisl tincidunt eu. Ut lobortis dui quam, et scelerisque erat ultrices sit amet. Sed libero sem, mollis quis euismod quis, suscipit ac justo.
 
 %% Sottosezione
 \subsection{Sottosezione}
-Donec cursus tortor eget sem ornare imperdiet. Ut vel orci non ipsum condimentum laoreet vitae ut sapien. Aenean metus mi, vehicula quis turpis nec, porttitor blandit dui. Nullam sed sollicitudin quam. Fusce nisl ante, commodo eget lacus ac, mollis ullamcorper neque. Quisque faucibus dictum nisl, dignissim fermentum sapien fringilla vel. Proin dui velit, molestie sit amet sapien et, pellentesque tristique purus. Curabitur ac quam ac diam varius bibendum.\part{Introduction}
-
-%% Capitolo
-\chapter{Problem: implementing advance IDE functionalities for the Jolie language to be added in Microsoft VSCode and similar}
-In hac habitasse platea dictumst. Vestibulum consectetur dictum pellentesque. Suspendisse nunc neque, commodo ac imperdiet nec, sollicitudin vitae libero. Donec bibendum vel nunc vitae pharetra. In vel volutpat odio, et interdum dui. Duis mauris ligula, congue eget molestie at, tincidunt nec diam. Nam vitae eros nec arcu suscipit vehicula. Aliquam consectetur imperdiet elit, eget pretium arcu fringilla at. Maecenas \cite{Knu86} sed libero pulvinar, mattis tortor vel, fermentum enim.
-
-%% Sezione
-\section{Sezione}
-Donec pulvinar neque non lectus vulputate pellentesque. Quisque rutrum arcu velit, in feugiat sapien posuere vel. Praesent metus orci, aliquam ac cursus eget, fermentum a nisl. Etiam eu augue lacus. Nam nisi sapien, mattis sed vehicula non, pellentesque at quam. Sed euismod, dolor nec commodo lobortis, erat erat ultricies eros, bibendum dictum nulla felis in dui. Nulla blandit ultrices arcu, vitae lacinia tellus tempor sit amet. Nulla non tincidunt dolor. In eget luctus sem, sed elementum ligula. Proin elementum adipiscing sem, sit amet ultricies nisl tincidunt eu. Ut lobortis dui quam, et scelerisque erat ultrices sit amet. Sed libero sem, mollis quis euismod quis, suscipit ac justo.
-
-%% Sottosezione
-\subsection{Sottosezione}
-Donec cursus tortor eget sem ornare imperdiet. Ut vel orci non ipsum condimentum laoreet vitae ut sapien. Aenean metus mi, vehicula quis turpis nec, porttitor blandit dui. Nullam sed sollicitudin quam. Fusce nisl ante, commodo eget lacus ac, mollis ullamcorper neque. Quisque faucibus dictum nisl, dignissim fermentum sapien fringilla vel. Proin dui velit, molestie sit amet sapien et, pellentesque tristique purus. Curabitur ac quam ac diam varius bibendum.
 
 \chapter{Jolie and the Language Server Protocol}
 \section{Jolie: Java Orchestration Language Interpreter Engine}
@@ -87,7 +77,35 @@ Donec cursus tortor eget sem ornare imperdiet. Ut vel orci non ipsum condimentum
 \part{Project}
 
 \chapter{Analysis of the problem}
-\section{Functional Requirments}
+In this chapter I will identify the requirements, gathered an analysis of the Language Server Protocol and over a series of meetings with the supervisor.
+\section{Functional Requirements}
+Functional requirements are statements of services the system should provide, particularly how it should react to particular inputs.
+The Language Server Protocol has six features that can be implemented: 
+\begin{itemize}
+	\item Code completion
+	\item Hover information
+	\item Jump to definition
+	\item Workspace symbols
+	\item Find references
+	\item Diagnostics
+\end{itemize}
+From those features we extracted the following functional requirements, in ascending order of importance.
+\begin{table}
+	\begin{center}
+	\caption{Functional Requirements}
+	\begin{tabular}{c|c}
+		\hline
+		\textbf{Functional r. No.} & \textbf{Description}\\
+		\hline\hline
+		FR 1 & The server provides information of eventual syntax errors every time a document is opened/modified\\
+		FR 2 & Every time the user starts typing an operation name, the server returns a list of possible completion items that consists the full operation name and the output port\\
+		FR 3 & Every time the user start typing a reserved word, the server provides a list of possible completion items\\
+		FR 4 & Every time a document is opened/modified/closed, the server should save/update/delete the information in his memory like the text, URI and a data structure containing all the information regarding the Jolie program (output and input ports, abstract syntax tree of the behavior).
+		FR 5 & 
+	
+	\end{tabular}
+	\end{center}
+\end{table}
 \subsection{Complying with the Language Server Protocol specifications}
 \subsection{Language Server Protocol features}
 \section{Non-functional requirments}
@@ -95,7 +113,7 @@ Donec cursus tortor eget sem ornare imperdiet. Ut vel orci non ipsum condimentum
 \subsection{Modular/scalable}
 
 \chapter{Design of the system}
-\section{Arichitecture}
+\section{Architecture}
 \subsection{Modules, interfaces, communication}
 \section{What needs to be implemented}
 
@@ -104,8 +122,8 @@ Donec cursus tortor eget sem ornare imperdiet. Ut vel orci non ipsum condimentum
 \section{Implementation details}
 
 \chapter{Validation}
-\section{Met requirments (screeshots)}
-\section{Unmet requirments}
+\section{Met requirements (screenshots)}
+\section{Unmet requirements}
 
 \chapter{Conclusions: review, what needs to be done}
 
@@ -125,7 +143,7 @@ Sed purus libero, vestibulum ut nibh vitae, mollis ultricies augue. Pellentesque
 Maecenas tempor elit sed arcu commodo, dapibus sagittis leo egestas. Praesent at ultrices urna. Integer et nibh in augue mollis facilisis sit amet eget magna. Fusce at porttitor sapien. Phasellus imperdiet, felis et molestie vulputate, mauris sapien tincidunt justo, in lacinia velit nisi nec ipsum. Duis elementum pharetra lorem, ut pellentesque nulla congue et. Sed eu venenatis tellus, pharetra cursus felis. Sed et luctus nunc. Aenean commodo, neque a aliquam bibendum, mauris augue fringilla justo, et scelerisque odio mi sit amet diam. Nulla at placerat nibh, nec rutrum urna. Donec ut egestas magna. Aliquam erat volutpat. Phasellus vestibulum justo sed purus mattis, vitae lacinia magna viverra. Nulla rutrum diam dui, vel semper mi mattis ac. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec id vestibulum lectus, eget tristique est.
 
 %% Bibliografia (opzionale)
-\bibliographystyle{plain_\languagename}%% Carica l'omonimo file .bst, dove \languagename ï¿½ la lingua attiva.
+\bibliographystyle{plain_\languagename}%% Carica l'omonimo file .bst, dove \languagename è la lingua attiva.
 %% Nel caso in cui si usi un file .bib (consigliato)
 \bibliography{thud}
 %% Nel caso di bibliografia manuale, usare l'environment thebibliography.

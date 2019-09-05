@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2019/dev/Debian) (preloaded format=pdflatex 2019.9.5)  5 SEP 2019 15:28
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2019/dev/Debian) (preloaded format=pdflatex 2019.9.5)  5 SEP 2019 18:10
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -122,41 +122,22 @@ Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
 
 (./book.thud.tex
 \c@thud@secnumdepth=\count94
-))
-
-LaTeX Warning: You have requested, on input line 5, version
-               `2019/10/17' of document class thud,
-               but only version
-               `2014/03/11'
-               is available.
-
-
-Class  Warning: \phdnumber in non-PhD thesis on input line 17.
-
-
-Class  Warning: \cycle in non-PhD thesis on input line 18.
-
-
-Class  Warning: \contacts in non-PhD thesis on input line 19.
-
-
-Class  Warning: \rights in non-PhD thesis on input line 20.
-
-No file thesis.aux.
+)) (./thesis.aux)
 \openout1 = `thesis.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 32.
-LaTeX Font Info:    ... okay on input line 32.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 32.
-LaTeX Font Info:    ... okay on input line 32.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 32.
-LaTeX Font Info:    ... okay on input line 32.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 32.
-LaTeX Font Info:    ... okay on input line 32.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 32.
-LaTeX Font Info:    ... okay on input line 32.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 32.
-LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count95
@@ -237,7 +218,7 @@ e
 <UdineLogo.pdf, id=1, 245.2885pt x 406.51875pt>
 File: UdineLogo.pdf Graphic file (type pdf)
 <use UdineLogo.pdf>
-Package pdftex.def Info: UdineLogo.pdf  used on input line 35.
+Package pdftex.def Info: UdineLogo.pdf  used on input line 34.
 (pdftex.def)             Requested size: 438.5247pt x 726.74081pt.
 [1
 
@@ -250,57 +231,93 @@ Package pdftex.def Info: UdineLogo.pdf  used on input line 35.
 
 ] [5] [6] [7
 
-] [8]
-No file thesis.toc.
+] [8] (./thesis.toc
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <10.95> on input line 4.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 4.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 4.
+)
 \tf@toc=\write3
 \openout3 = `thesis.toc'.
 
-[9
+ [9
 
 ] [10] [1
 
 ] [2]
 Chapter 1.
-
-LaTeX Warning: Citation `Knu86' on page 3 undefined on input line 66.
-
 [3
 
-] [4] [5
+] [4]
+Chapter 2.
+[5
 
-] [6]
-Appendix A.
-[7
+] [6] [7
 
 ] [8]
+Chapter 3.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 85.
+(/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 85.
+
+Underfull \vbox (badness 3019) has occurred while \output is active []
+
+ [9
+
+]
+[10] [11] [12
+
+]
+Chapter 4.
+[13] [14]
+Chapter 5.
+[15
+
+] [16]
+Chapter 6.
+[17
+
+] [18]
+Chapter 7.
+[19
+
+] [20] [21
+
+] [22]
+Appendix A.
+[23
+
+] [24]
 No file thesis.bbl.
-[9
+[25
 
-] (./thesis.aux)
-
-LaTeX Warning: There were undefined references.
-
- ) 
+] (./thesis.aux) ) 
 Here is how much of TeX's memory you used:
- 2679 strings out of 492615
- 38014 string characters out of 6131391
- 120004 words of memory out of 5000000
- 6567 multiletter control sequences out of 15000+600000
- 8334 words of font info for 30 fonts, out of 8000000 for 9000
+ 2721 strings out of 492615
+ 38596 string characters out of 6131391
+ 123000 words of memory out of 5000000
+ 6595 multiletter control sequences out of 15000+600000
+ 11372 words of font info for 40 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 36i,8n,35p,900b,252s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
-r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
-e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts
-/type1/public/amsfonts/cm/cmssbx10.pfb></usr/share/texlive/texmf-dist/fonts/typ
-e1/public/amsfonts/cm/cmtt10.pfb>
-Output written on thesis.pdf (19 pages, 151866 bytes).
+ 36i,9n,35p,900b,251s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx1
+2.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb
+></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/
+share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/t
+exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/share/texlive/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on thesis.pdf (35 pages, 183524 bytes).
 PDF statistics:
- 105 PDF objects out of 1000 (max. 8388607)
- 74 compressed objects within 1 object stream
+ 160 PDF objects out of 1000 (max. 8388607)
+ 111 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 
