@@ -1,0 +1,7 @@
+\babel@toc {english}{}
+\contentsline {part}{I\hspace {1em}Parte}{1}% 
+\contentsline {chapter}{\numberline {1}Capitolo}{3}% 
+\contentsline {section}{\numberline {1.1}Sezione}{3}% 
+\contentsline {subsection}{\numberline {1.1.1}Sottosezione}{3}% 
+\contentsline {part}{II\hspace {1em}Appendici}{5}% 
+\contentsline {chapter}{\numberline {A}Altro capitolo}{7}% 
