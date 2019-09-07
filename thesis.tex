@@ -3,6 +3,48 @@
 \def\thudbabelopt{english}
 %% Valori ammessi per target: bach (tesi triennale), mst (tesi magistrale), phd (tesi di dottorato).
 \documentclass[target=bach]{thud}[2014/03/11]
+\usepackage{adjustbox}
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{hyperref}
+%\usepackage{bera}% optional: just to have a nice mono-spaced font
+\usepackage{listings}
+\usepackage{xcolor}
+
+\colorlet{punct}{red!60!black}
+\definecolor{background}{HTML}{EEEEEE}
+\definecolor{delim}{RGB}{20,105,176}
+\colorlet{numb}{magenta!60!black}
+
+\lstdefinelanguage{json}{
+    basicstyle=\normalfont\ttfamily,
+    numbers=left,
+    numberstyle=\scriptsize,
+    stepnumber=1,
+    numbersep=8pt,
+    showstringspaces=false,
+    breaklines=true,
+    frame=lines,
+    backgroundcolor=\color{background},
+    literate=
+     *{0}{{{\color{numb}0}}}{1}
+      {1}{{{\color{numb}1}}}{1}
+      {2}{{{\color{numb}2}}}{1}
+      {3}{{{\color{numb}3}}}{1}
+      {4}{{{\color{numb}4}}}{1}
+      {5}{{{\color{numb}5}}}{1}
+      {6}{{{\color{numb}6}}}{1}
+      {7}{{{\color{numb}7}}}{1}
+      {8}{{{\color{numb}8}}}{1}
+      {9}{{{\color{numb}9}}}{1}
+      {:}{{{\color{punct}{:}}}}{1}
+      {,}{{{\color{punct}{,}}}}{1}
+      {\{}{{{\color{delim}{\{}}}}{1}
+      {\}}{{{\color{delim}{\}}}}}{1}
+      {[}{{{\color{delim}{[}}}}{1}
+      {]}{{{\color{delim}{]}}}}{1},
+}
+
 
 %% --- Informazioni sulla tesi ---
 %% Per tutti i tipi di tesi
@@ -71,6 +113,7 @@ Nunc ac dignissim ipsum, quis pulvinar elit. Mauris congue nec leo ornare lobort
 \subsection{Sottosezione}
 
 \chapter{Jolie and the Language Server Protocol}
+\label{sec:JolieLSP}
 \section{Jolie: Java Orchestration Language Interpreter Engine}
 \section{Language Server Protocol}
 
@@ -78,39 +121,81 @@ Nunc ac dignissim ipsum, quis pulvinar elit. Mauris congue nec leo ornare lobort
 
 \chapter{Analysis of the problem}
 In this chapter I will identify the requirements, gathered an analysis of the Language Server Protocol and over a series of meetings with the supervisor.
+\section{Language Server Protocol features}
+LSP supports six key feature which are:
+\begin{enumerate}
+	\item \textbf{Code completion}: feature that speeds up the process of coding applications by reducing typos and other common mistakes;
+	\item \textbf{Hover information}: feature that shows information, like the type signature, when the user moves the pointer over an element (such as a function definition);
+	\item \textbf{Jump to definition}: feature that shows the definition of a selected symbol;
+	\item \textbf{Workspace symbols}: displays all the symbols of the workspace, in order to help the user search for elements inside the workspace (such as classes, variables, methods, etc.);
+	\item \textbf{Find references}: given a symbol, this features lists all the project wide references;
+	\item \textbf{Diagnostics}: the tool (e.g. VSCode) flags syntax errors, warnings together with a description.
+\end{enumerate}
+The protocol supports many other features that are all linked to the above listed. The requirements elicitation phase was based on these main ones.
 \section{Functional Requirements}
-Functional requirements are statements of services the system should provide, particularly how it should react to particular inputs.
-The Language Server Protocol has six features that can be implemented: 
-\begin{itemize}
-	\item Code completion
-	\item Hover information
-	\item Jump to definition
-	\item Workspace symbols
-	\item Find references
-	\item Diagnostics
-\end{itemize}
-From those features we extracted the following functional requirements, in ascending order of importance.
-\begin{table}
-	\begin{center}
+Functional requirements are statements of services the system should provide, particularly how it should react to particular inputs. 
+From the features analyzed in the previous section, we extracted the following functional requirements, listed in ascending order of importance.
+\begin{table}[H]
 	\caption{Functional Requirements}
-	\begin{tabular}{c|c}
+	\begin{tabularx}{\textwidth}{c|X}
 		\hline
 		\textbf{Functional r. No.} & \textbf{Description}\\
 		\hline\hline
-		FR 1 & The server provides information of eventual syntax errors every time a document is opened/modified\\
-		FR 2 & Every time the user starts typing an operation name, the server returns a list of possible completion items that consists the full operation name and the output port\\
-		FR 3 & Every time the user start typing a reserved word, the server provides a list of possible completion items\\
-		FR 4 & Every time a document is opened/modified/closed, the server should save/update/delete the information in his memory like the text, URI and a data structure containing all the information regarding the Jolie program (output and input ports, abstract syntax tree of the behavior).
-		FR 5 & 
-	
-	\end{tabular}
-	\end{center}
+		FR 1 & The server must provide information of eventual programming errors and warnings every time a document is opened/modified.\\\hline
+		FR 2 & Every time the user starts typing an operation name, the server returns a list of possible completion items that consists of the full operation name and the output port.\\\hline
+		FR 3 & Every time the user starts typing a reserved word, the server provides a list of possible completion items.\\\hline
+		FR 4 & Every time a document is opened/modified/closed, the server saves/updates/deletes the information in his memory like the text, URI and a data structure containing all the information regarding the Jolie program (an abstract syntax tree of the \textit{behavior} and data regarding the \textit{deployment}).\\\hline
+		FR 5 & The server provides the type signature to the client every time the latter sends an hover request.\\\hline
+		FR 6 & The server shows the operation definition every time it receives a definition. request\\\hline
+		FR 7 & The server provides a list or hierarchy of symbols of a specific document requested by the client.\\\hline
+		FR 8 & Information regarding the workspace are sent to the client and updated every time the client requests them (workspace symbols for example).\\\hline
+		FR 9 & The server resolves project wide references of a given symbol.\\\hline 
+	\end{tabularx}
 \end{table}
-\subsection{Complying with the Language Server Protocol specifications}
-\subsection{Language Server Protocol features}
-\section{Non-functional requirments}
+
+\section{Non-functional requirements}
+Non-functional requirements are requirements that are not directly concerned with the specific services delivered by the system to its users. They may relate to emergent system properties such as reliability, response time, and store occupancy. Alternatively, they may define constraints on the system implementation such as the capabilities of I/O devices or the data representations used in interfaces with other systems.\\ Regarding the aforementioned non-functional requirements, the response time is critical for the project, as the server should be able to respond to the client as soon as possible. Nonetheless, this kind of calculations (such as code completion) are not computationally heavy.\\Other non-functional requirements, are listed above.
+\subsection{Complying with the Language Server Protocol specification}
+The Language Server Protocol defines a common language, between a tool and a language server. As a consequence, the latter must be able to recognize the different requests received from the client and send back proper responses that the client is able to interpret and compute.\\Following an example: the request-response method \verb|initialize|, that provides the server client's capabilities and it expects a response with the server capabilities, has the following type:\\\textbf{Request type}
+\begin{lstlisting}[language=json,firstnumber=1]
+interface InitializeParams {
+	processId: number | null;
+	rootPath?: string | null;
+	rootUri: DocumentUri | null;
+	initializationOptions?: any;
+	capabilities: ClientCapabilities;
+	trace?: 'off' | 'messages' | 'verbose';
+	workspaceFolders?: WorkspaceFolder[] | null;
+}
+\end{lstlisting}
+\textbf{Response type}
+\begin{lstlisting}[language=json,firstnumber=1]
+interface InitializeResult {
+	/**
+	 * The capabilities the language server provides.
+	 */
+	capabilities: ServerCapabilities;
+}
+\end{lstlisting} 
 \subsection{Distributed}
-\subsection{Modular/scalable}
+The server must be adapted to the LSP, in order to make it works with different tools that uses the protocol concerned. Therefore, it must be \textbf{editor-agnostic} and it should be designed and implemented in order to be deployed both locally and in a different machine with respect to the clients, so it can interact with different tools at the same time. Consequently the best communication method to use in this case is the socket.\\Regarding the communication protocol and data format, LSP supports only JSON-RPC 2.0, as mentioned in \hyperref[sec:JolieLSP]{Chapter 2}, therefore also the server must support it.
+
+\subsection{Modular}
+Not every language server can support all features defined by the protocol. LSP therefore provides, the previous mentioned, \textbf{capabilities}. A capability groups a set of language features. A development tool and the language server announce their supported features using capabilities. For instance, the server announces that it can handle the \verb|textDocument/hover| request, but it might not support the \verb|textDocument/references| request. Similarly, a development tool announces its ability to provide \verb|textDocument/didChange| notification when a document is modified, so that a server can compute textual edits to format the edited document.\\On account of this, the server must be designed in order to easily add new capabilities or improve the existing ones. After implementing a new feature, the programmer just need to modify the server capabilities thus the client can start sending requests regarding the newly activated capability.
+
+\begin{table}
+	\caption{Non-Functional Requirements}
+	\begin{tabularx}{\textwidth}{c|X}
+		\hline
+		\textbf{Non-functional r. No.} & \textbf{Description}\\
+		\hline\hline
+		NFR 1 & The server must support the JSON-RPC protocol.\\\hline
+		NFR 2 & The server must be designed to be modular.\\\hline
+		NFR 3 & The server must be able to respond to a client request as soon as possible.\\\hline
+		NFR 4 & The server must work both when deployed in a different machine and when deployed in a local machine, with respect of the client location. As a consequence, it has to support the socket channel of communication.\\\hline
+		NFR 5 & The server if distributed, must be able to handle more clients sending multiple requests at the same time.\\\hline
+	\end{tabularx}
+\end{table}
 
 \chapter{Design of the system}
 \section{Architecture}
@@ -118,9 +203,14 @@ From those features we extracted the following functional requirements, in ascen
 \section{What needs to be implemented}
 
 \chapter{Implementation}
+\label{sec:impl}
 \section{Choosing a language: Jolie (why)}
-\section{Implementation details}
 
+\section{Implementation details}
+\subsection{Complying with LSP's JSON-RPC protocol}
+% TODO rivedere testo, far capire che c'è stato un problema di compatibilità tra i protocolli
+% e come si è risolto
+The JSON-RPC 2.0 is a remote procedure call protocol that uses the JSON, a lightweight data-interchange format which is language independent. As stated in \hyperref[sec:JolieLSP]{Chapter 2}, an LSP message supports only two headers (\textit{Content-Lenghth} and \textit{Content-Type}), while the Jolie protocol runs over HTTP. This incompatibility led to a complex rework on the aforementioned Jolie protocol in order to meet the FR 1.\\ Further details can be read in \hyperref[sec:impl]{Chapter 5}.
 \chapter{Validation}
 \section{Met requirements (screenshots)}
 \section{Unmet requirements}
@@ -133,14 +223,12 @@ From those features we extracted the following functional requirements, in ascen
 \part{Appendici}
 
 \chapter{Altro capitolo}
-Sed purus libero, vestibulum ut nibh vitae, mollis ultricies augue. Pellentesque velit libero, tempor sed pulvinar non, fermentum eu leo. Duis posuere eleifend nulla eget sagittis. Nam laoreet accumsan rutrum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Curabitur eget libero quis leo porttitor vehicula eget nec odio. Proin euismod interdum ligula non ultricies. Maecenas sit amet accumsan sapien.
 
 %% Parte conclusiva del documento; tipicamente per riassunto, bibliografia e/o indice analitico.
 \backmatter
 
 %% Riassunto (opzionale)
 \summary
-Maecenas tempor elit sed arcu commodo, dapibus sagittis leo egestas. Praesent at ultrices urna. Integer et nibh in augue mollis facilisis sit amet eget magna. Fusce at porttitor sapien. Phasellus imperdiet, felis et molestie vulputate, mauris sapien tincidunt justo, in lacinia velit nisi nec ipsum. Duis elementum pharetra lorem, ut pellentesque nulla congue et. Sed eu venenatis tellus, pharetra cursus felis. Sed et luctus nunc. Aenean commodo, neque a aliquam bibendum, mauris augue fringilla justo, et scelerisque odio mi sit amet diam. Nulla at placerat nibh, nec rutrum urna. Donec ut egestas magna. Aliquam erat volutpat. Phasellus vestibulum justo sed purus mattis, vitae lacinia magna viverra. Nulla rutrum diam dui, vel semper mi mattis ac. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec id vestibulum lectus, eget tristique est.
 
 %% Bibliografia (opzionale)
 \bibliographystyle{plain_\languagename}%% Carica l'omonimo file .bst, dove \languagename è la lingua attiva.
