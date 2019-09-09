@@ -10,6 +10,8 @@
 %\usepackage{bera}% optional: just to have a nice mono-spaced font
 \usepackage{listings}
 \usepackage{xcolor}
+%\usepackage{natbib}
+\usepackage{tocbibind}
 
 \colorlet{punct}{red!60!black}
 \definecolor{background}{HTML}{EEEEEE}
@@ -100,24 +102,33 @@ Nunc ac dignissim ipsum, quis pulvinar elit. Mauris congue nec leo ornare lobort
 
 %% Parte
 %% La suddivisione in parti è opzionale; talvolta sono sufficienti i capitoli.
-\part{Introduction}
 
 %% Capitolo
 \chapter{Introduction}
 %%Problem: implementing advance IDE functionalities for the Jolie language to be added in Microsoft Vs-code and similar
 
-%% Sezione
-\section{Sezione}
-
-%% Sottosezione
-\subsection{Sottosezione}
-
 \chapter{Jolie and the Language Server Protocol}
 \label{sec:JolieLSP}
 \section{Jolie: Java Orchestration Language Interpreter Engine}
-\section{Language Server Protocol}
+Service-Oriented Computing (SOC) is a design methodology that focuses on the
+composition of autonomous entities in a system, called services. SOC abstracts
+from the implementation details of services by imposing a standard communication mechanism between the entities in an SOA (Service-Oriented Architecture)\cite{Jol}. From the perspective the aforementioned methodologies, it is possible to identify a separation between \textit{behavioral} and \textit{architectural} composition of services. The first denotes a series of interactions to be performed in order to reach a goal, while the second deals with the topological structure of a SOA, managing its execution and integration. The lack of an homogeneous solution between the \textit{behavioral} and the \textit{architectural} composition of services require ad-hoc interventions in order to integrate them, which will make the entire architecture less modular and difficult to maintain.\\\textbf{Jolie} was created with the intention to fill the aforementioned gap. This language permits to define services, their behavioral composition, supporting different communication technologies, and their organization inside a SOA.
+\subsection{Language basics: behavior and deployment}
+A Jolie program defines a service, which is composed by two parts: the \textit{behavior} and the \textit{deployment}. The first defines the functionalities of the service, including primitives like communication and computation constructs. These does not define \textit{how} the communication is supported, they abstractly refer to \textit{communication ports} which are assumed to be correctly defined in the deployment part. For example, a behavioral primitive may express the action "ask the bank to show the actual balance", without knowing how to reach the "bank" service and which communication protocol it uses. These last two are handled by the deployment, which permits to define the \textit{location} and the \textit{protocol} of the bank service. The deployment permits the usage of architectural primitives for defining the architecture of a SOA. Following an example of Jolie program
 
-\part{Project}
+%The aforementioned designed methodology led to heterogeneous scenario formed by different technologies and specifications, meaning that each different SOC technology target different requirements and cannot be integrated without ad-hoc interventions.\\Jolie
+\section{Language Server Protocol}
+\begin{table}[H]
+	\caption{Headers}
+	\begin{tabularx}{\textwidth}{c|c|X}
+		\hline
+		\textbf{Header Field Name} & \textbf{Value Type} & \textbf{Description}\\
+		\hline\hline
+		Content-Length & number & The length of the content part in bytes. This header is required.\\\hline
+		Content-Type & string & The mime type of the content part. Defaults to application/vscode-jsonrpc; charset=utf-8\\\hline
+	\end{tabularx}
+\end{table}
+The header part is encoded using the 'ascii' encoding. This includes the '\\r\\n' separating the header and content part.\\The content part contains the actual content of the message
 
 \chapter{Analysis of the problem}
 In this chapter I will identify the requirements, gathered an analysis of the Language Server Protocol and over a series of meetings with the supervisor.
@@ -133,8 +144,7 @@ LSP supports six key feature which are:
 \end{enumerate}
 The protocol supports many other features that are all linked to the above listed. The requirements elicitation phase was based on these main ones.
 \section{Functional Requirements}
-Functional requirements are statements of services the system should provide, particularly how it should react to particular inputs. 
-From the features analyzed in the previous section, we extracted the following functional requirements, listed in ascending order of importance.
+Functional requirements are statements of services the system should provide, particularly how it should react to particular inputs \cite{Som11}. From the features analyzed in the previous section, we extracted the following functional requirements, listed in ascending order of importance.
 \begin{table}[H]
 	\caption{Functional Requirements}
 	\begin{tabularx}{\textwidth}{c|X}
@@ -154,7 +164,7 @@ From the features analyzed in the previous section, we extracted the following f
 \end{table}
 
 \section{Non-functional requirements}
-Non-functional requirements are requirements that are not directly concerned with the specific services delivered by the system to its users. They may relate to emergent system properties such as reliability, response time, and store occupancy. Alternatively, they may define constraints on the system implementation such as the capabilities of I/O devices or the data representations used in interfaces with other systems.\\ Regarding the aforementioned non-functional requirements, the response time is critical for the project, as the server should be able to respond to the client as soon as possible. Nonetheless, this kind of calculations (such as code completion) are not computationally heavy.\\Other non-functional requirements, are listed above.
+Non-functional requirements are requirements that are not directly concerned with the specific services delivered by the system to its users. They may relate to emergent system properties such as reliability, response time, and store occupancy. Alternatively, they may define constraints on the system implementation such as the capabilities of I/O devices or the data representations used in interfaces with other systems \cite{Som11}.\\ Regarding the aforementioned non-functional requirements, the response time is critical for the project, as the server should be able to respond to the client as soon as possible. Nonetheless, this kind of calculations (such as code completion) are not computationally heavy.\\Other non-functional requirements, are listed below.
 \subsection{Complying with the Language Server Protocol specification}
 The Language Server Protocol defines a common language, between a tool and a language server. As a consequence, the latter must be able to recognize the different requests received from the client and send back proper responses that the client is able to interpret and compute.\\Following an example: the request-response method \verb|initialize|, that provides the server client's capabilities and it expects a response with the server capabilities, has the following type:\\\textbf{Request type}
 \begin{lstlisting}[language=json,firstnumber=1]
@@ -176,20 +186,23 @@ interface InitializeResult {
 	 */
 	capabilities: ServerCapabilities;
 }
-\end{lstlisting} 
+\end{lstlisting}
+\subsubsection{JSON-RPC 2.0 Protocol}
+Regarding the communication protocol, LSP supports a custom version of the JSON-RPC 2.0 protocol, as mentioned in \hyperref[sec:JolieLSP]{Chapter 2}. A message is characterized by an header part, which can contain up to two headers (Content-Length, which is mandatory, and Content-Type) and a content part, with the actual message represented with the JSON-RPC notation.\\Jolie supports JSON-RPC, but it runs over HTTP, therefore Jolie's JSON-RPC will expect HTTP headers before the Content-Length and Content-Type. As a consequence, Jolie's JSON-RPC protocol must be extended in order to make it compatible LSP messages.
 \subsection{Distributed}
-The server must be adapted to the LSP, in order to make it works with different tools that uses the protocol concerned. Therefore, it must be \textbf{editor-agnostic} and it should be designed and implemented in order to be deployed both locally and in a different machine with respect to the clients, so it can interact with different tools at the same time. Consequently the best communication method to use in this case is the socket.\\Regarding the communication protocol and data format, LSP supports only JSON-RPC 2.0, as mentioned in \hyperref[sec:JolieLSP]{Chapter 2}, therefore also the server must support it.
+The server must be adapted to the LSP, in order to make it works with different tools that uses the protocol concerned. Therefore, it must be \textbf{editor-agnostic} and it should be designed and implemented in order to be deployed both locally and in a different machine with respect to the clients, so it can interact with different tools at the same time. Consequently the best communication method to use in this case is the socket.
+%\\
 
 \subsection{Modular}
 Not every language server can support all features defined by the protocol. LSP therefore provides, the previous mentioned, \textbf{capabilities}. A capability groups a set of language features. A development tool and the language server announce their supported features using capabilities. For instance, the server announces that it can handle the \verb|textDocument/hover| request, but it might not support the \verb|textDocument/references| request. Similarly, a development tool announces its ability to provide \verb|textDocument/didChange| notification when a document is modified, so that a server can compute textual edits to format the edited document.\\On account of this, the server must be designed in order to easily add new capabilities or improve the existing ones. After implementing a new feature, the programmer just need to modify the server capabilities thus the client can start sending requests regarding the newly activated capability.
 
-\begin{table}
+\begin{table}[H]
 	\caption{Non-Functional Requirements}
 	\begin{tabularx}{\textwidth}{c|X}
 		\hline
 		\textbf{Non-functional r. No.} & \textbf{Description}\\
 		\hline\hline
-		NFR 1 & The server must support the JSON-RPC protocol.\\\hline
+		NFR 1 & The server must support the LSP's JSON-RPC protocol.\\\hline
 		NFR 2 & The server must be designed to be modular.\\\hline
 		NFR 3 & The server must be able to respond to a client request as soon as possible.\\\hline
 		NFR 4 & The server must work both when deployed in a different machine and when deployed in a local machine, with respect of the client location. As a consequence, it has to support the socket channel of communication.\\\hline
