@@ -17,35 +17,103 @@
 \definecolor{background}{HTML}{EEEEEE}
 \definecolor{delim}{RGB}{20,105,176}
 \colorlet{numb}{magenta!60!black}
+\definecolor{color:keyword}{rgb}{0.53,0.05,0.05}
+\definecolor{color:comment}{rgb}{0.25,0.37,0.75}
+\definecolor{color:string}{rgb}{0.87,0.0,0.0}
+
+\lstdefinelanguage{Jolie}{
+ morekeywords={csets,type,raw,any,undefined,void,default,if,for,while,spawn,foreach,else,define,main,include,constants,inputPort,outputPort,interface,execution,cset,nullProcess,RequestResponse,OneWay,throw,throws,install,scope,embedded,init,synchronized,global,is_defined,is_int,is_bool,is_long,is_string,bool,long,int,string,double,undef,with,Location,Protocol,Interfaces,Aggregates,Redirects,linkIn,linkOut},
+ sensitive=true,
+ morecomment=[l]{//},
+ morecomment=[s]{/*}{*/},
+ morestring=[b]",
+ otherkeywords={;,|,@}
+}
+
+\lstset{
+ language=Jolie,
+ mathescape=true,
+ resetmargins=true,
+ numberstyle=\footnotesize,
+ numbers=left,
+ numbersep=5pt,
+ numberblanklines=true,
+ basicstyle=\ttfamily\small,
+ tabsize=2,
+ %frame=lines,
+ commentstyle=\ttfamily\color{color:comment},
+ stringstyle=\color{color:string},
+ captionpos=b,
+ keywordstyle=\bfseries\color{color:keyword},
+ showstringspaces=false,
+ belowcaptionskip=10mm,
+ breaklines=false,
+ columns=fullflexible,
+ linewidth= 0.8\linewidth
+}
+
+
+\colorlet{punct}{red!60!black}
+\definecolor{delim}{RGB}{20,105,176}
+\definecolor{keyword}{RGB}{48,0,211}
+\colorlet{numb}{magenta!60!black}
+
+\newcommand{\kwd}[1]{{\color{keyword}\textbf{#1}}}
+\newcommand{\hid}[1]{{\color{gray}#1}}
 
 \lstdefinelanguage{json}{
-    basicstyle=\normalfont\ttfamily,
+    basicstyle=\ttfamily\small,
+    commentstyle=\color{color:comment}, % style of comment
+    stringstyle=\color{color:string}, % style of strings
     numbers=left,
     numberstyle=\scriptsize,
     stepnumber=1,
     numbersep=8pt,
     showstringspaces=false,
-    breaklines=true,
     frame=lines,
-    backgroundcolor=\color{background},
+    string=[s]{"}{"},
+    comment=[l]{:\ "},
+    morecomment=[l]{:"},
     literate=
-     *{0}{{{\color{numb}0}}}{1}
-      {1}{{{\color{numb}1}}}{1}
-      {2}{{{\color{numb}2}}}{1}
-      {3}{{{\color{numb}3}}}{1}
-      {4}{{{\color{numb}4}}}{1}
-      {5}{{{\color{numb}5}}}{1}
-      {6}{{{\color{numb}6}}}{1}
-      {7}{{{\color{numb}7}}}{1}
-      {8}{{{\color{numb}8}}}{1}
-      {9}{{{\color{numb}9}}}{1}
-      {:}{{{\color{punct}{:}}}}{1}
-      {,}{{{\color{punct}{,}}}}{1}
-      {\{}{{{\color{delim}{\{}}}}{1}
-      {\}}{{{\color{delim}{\}}}}}{1}
-      {[}{{{\color{delim}{[}}}}{1}
-      {]}{{{\color{delim}{]}}}}{1},
+        *{0}{{{\color{numb}0}}}{1}
+         {1}{{{\color{numb}1}}}{1}
+         {2}{{{\color{numb}2}}}{1}
+         {3}{{{\color{numb}3}}}{1}
+         {4}{{{\color{numb}4}}}{1}
+         {5}{{{\color{numb}5}}}{1}
+         {6}{{{\color{numb}6}}}{1}
+         {7}{{{\color{numb}7}}}{1}
+         {8}{{{\color{numb}8}}}{1}
+         {9}{{{\color{numb}9}}}{1}
 }
+%\lstdefinelanguage{json}{
+%    basicstyle=\normalfont\ttfamily,
+%    numbers=left,
+%    numberstyle=\scriptsize,
+%    stepnumber=1,
+%    numbersep=8pt,
+%    showstringspaces=false,
+%    breaklines=true,
+%    frame=lines,
+%    backgroundcolor=\color{background},
+%    literate=
+%     *{0}{{{\color{numb}0}}}{1}
+%      {1}{{{\color{numb}1}}}{1}
+%      {2}{{{\color{numb}2}}}{1}
+%      {3}{{{\color{numb}3}}}{1}
+%      {4}{{{\color{numb}4}}}{1}
+%      {5}{{{\color{numb}5}}}{1}
+%      {6}{{{\color{numb}6}}}{1}
+%      {7}{{{\color{numb}7}}}{1}
+%      {8}{{{\color{numb}8}}}{1}
+%      {9}{{{\color{numb}9}}}{1}
+%      {:}{{{\color{punct}{:}}}}{1}
+%      {,}{{{\color{punct}{,}}}}{1}
+%      {\{}{{{\color{delim}{\{}}}}{1}
+%      {\}}{{{\color{delim}{\}}}}}{1}
+%      {[}{{{\color{delim}{[}}}}{1}
+%      {]}{{{\color{delim}{]}}}}{1},
+%}
 
 
 %% --- Informazioni sulla tesi ---
@@ -118,6 +186,9 @@ A Jolie program defines a service, which is composed by two parts: the \textit{b
 
 %The aforementioned designed methodology led to heterogeneous scenario formed by different technologies and specifications, meaning that each different SOC technology target different requirements and cannot be integrated without ad-hoc interventions.\\Jolie
 \section{Language Server Protocol}
+Implementing advanced features like auto-complete, hover information, diagnostics and go to definition for a programming language can take a significant effort. Typically, this work has to be repeated for every editor or IDE as each of them might offer different APIs for implementing the same feature. A Language Server is a software program that is intended to provide the aforementioned language-specific features and communicate with a development tool through a communication protocol.\\The Language Server Protocol was developed by Microsoft to standardize the protocol for how such servers and IDEs communicate. Therefore, on one hand, the single Language Server can be reused for each development tool that implements the aforementioned protocol, on the other hand, the editor can support multiple languages with minimal effort.
+\subsection{How LSP works}
+A language server runs as a separate process and the development tool communicate with the server using JSON-RPC, a remote procedure protocol which uses JSON syntax as data-format. Following an example:\\
 \begin{table}[H]
 	\caption{Headers}
 	\begin{tabularx}{\textwidth}{c|c|X}
@@ -167,7 +238,7 @@ Functional requirements are statements of services the system should provide, pa
 Non-functional requirements are requirements that are not directly concerned with the specific services delivered by the system to its users. They may relate to emergent system properties such as reliability, response time, and store occupancy. Alternatively, they may define constraints on the system implementation such as the capabilities of I/O devices or the data representations used in interfaces with other systems \cite{Som11}.\\ Regarding the aforementioned non-functional requirements, the response time is critical for the project, as the server should be able to respond to the client as soon as possible. Nonetheless, this kind of calculations (such as code completion) are not computationally heavy.\\Other non-functional requirements, are listed below.
 \subsection{Complying with the Language Server Protocol specification}
 The Language Server Protocol defines a common language, between a tool and a language server. As a consequence, the latter must be able to recognize the different requests received from the client and send back proper responses that the client is able to interpret and compute.\\Following an example: the request-response method \verb|initialize|, that provides the server client's capabilities and it expects a response with the server capabilities, has the following type:\\\textbf{Request type}
-\begin{lstlisting}[language=json,firstnumber=1]
+\begin{lstlisting}[language=json]
 interface InitializeParams {
 	processId: number | null;
 	rootPath?: string | null;
