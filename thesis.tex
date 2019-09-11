@@ -7,11 +7,34 @@
 \usepackage{tabularx}
 \usepackage{float}
 \usepackage{hyperref}
+\usepackage{graphicx}
 %\usepackage{bera}% optional: just to have a nice mono-spaced font
 \usepackage{listings}
 \usepackage{xcolor}
 %\usepackage{natbib}
 \usepackage{tocbibind}
+
+\definecolor{lightgray}{rgb}{0.95, 0.95, 0.95}
+\definecolor{darkgray}{rgb}{0.4, 0.4, 0.4}
+%\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+\definecolor{editorGray}{rgb}{0.95, 0.95, 0.95}
+\definecolor{editorOcher}{rgb}{1, 0.5, 0} % #FF7F00 -> rgb(239, 169, 0)
+\definecolor{editorGreen}{rgb}{0, 0.5, 0} % #007C00 -> rgb(0, 124, 0)
+\definecolor{orange}{rgb}{1,0.45,0.13}		
+\definecolor{olive}{rgb}{0.17,0.59,0.20}
+\definecolor{brown}{rgb}{0.69,0.31,0.31}
+\definecolor{purple}{rgb}{0.38,0.18,0.81}
+\definecolor{lightblue}{rgb}{0.1,0.57,0.7}
+\definecolor{lightred}{rgb}{1,0.4,0.5}
+
+\lstdefinelanguage{JavaScript}{
+  morekeywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  morecomment=[s]{/*}{*/},
+  morecomment=[l]//,
+  frame=lines,
+  morestring=[b]",
+  morestring=[b]'
+}
 
 \colorlet{punct}{red!60!black}
 \definecolor{background}{HTML}{EEEEEE}
@@ -54,7 +77,6 @@
 
 
 \colorlet{punct}{red!60!black}
-\definecolor{delim}{RGB}{20,105,176}
 \definecolor{keyword}{RGB}{48,0,211}
 \colorlet{numb}{magenta!60!black}
 
@@ -85,6 +107,7 @@
          {7}{{{\color{numb}7}}}{1}
          {8}{{{\color{numb}8}}}{1}
          {9}{{{\color{numb}9}}}{1}
+         {\$}{{{\color{numb}{\$}}}}{1}
 }
 %\lstdefinelanguage{json}{
 %    basicstyle=\normalfont\ttfamily,
@@ -182,15 +205,16 @@ Service-Oriented Computing (SOC) is a design methodology that focuses on the
 composition of autonomous entities in a system, called services. SOC abstracts
 from the implementation details of services by imposing a standard communication mechanism between the entities in an SOA (Service-Oriented Architecture)\cite{Jol}. From the perspective the aforementioned methodologies, it is possible to identify a separation between \textit{behavioral} and \textit{architectural} composition of services. The first denotes a series of interactions to be performed in order to reach a goal, while the second deals with the topological structure of a SOA, managing its execution and integration. The lack of an homogeneous solution between the \textit{behavioral} and the \textit{architectural} composition of services require ad-hoc interventions in order to integrate them, which will make the entire architecture less modular and difficult to maintain.\\\textbf{Jolie} was created with the intention to fill the aforementioned gap. This language permits to define services, their behavioral composition, supporting different communication technologies, and their organization inside a SOA.
 \subsection{Language basics: behavior and deployment}
-A Jolie program defines a service, which is composed by two parts: the \textit{behavior} and the \textit{deployment}. The first defines the functionalities of the service, including primitives like communication and computation constructs. These does not define \textit{how} the communication is supported, they abstractly refer to \textit{communication ports} which are assumed to be correctly defined in the deployment part. For example, a behavioral primitive may express the action "ask the bank to show the actual balance", without knowing how to reach the "bank" service and which communication protocol it uses. These last two are handled by the deployment, which permits to define the \textit{location} and the \textit{protocol} of the bank service. The deployment permits the usage of architectural primitives for defining the architecture of a SOA. Following an example of Jolie program
-
+A Jolie program defines a service, which is composed by two parts: the \textit{behavior} and the \textit{deployment}. The first defines the functionalities of the service, including primitives like communication and computation constructs. These does not define \textit{how} the communication is supported, they abstractly refer to \textit{communication ports} which are assumed to be correctly defined in the deployment part. For example, a behavioral primitive may express the action "ask the bank to show the actual balance", without knowing how to reach the "bank" service and which communication protocol it uses. These last two are handled by the deployment, which permits to define the \textit{location} and the \textit{protocol} of the bank service. Furthermore, the deployment permits the usage of architectural primitives for defining the architecture of a SOA.
+\subsubsection{Behaviour}
+Jolie syntax is a combination of the message passing and the imperative programming styles. 
 %The aforementioned designed methodology led to heterogeneous scenario formed by different technologies and specifications, meaning that each different SOC technology target different requirements and cannot be integrated without ad-hoc interventions.\\Jolie
 \section{Language Server Protocol}
 Implementing advanced features like auto-complete, hover information, diagnostics and go to definition for a programming language can take a significant effort. Typically, this work has to be repeated for every editor or IDE as each of them might offer different APIs for implementing the same feature. A Language Server is a software program that is intended to provide the aforementioned language-specific features and communicate with a development tool through a communication protocol.\\The Language Server Protocol was developed by Microsoft to standardize the protocol for how such servers and IDEs communicate. Therefore, on one hand, the single Language Server can be reused for each development tool that implements the aforementioned protocol, on the other hand, the editor can support multiple languages with minimal effort.
 \subsection{How LSP works}
-A language server runs as a separate process and the development tool communicate with the server using JSON-RPC, a remote procedure protocol which uses JSON syntax as data-format. Following an example:\\
+A language server runs as a separate process and the development tool communicate with the server using JSON-RPC, a remote procedure protocol which uses JSON syntax as data-format. An LSP message is composed by two parts: the \textit{header} part and the \textit{content} part. The first part is composed by 
 \begin{table}[H]
-	\caption{Headers}
+	\caption{LSP headers}
 	\begin{tabularx}{\textwidth}{c|c|X}
 		\hline
 		\textbf{Header Field Name} & \textbf{Value Type} & \textbf{Description}\\
@@ -199,8 +223,73 @@ A language server runs as a separate process and the development tool communicat
 		Content-Type & string & The mime type of the content part. Defaults to application/vscode-jsonrpc; charset=utf-8\\\hline
 	\end{tabularx}
 \end{table}
-The header part is encoded using the 'ascii' encoding. This includes the '\\r\\n' separating the header and content part.\\The content part contains the actual content of the message
+The header part is encoded using the 'ascii' encoding. This includes the '\textbackslash r\textbackslash n' separating the header and content part.\\The content part contains the actual content of the message using JSON-RPC to describe requests, responses and notifications, the latter also called one-way messages. Following an example:
+\begin{lstlisting}[language=json]
+Content-Length: ...\r\n
+\r\n
+{
+	"jsonrpc": "2.0",
+	"id": 1,
+	"method": "textDocument/didClose",
+	"params": {
+		...
+	}
+}
+\end{lstlisting}
+Following a simplified sequence diagram that shows a slice of interaction between a client and a server.
 
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{lsp.png}
+\end{figure}
+
+\begin{enumerate}
+	\item \textbf{The user opens a file (refferred as a \textit{document})}: the tool notifies the server that a document is open ("textDocument/didOpen"), meaning that it is kept in the tool memory. The server will therefore save the language representation of the document in his memory.
+	\item \textbf{The user edits the document}: the tool notifies the server about a change made by the user on the document ("textDocument/didChange"). The server updates the language representation of the document.
+	\item \textbf{The tool execute the "Completion Request"}: the request ("textDocument/completion") is triggered by the aforementioned changes. The parameter, \textit{completionParams}, is essentially a JSON object with all the necessary information (documentURI, position, triggerKind) that the server needs to compute the response. Note that this call is \textit{asynchronous}: the tool can send other notifications or request while waiting for the completion response, same for the language server.
+	\item \textbf{The server publishes errors and warnings}: after the change notification, the server computes and notifies the tool with a list of eventual errors and warnings in the code ("textDocument/publishDiagnostics"). The parameters of this notification contains all the necessary information in order to permit the tool flags errors and warnings.
+	\item \textbf{The server replies to the "Completion Request"}: the server after computing a list of possible completion items, replies to the completion request made before by the tool. The latter lists the items received in order to let the user decide which suites the best.
+	\item \textbf{The user closes the document}: the tool notifies the server when the user closes the document, which cease to exist in the tool memory. The server erases all the information regarding the aforementioned document. 
+\end{enumerate}
+
+All the data types illustrated are language agnostic, meaning that can be applied to all the programming languages. This is due to the protocol simplicity: it is more simple to standardize a document URI or a position inside a it, that standardizing an abstract syntax tree and compiler symbol across different programming languages.\\The aforementioned simplicity is shown in the following JSON-RPC objects that refers to the completion request and response:\\
+\textbf{Request}:
+\begin{lstlisting}[language=json]
+{
+	"jsonrpc": "2.0",
+	"id" : 1,
+	"method": "textDocument/completion",
+	"params": {
+		"textDocument": {
+			"uri": "file:///home/user/Desktop/client.ol"
+		},
+		"position": {
+			"line": 3,
+			"character": 7
+		},
+		"context": {
+			"triggerKind": 1,
+		}
+	}
+}
+\end{lstlisting}
+\textbf{Response}:
+\begin{lstlisting}[language=json]
+{
+	"jsonrpc": "2.0",
+	"id": 1,
+	"result": {
+	"isIncomplete": false,
+		"items": {
+			"label": "println@Console",
+			"kind": 2,
+			"insertText": "println@Console(  )(  )",
+			"insertTextFormat": 2
+		}
+	}
+}
+\end{lstlisting}
+
+A language server in order to work with LSP does not need to implement all the features. LSP provide \textbf{capabilities}. A capability groups a set of language features. The protocol permits the server to notify the tool which capabilities supports, therefore the tool adapts itself in order to send notifications and requests of the capabilities supported.
 \chapter{Analysis of the problem}
 In this chapter I will identify the requirements, gathered an analysis of the Language Server Protocol and over a series of meetings with the supervisor.
 \section{Language Server Protocol features}
@@ -238,7 +327,7 @@ Functional requirements are statements of services the system should provide, pa
 Non-functional requirements are requirements that are not directly concerned with the specific services delivered by the system to its users. They may relate to emergent system properties such as reliability, response time, and store occupancy. Alternatively, they may define constraints on the system implementation such as the capabilities of I/O devices or the data representations used in interfaces with other systems \cite{Som11}.\\ Regarding the aforementioned non-functional requirements, the response time is critical for the project, as the server should be able to respond to the client as soon as possible. Nonetheless, this kind of calculations (such as code completion) are not computationally heavy.\\Other non-functional requirements, are listed below.
 \subsection{Complying with the Language Server Protocol specification}
 The Language Server Protocol defines a common language, between a tool and a language server. As a consequence, the latter must be able to recognize the different requests received from the client and send back proper responses that the client is able to interpret and compute.\\Following an example: the request-response method \verb|initialize|, that provides the server client's capabilities and it expects a response with the server capabilities, has the following type:\\\textbf{Request type}
-\begin{lstlisting}[language=json]
+\begin{lstlisting}[language=javascript]
 interface InitializeParams {
 	processId: number | null;
 	rootPath?: string | null;
@@ -250,7 +339,7 @@ interface InitializeParams {
 }
 \end{lstlisting}
 \textbf{Response type}
-\begin{lstlisting}[language=json,firstnumber=1]
+\begin{lstlisting}[language=javascript]
 interface InitializeResult {
 	/**
 	 * The capabilities the language server provides.
