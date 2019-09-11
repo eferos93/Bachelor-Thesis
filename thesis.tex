@@ -13,6 +13,7 @@
 \usepackage{xcolor}
 %\usepackage{natbib}
 \usepackage{tocbibind}
+\usepackage{mathtools}
 
 \definecolor{lightgray}{rgb}{0.95, 0.95, 0.95}
 \definecolor{darkgray}{rgb}{0.4, 0.4, 0.4}
@@ -63,7 +64,7 @@
  numberblanklines=true,
  basicstyle=\ttfamily\small,
  tabsize=2,
- %frame=lines,
+ frame=lines,
  commentstyle=\ttfamily\color{color:comment},
  stringstyle=\color{color:string},
  captionpos=b,
@@ -205,9 +206,55 @@ Service-Oriented Computing (SOC) is a design methodology that focuses on the
 composition of autonomous entities in a system, called services. SOC abstracts
 from the implementation details of services by imposing a standard communication mechanism between the entities in an SOA (Service-Oriented Architecture)\cite{Jol}. From the perspective the aforementioned methodologies, it is possible to identify a separation between \textit{behavioral} and \textit{architectural} composition of services. The first denotes a series of interactions to be performed in order to reach a goal, while the second deals with the topological structure of a SOA, managing its execution and integration. The lack of an homogeneous solution between the \textit{behavioral} and the \textit{architectural} composition of services require ad-hoc interventions in order to integrate them, which will make the entire architecture less modular and difficult to maintain.\\\textbf{Jolie} was created with the intention to fill the aforementioned gap. This language permits to define services, their behavioral composition, supporting different communication technologies, and their organization inside a SOA.
 \subsection{Language basics: behavior and deployment}
-A Jolie program defines a service, which is composed by two parts: the \textit{behavior} and the \textit{deployment}. The first defines the functionalities of the service, including primitives like communication and computation constructs. These does not define \textit{how} the communication is supported, they abstractly refer to \textit{communication ports} which are assumed to be correctly defined in the deployment part. For example, a behavioral primitive may express the action "ask the bank to show the actual balance", without knowing how to reach the "bank" service and which communication protocol it uses. These last two are handled by the deployment, which permits to define the \textit{location} and the \textit{protocol} of the bank service. Furthermore, the deployment permits the usage of architectural primitives for defining the architecture of a SOA.
+A Jolie program defines a service, which is composed by two parts: the \textit{behavior} and the \textit{deployment}. The first defines the functionalities of the service, including primitives like communication and computation constructs. These does not define \textit{how} the communication is supported, they abstractly refer to \textit{communication ports} which are assumed to be correctly defined in the deployment part. For example, a behavioral primitive may express the action "ask the bank to show the actual balance", without knowing how to reach the "bank" service and which communication protocol it uses. These last two are handled by the deployment, which permits to define the \textit{location} and the \textit{protocol} of the bank service. Furthermore, the deployment permits the usage of architectural primitives for defining the architecture of a SOA. The syntax of a Jolie program is defined as the following:
+\[Program \quad \Coloneqq \quad	D \quad \textcolor{color:keyword}{main}\,\{\, B\, \}\]
+where D is the Deployment and B is the Behaviour. The \textcolor{color:keyword}{main} procedure is the execution entry point. 
 \subsubsection{Behaviour}
 Jolie syntax is a combination of the message passing and the imperative programming styles. 
+Following a selection of the Jolie behavioral syntax:\\
+
+{\setstretch{0.4}
+\begin{align*}
+	B \quad \Coloneqq&\, \eta \quad (input)\\
+	|& \, \bar{\eta} \quad (output)\\
+	|& \, if(e) \> B_1 \> [else \> B_2] \quad (condition)\\
+	|& \, while(e) \> B \quad (while)\\
+	|& \, for(init,\,cond,\,incr)\> B \quad (for)\\
+	|& \, for(x \, in \, y)\> B \quad (array \> iteration)\\
+	|& \, foreach(c : t)\> \quad (foreach child in tree)\\
+	|& \, B_1 \, ; \, B_2 \quad (sequential)\\
+	|& \, B_1 \, | \, B_2 \quad (parallel)\\
+	|& \, \{\, B \,\} \quad (block)\\
+	|& \, x\,=\,e \quad (assign)\\
+	|& \, [\,\eta_1\,]\>\{\,B_1\,\}\,...\,[\,\eta_n\,]\>\{\,B_n\,\} \quad (inputChoice)
+\end{align*}
+where
+\begin{align*}
+	\eta \quad \Coloneqq&\, opName(x) \quad (OneWay)\\
+	|& \, opName(x)(e)\>\{\,B\,\} \quad (RequestResponse)
+\end{align*}\\
+\begin{align*}
+	\bar{\eta} \quad \Coloneqq&\, opName@OP(e) \quad (notification)\\
+	|&\, opName@OP(e)(x) \quad (SolcitResponse)
+\end{align*}
+}
+\textbf{Communications} are implemented through \textit{Rules} \textit{(input)}, \textit{(output)} and \textit{(inputChoice)}. Input $\boldsymbol\eta$ can be either a \textit{OneWay} or a \textit{RequestResponse}. The first receives a message for the operation \textit{opName} and saves its content in variable \verb|x|, while the second receives a message for operation \textit{opName} in variable \verb|x|, executes behavior \textit{B} and sends the value of the evaluation of the expression \textit{e} to the invoker.
+%\begin{lstlisting}[language=jolie]
+%main
+%{
+%	[ twice( req )( res ) {
+%		println@Console( "Received a twice request" )()
+%		res = 2 * req
+%	  } 
+%	] { println@Console( "Twice response sent" )() }
+%	
+%	[ terminate( message ) ] {
+%	 println@Console( message )()
+%	 exit 
+%	 }
+%}
+%\end{lstlisting}
+
 %The aforementioned designed methodology led to heterogeneous scenario formed by different technologies and specifications, meaning that each different SOC technology target different requirements and cannot be integrated without ad-hoc interventions.\\Jolie
 \section{Language Server Protocol}
 Implementing advanced features like auto-complete, hover information, diagnostics and go to definition for a programming language can take a significant effort. Typically, this work has to be repeated for every editor or IDE as each of them might offer different APIs for implementing the same feature. A Language Server is a software program that is intended to provide the aforementioned language-specific features and communicate with a development tool through a communication protocol.\\The Language Server Protocol was developed by Microsoft to standardize the protocol for how such servers and IDEs communicate. Therefore, on one hand, the single Language Server can be reused for each development tool that implements the aforementioned protocol, on the other hand, the editor can support multiple languages with minimal effort.
