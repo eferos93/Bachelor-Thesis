@@ -217,28 +217,147 @@ Following a selection of the Jolie behavioral syntax:\\
 \begin{align*}
 	B \quad \Coloneqq&\, \eta \quad (input)\\
 	|& \, \bar{\eta} \quad (output)\\
-	|& \, if(e) \> B_1 \> [else \> B_2] \quad (condition)\\
-	|& \, while(e) \> B \quad (while)\\
-	|& \, for(init,\,cond,\,incr)\> B \quad (for)\\
-	|& \, for(x \, in \, y)\> B \quad (array \> iteration)\\
-	|& \, foreach(c : t)\> \quad (foreach child in tree)\\
+	|& \, \textcolor{color:keyword}{if}(e) \> B_1 \> \big[else \> B_2\big] \quad (condition)\\
+	|& \, \textcolor{color:keyword}{while}(e) \> B \quad (while)\\
+	|& \, \textcolor{color:keyword}{for}(init,\,cond,\,incr)\> B \quad (forLoop)\\
+	|& \, \textcolor{color:keyword}{for}(x \, in \, y)\> B \quad (arrayIteration)\\
 	|& \, B_1 \, ; \, B_2 \quad (sequential)\\
 	|& \, B_1 \, | \, B_2 \quad (parallel)\\
 	|& \, \{\, B \,\} \quad (block)\\
 	|& \, x\,=\,e \quad (assign)\\
-	|& \, [\,\eta_1\,]\>\{\,B_1\,\}\,...\,[\,\eta_n\,]\>\{\,B_n\,\} \quad (inputChoice)
+	|& \, a\,->\,e \quad (alias)\\
+	|& \, x \, << \, y \quad (deepCopy)\\
+	|& \, \big[\,\eta_1\,\big]\>\{\,B_1\,\}\,...\, \big[\,\eta_n\,\big]\>\{\,B_n\,\} \quad (inputChoice)\\
+	|& \, \textcolor{color:keyword}{scope}(s) \> \{\,B\,\} \quad (scope)\\
+	|& \, \textcolor{color:keyword}{install}(\,h_1\> => \>B_1,...,\,h_n\> => \> B_n) \quad (install)\\
+	|& \, \textcolor{color:keyword}{throw}(f[,\,x]) \quad (throw)
 \end{align*}
+%	|& \, \textcolor{color:keyword}{cH} \quad (cH)\\
 where
 \begin{align*}
 	\eta \quad \Coloneqq&\, opName(x) \quad (OneWay)\\
 	|& \, opName(x)(e)\>\{\,B\,\} \quad (RequestResponse)
 \end{align*}\\
+and
 \begin{align*}
-	\bar{\eta} \quad \Coloneqq&\, opName@OP(e) \quad (notification)\\
-	|&\, opName@OP(e)(x) \quad (SolcitResponse)
+	\bar{\eta} \quad \Coloneqq&\, opName\textcolor{color:keyword}{@}OP(e) \quad (notification)\\
+	|&\, opName\textcolor{color:keyword}{@}OP(e)(x) \quad (SolcitResponse)
 \end{align*}
 }
-\textbf{Communications} are implemented through \textit{Rules} \textit{(input)}, \textit{(output)} and \textit{(inputChoice)}. Input $\boldsymbol\eta$ can be either a \textit{OneWay} or a \textit{RequestResponse}. The first receives a message for the operation \textit{opName} and saves its content in variable \verb|x|, while the second receives a message for operation \textit{opName} in variable \verb|x|, executes behavior \textit{B} and sends the value of the evaluation of the expression \textit{e} to the invoker.
+\textbf{Communications} are implemented through \textit{Rules} \textit{(input)}, \textit{(output)} and \textit{(inputChoice)}. Input $\boldsymbol\eta$ can be either a \textit{OneWay} or a \textit{RequestResponse}. The first receives a message for the operation \textit{opName} and saves its content in variable \verb|x|, while the second receives a message for operation \textit{opName} in variable \verb|x|, executes behavior \textit{B} and sends the value of the evaluation of the expression \textit{e} to the invoker. \textit{(notification)} and \textit{(SolcitResponse)}  implement the output towards the input . The first sends a message with the evaluation of \textit{e}, the second does the same thing and waits for the response from the invoked service which is stored in the var \verb|x|. \textit{OP} denotes the \textbf{output port name} that references an \textcolor{color:keyword}{outputPort}. The latter is specified in the deployment definition and it contains all the necessary information in order to contact the target service. Lastly, the \textit{(inputChoice)} supports the receiving of a message for any of the inputs. When a message for the input $\eta_i$ is received, all the remaining branches are deactivated and $\eta_i$ is executed. Afterwards, $B_i$ is executed. The interpreter enforces that $\eta_i \neq \eta_j,\,\forall i,j \in [1,n] \, | \, i \neq j$, which means that there cannot be two inputs with the same operation.\\\textbf{Statement compositions}, such that \textit{(condition)}, \textit{(while)}, \textit{(forLoop)}, \textit{(arrayIteration)} and \textit{(block)}, resembles the ones used in classic imperative styles. Rule \textit{sequential} sequentially compose the two behaviors: when $B_1$ is terminated, $B_2$ can start its execution (remark: the separator \textit{;} is now optional). On the contrary, \textit{(parallel)} permits the parallel execution of the two behaviors.\\\textbf{Assignment and aliasing}: \textit{(assign)} evaluates the expression \textit{e} and assigns its value to the variable \verb|x|. \textit{(alias)} permits to define a variable $a$ that points to $x$ variable path.\\\textbf{Handling data} Jolie is dynamically-typed meaning that there is no necessity of type declarations and that the type of a variable value is checked at runtime. The language handles the following basic data types:
+\begin{itemize}
+	\item \verb|bool|: booleans;
+	\item \verb|int|: integers;	
+	\item \verb|long|: long integers (with \verb|l| or \verb|L| suffix);
+	\item \verb|double|: double-precision float;
+	\item \verb|string|: strings;
+	\item \verb|raw|: byte arrays (supported for data-passing purposes);
+	\item \verb|void|: the empty type.
+\end{itemize}
+Jolie supports basic arithmetic and logic operators like in Java and also pre-/post-increment and pre-/post-decrement operators. Furthermore, it is possible to cast variables to other types with the following casting functions: \verb|bool()|, \verb|int()|, \verb|long()|, \verb|double()| and \verb|string()|. For instance:
+\begin{lstlisting}[language=jolie]
+	d = "1.5"
+	n = double( d ) // n = 1.5
+	n = int( n ) // n = 1
+\end{lstlisting}
+A variable type can be checked at runtype with the \textcolor{color:keyword}{instanceof} operator, whose syntax is:
+\[expression \>\> \textcolor{color:keyword}{instanceof} \>\> (native\_type\,|\,custom\_type)\]
+Variables are undefined until they are assigned a value. Until then, their state is set to \textcolor{color:keyword}{undefined} (equivalent to \verb|NULL|, \verb|null| or \verb|nil| in other languages). The predicate \textcolor{color:keyword}{is\_defined} is used for checking is a variable is defined or not. Following the syntax:
+\[ \textcolor{color:keyword}{is\_defined} (\, variable\_name \,)\]
+An example:
+\begin{lstlisting}[language=jolie]
+	x = 2
+	if ( is_defined( x ) ) {
+		println@Console( "Variable x is defined" )
+	}
+\end{lstlisting}
+Arrays in Jolie are handled dynamically and can be accessed using the \verb|[]| operator. To be more precise, in Jolie \textbf{every} variable is a dynamic array. So for example this assignment
+\begin{lstlisting}[language=jolie]
+	x = 7
+\end{lstlisting}
+is equivalent to the following
+\begin{lstlisting}[language=jolie]
+	x[0] = 7
+\end{lstlisting}
+thus managing complex data is easier. To compute the size of an array Jolie provides the size operator \verb|#|. Together with this operator, the aforementioned \textit{forLoop} can be used to traverse an array. Alternatively, \textit{(arrayIteration)} has the same purpose. The example below shows the usage of the mentioned constructs.
+\begin{lstlisting}[language=jolie]
+	x[0] = 1
+	x[1] = 2
+	x[2] = 3
+	println@Console( #x )() // prints 3
+	
+	for( i = 0, i < #x, i++) {
+		println@Console( x[i] )()	
+	}
+	//which is equivalent to
+	for( el in x ) {
+		println@Console( el )()	
+	}
+\end{lstlisting}
+\textbf{Data structures} in Jolie are tree-like, similarly to XML or JSON data trees. The operator \verb|.| is used to traverse a data structure. Following an example.
+\begin{lstlisting}[language=jolie]
+	doctor.name = "Marco"
+	doctor.surname = "Rossi"
+	doctor.age = 45
+	doctor.specialization[0] = "Cardiology"
+	doctor.specialization[1] = "General Surgery"
+\end{lstlisting}
+The above data tree is catheterized by \verb|doctor| as root with \verb|void| type and by three children: \verb|name|, \verb|surname| and \verb|specialization| which respectively have the types \verb|string|, \verb|string|, \verb|int| and \verb|string|. The \textcolor{color:keyword}{undef} operator is used to erase an entire structure. Syntax:
+\[\textcolor{color:keyword}{undef}(\,variable\_name\,) \]
+The \textit{(deepCopy)} operator copies the entire structure of a tree $y$ into a tree $x$. Jolie at runtime explores the tree $y$ node-wise and for all initialised sub-nodes in $y$, it assigns the value of each of them to the corresponding sub-node rooted in $x$. This means that if $x$ already had sub-nodes initialised that correspondes to some ones rooted in $y$, $x \, << \, y$ will overwrite them, leaving all the others initialised nodes of $x$ unaffected. This operator can be used also as syntax sugar for creating a data structure. Basing on the previous example of the doctor data structure, in can be re-written in the following way.
+\begin{lstlisting}[language=jolie]
+	doctor << {
+		name = "Marco"
+		surname = "Rossi"
+		age = 45
+		specialization[0] = "Cardiology"
+		specialization[1] = "General Surgery"
+	}
+\end{lstlisting}
+\textbf{Fault handling:} Jolie has constructs to handle faults. The primitives meant for this purpose are: \textcolor{color:keyword}{scope}, \textcolor{color:keyword}{install} and \textcolor{color:keyword}{throw}. For more details see \cite{Jol}.
+\subsubsection{Deployment}
+The deployment is the part of a Jolie program in which all the necessary information for establishing communication channels between services are established. The basic primitives are \textit{input ports} and \textit{output ports} which are based on \textit{data types} and \textit{interfaces}. A deployment $D$ is simply a list of deployment instructions among which we can have input and output ports, type definitions, and interfaces \cite{Jol}:
+%{\setstretch{0.4}
+\begin{align*}
+	D \quad \Coloneqq& \> IP \quad (inputPort)\\
+	|& \> OP \quad (outputPort)\\
+	|& \> T_{def} \quad (typeDefinition)\\
+	|& \> I \quad (interface)
+\end{align*}
+%}
+\textbf{Communication ports} are primitives that define \textit{how} communications with other services are handled. There are two kind of ports. $(inputPort)$ that exposes input operations to other services. Alternatively, $(outputPort)$ permits the invocation of other services' operations.\\The syntax for input and output port is the following.
+%{\setstretch{0.4}
+\begin{align*}
+	IP \quad \Coloneqq \> &\textcolor{color:keyword}{inputPort}: \, id \> \{\\
+	&\textcolor{color:keyword}{location}: \, URI\\
+	&\textcolor{color:keyword}{protocol}: \, p\\
+	&\textcolor{color:keyword}{interfaces}: \, I_1,\,I_2,...,\,I_n\\
+	& \big[ \textcolor{color:keyword}{aggregates}: OP_1,...,OP_n\big]\\
+	&\}
+\end{align*}
+\begin{align*}
+	OP \quad \Coloneqq \> &\textcolor{color:keyword}{outputPort}: \, id \> \{\\
+	&\textcolor{color:keyword}{location}: \, URI\\
+	&\textcolor{color:keyword}{protocol}: \, p\\
+	&\textcolor{color:keyword}{interfaces}: \, I_1,\,I_2,...,\,I_n\\
+	&\}
+\end{align*}
+%}
+These ports are based on three concepts of $location$, $protocol$ and $interface$. The former two define the concrete binding between the program and other services. In particular the $location$ must specify the communication medium. The mediums supported are: \textit{local} (jolie in-memory communication), \textit{socket}, \textit{btl2cap} (Bluetooth L2CAP), \textit{rmi} (Java RMI) and \textit{localsocket} (Unix local sockets). The $protocol$ indicates the data format. Jolie supports the following protocols: \textit{HTTP}, \textit{HTTPS}, \textit{JSON-RPC}, \textit{XML-RPC}, \textit{SOAP}, \textit{SODEP} (created and developed for Jolie), \textit{SODEPS} and \textit{RMI}. More details about the mediums and protocols can be found at \cite{JolieDoc}. The $interface$ defines a bind between the deployment and the behavior: more specifically it defines type information that is expected to be satisfied by the behavior that uses the ports.\\\textbf{Data types and interfaces}. Interfaces are a collection of operation types. The latter defines the type of the data to be communicated over each specified operation. Follwoing the data type syntax.
+\[ 
+	T_{def} \>\> \Coloneqq \>\> \textcolor{color:keyword}{type} \> id \> T
+\]
+
+\[
+	T \>\> \Coloneqq \>\> : \> BT \> \big[\{\> id_1 \, R_1 \, T_1 \> ... \> id_n \, R_n \, T_n\> \}\big]\, 	| \, \textcolor{color:keyword}{undefined}
+\]
+
+\[
+	R \>\> \Coloneqq \>\> [min, \, max] \> | \> *
+\]
+\[
+	BT \>\> \Coloneqq \>\> \textcolor{color:keyword}{int}\,|\,\textcolor{color:keyword}{string}\,|\,\textcolor{color:keyword}{void}\,|\,\textcolor{color:keyword}{bool}\,|\,\textcolor{color:keyword}{long} \,|\, \textcolor{color:keyword}{double} \,|\, \textcolor{color:keyword}{raw} \,|\, \textcolor{color:keyword}{double}
+\]
 %\begin{lstlisting}[language=jolie]
 %main
 %{
@@ -314,7 +433,7 @@ All the data types illustrated are language agnostic, meaning that can be applie
 			"character": 7
 		},
 		"context": {
-			"triggerKind": 1,
+			"triggerKind": 1
 		}
 	}
 }

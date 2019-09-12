@@ -1,9 +1,14 @@
 \begin{thebibliography}{1}
 
 \bibitem{Jol}
-Fabrizio Montesi, Claudio Guidi, and Gianluigi Zavattaro.
+{Fabrizio Montesi and Claudio Guidi and Gianluigi Zavattaro}.
 \newblock Service-oriented programming with jolie.
-\newblock page~1.
+\newblock \url{https://www.fabriziomontesi.com/files/mgz14.pdf}.
+
+\bibitem{JolieDoc}
+{Jolie Development Team}.
+\newblock Jolie documentation.
+\newblock \url{https://jolielang.gitbook.io/docs/}.
 
 \bibitem{Som11}
 Ian Sommerville.
