@@ -3,7 +3,7 @@
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}% 
 \contentsline {chapter}{\numberline {2}Jolie and the Language Server Protocol}{3}{chapter.2}% 
 \contentsline {section}{\numberline {2.1}Jolie: Java Orchestration Language Interpreter Engine}{3}{section.2.1}% 
-\contentsline {subsection}{\numberline {2.1.1}Behavior}{4}{subsection.2.1.1}% 
+\contentsline {subsection}{\numberline {2.1.1}Behavior}{3}{subsection.2.1.1}% 
 \contentsline {subsubsection}{Communications}{4}{section*.4}% 
 \contentsline {subsubsection}{Data Structures}{6}{section*.5}% 
 \contentsline {subsubsection}{Fault handling}{7}{section*.6}% 
