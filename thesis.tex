@@ -14,6 +14,7 @@
 %\usepackage{natbib}
 \usepackage{tocbibind}
 \usepackage{mathtools}
+%\usepackage{cite}
 
 \definecolor{lightgray}{rgb}{0.95, 0.95, 0.95}
 \definecolor{darkgray}{rgb}{0.4, 0.4, 0.4}
@@ -204,12 +205,10 @@ Nunc ac dignissim ipsum, quis pulvinar elit. Mauris congue nec leo ornare lobort
 \section{Jolie: Java Orchestration Language Interpreter Engine}
 Service-Oriented Computing (SOC) is a design methodology that focuses on the
 composition of autonomous entities in a system, called services. SOC abstracts
-from the implementation details of services by imposing a standard communication mechanism between the entities in an SOA (Service-Oriented Architecture)\cite{Jol}. From the perspective the aforementioned methodologies, it is possible to identify a separation between \textit{behavioral} and \textit{architectural} composition of services. The first denotes a series of interactions to be performed in order to reach a goal, while the second deals with the topological structure of a SOA, managing its execution and integration. The lack of an homogeneous solution between the \textit{behavioral} and the \textit{architectural} composition of services require ad-hoc interventions in order to integrate them, which will make the entire architecture less modular and difficult to maintain.\\\textbf{Jolie} was created with the intention to fill the aforementioned gap. This language permits to define services, their behavioral composition, supporting different communication technologies, and their organization inside a SOA.
-\subsection{Language basics: behavior and deployment}
-A Jolie program defines a service, which is composed by two parts: the \textit{behavior} and the \textit{deployment}. The first defines the functionalities of the service, including primitives like communication and computation constructs. These does not define \textit{how} the communication is supported, they abstractly refer to \textit{communication ports} which are assumed to be correctly defined in the deployment part. For example, a behavioral primitive may express the action "ask the bank to show the actual balance", without knowing how to reach the "bank" service and which communication protocol it uses. These last two are handled by the deployment, which permits to define the \textit{location} and the \textit{protocol} of the bank service. Furthermore, the deployment permits the usage of architectural primitives for defining the architecture of a SOA. The syntax of a Jolie program is defined as the following:
+from the implementation details of services by imposing a standard communication mechanism between the entities in an SOA (Service-Oriented Architecture)\cite{Jol}. From the perspective the aforementioned methodologies, it is possible to identify a separation between \textit{behavioral} and \textit{architectural} composition of services. The first denotes a series of interactions to be performed in order to reach a goal, while the second deals with the topological structure of a SOA, managing its execution and integration. The lack of an homogeneous solution between the \textit{behavioral} and the \textit{architectural} composition of services require ad-hoc interventions in order to integrate them, which will make the entire architecture less modular and difficult to maintain.\\\textbf{Jolie} was created with the intention to fill the aforementioned gap. This language permits to define services, their behavioral composition, supporting different communication technologies, and their organization inside a SOA.\\A Jolie program defines a service, which is composed by two parts: the \textit{behavior} and the \textit{deployment}. The first defines the functionalities of the service, including primitives like communication and computation constructs. These does not define \textit{how} the communication is supported, they abstractly refer to \textit{communication ports} which are assumed to be correctly defined in the deployment part. For example, a behavioral primitive may express the action "ask the bank to show the actual balance", without knowing how to reach the "bank" service and which communication protocol it uses. These last two are handled by the deployment, which permits to define the \textit{location} and the \textit{protocol} of the bank service. Furthermore, the deployment permits the usage of architectural primitives for defining the architecture of a SOA. The syntax of a Jolie program is defined as the following:
 \[Program \quad \Coloneqq \quad	D \quad \textcolor{color:keyword}{main}\,\{\, B\, \}\]
-where D is the Deployment and B is the Behaviour. The \textcolor{color:keyword}{main} procedure is the execution entry point. 
-\subsubsection{Behaviour}
+where D is the Deployment and B is the Behavior. The \textcolor{color:keyword}{main} procedure is the execution entry point. 
+\subsection{Behavior}
 Jolie syntax is a combination of the message passing and the imperative programming styles. 
 Following a selection of the Jolie behavioral syntax:\\
 
@@ -244,7 +243,8 @@ and
 	|&\, opName\textcolor{color:keyword}{@}OP(e)(x) \quad (SolcitResponse)
 \end{align*}
 }
-\textbf{Communications} are implemented through \textit{Rules} \textit{(input)}, \textit{(output)} and \textit{(inputChoice)}. Input $\boldsymbol\eta$ can be either a \textit{OneWay} or a \textit{RequestResponse}. The first receives a message for the operation \textit{opName} and saves its content in variable \verb|x|, while the second receives a message for operation \textit{opName} in variable \verb|x|, executes behavior \textit{B} and sends the value of the evaluation of the expression \textit{e} to the invoker. \textit{(notification)} and \textit{(SolcitResponse)}  implement the output towards the input . The first sends a message with the evaluation of \textit{e}, the second does the same thing and waits for the response from the invoked service which is stored in the var \verb|x|. \textit{OP} denotes the \textbf{output port name} that references an \textcolor{color:keyword}{outputPort}. The latter is specified in the deployment definition and it contains all the necessary information in order to contact the target service. Lastly, the \textit{(inputChoice)} supports the receiving of a message for any of the inputs. When a message for the input $\eta_i$ is received, all the remaining branches are deactivated and $\eta_i$ is executed. Afterwards, $B_i$ is executed. The interpreter enforces that $\eta_i \neq \eta_j,\,\forall i,j \in [1,n] \, | \, i \neq j$, which means that there cannot be two inputs with the same operation.\\\textbf{Statement compositions}, such that \textit{(condition)}, \textit{(while)}, \textit{(forLoop)}, \textit{(arrayIteration)} and \textit{(block)}, resembles the ones used in classic imperative styles. Rule \textit{sequential} sequentially compose the two behaviors: when $B_1$ is terminated, $B_2$ can start its execution (remark: the separator \textit{;} is now optional). On the contrary, \textit{(parallel)} permits the parallel execution of the two behaviors.\\\textbf{Assignment and aliasing}: \textit{(assign)} evaluates the expression \textit{e} and assigns its value to the variable \verb|x|. \textit{(alias)} permits to define a variable $a$ that points to $x$ variable path.\\\textbf{Handling data} Jolie is dynamically-typed meaning that there is no necessity of type declarations and that the type of a variable value is checked at runtime. The language handles the following basic data types:
+\subsubsection{Communications}
+Communications are implemented through \textit{Rules} \textit{(input)}, \textit{(output)} and \textit{(inputChoice)}. Input $\boldsymbol\eta$ can be either a \textit{OneWay} or a \textit{RequestResponse}. The first receives a message for the operation \textit{opName} and saves its content in variable \verb|x|, while the second receives a message for operation \textit{opName} in variable \verb|x|, executes behavior \textit{B} and sends the value of the evaluation of the expression \textit{e} to the invoker. \textit{(notification)} and \textit{(SolcitResponse)}  implement the output towards the input . The first sends a message with the evaluation of \textit{e}, the second does the same thing and waits for the response from the invoked service which is stored in the var \verb|x|. \textit{OP} denotes the \textbf{output port name} that references an \textcolor{color:keyword}{outputPort}. The latter is specified in the deployment definition and it contains all the necessary information in order to contact the target service. Lastly, the \textit{(inputChoice)} supports the receiving of a message for any of the inputs. When a message for the input $\eta_i$ is received, all the remaining branches are deactivated and $\eta_i$ is executed. Afterwards, $B_i$ is executed. The interpreter enforces that $\eta_i \neq \eta_j,\,\forall i,j \in [1,n] \, | \, i \neq j$, which means that there cannot be two inputs with the same operation.\\\textbf{Statement compositions}, such that \textit{(condition)}, \textit{(while)}, \textit{(forLoop)}, \textit{(arrayIteration)} and \textit{(block)}, resembles the ones used in classic imperative styles. Rule \textit{sequential} sequentially compose the two behaviors: when $B_1$ is terminated, $B_2$ can start its execution (remark: the separator \textit{;} is now optional). On the contrary, \textit{(parallel)} permits the parallel execution of the two behaviors.\\\textbf{Assignment and aliasing}: \textit{(assign)} evaluates the expression \textit{e} and assigns its value to the variable \verb|x|. \textit{(alias)} permits to define a variable $a$ that points to $x$ variable path.\\\textbf{Handling data} Jolie is dynamically-typed meaning that there is no necessity of type declarations and that the type of a variable value is checked at runtime. The language handles the following basic data types:
 \begin{itemize}
 	\item \verb|bool|: booleans;
 	\item \verb|int|: integers;	
@@ -260,7 +260,7 @@ Jolie supports basic arithmetic and logic operators like in Java and also pre-/p
 	n = double( d ) // n = 1.5
 	n = int( n ) // n = 1
 \end{lstlisting}
-A variable type can be checked at runtype with the \textcolor{color:keyword}{instanceof} operator, whose syntax is:
+A variable type can be checked at run-time with the \textcolor{color:keyword}{instanceof} operator, whose syntax is:
 \[expression \>\> \textcolor{color:keyword}{instanceof} \>\> (native\_type\,|\,custom\_type)\]
 Variables are undefined until they are assigned a value. Until then, their state is set to \textcolor{color:keyword}{undefined} (equivalent to \verb|NULL|, \verb|null| or \verb|nil| in other languages). The predicate \textcolor{color:keyword}{is\_defined} is used for checking is a variable is defined or not. Following the syntax:
 \[ \textcolor{color:keyword}{is\_defined} (\, variable\_name \,)\]
@@ -294,7 +294,8 @@ thus managing complex data is easier. To compute the size of an array Jolie prov
 		println@Console( el )()	
 	}
 \end{lstlisting}
-\textbf{Data structures} in Jolie are tree-like, similarly to XML or JSON data trees. The operator \verb|.| is used to traverse a data structure. Following an example.
+\subsubsection{Data Structures}
+Data structures in Jolie are tree-like, similarly to XML or JSON data trees. The operator \verb|.| is used to traverse a data structure. Following an example.
 \begin{lstlisting}[language=jolie]
 	doctor.name = "Marco"
 	doctor.surname = "Rossi"
@@ -304,7 +305,7 @@ thus managing complex data is easier. To compute the size of an array Jolie prov
 \end{lstlisting}
 The above data tree is catheterized by \verb|doctor| as root with \verb|void| type and by three children: \verb|name|, \verb|surname| and \verb|specialization| which respectively have the types \verb|string|, \verb|string|, \verb|int| and \verb|string|. The \textcolor{color:keyword}{undef} operator is used to erase an entire structure. Syntax:
 \[\textcolor{color:keyword}{undef}(\,variable\_name\,) \]
-The \textit{(deepCopy)} operator copies the entire structure of a tree $y$ into a tree $x$. Jolie at runtime explores the tree $y$ node-wise and for all initialised sub-nodes in $y$, it assigns the value of each of them to the corresponding sub-node rooted in $x$. This means that if $x$ already had sub-nodes initialised that correspondes to some ones rooted in $y$, $x \, << \, y$ will overwrite them, leaving all the others initialised nodes of $x$ unaffected. This operator can be used also as syntax sugar for creating a data structure. Basing on the previous example of the doctor data structure, in can be re-written in the following way.
+The \textit{(deepCopy)} operator copies the entire structure of a tree $y$ into a tree $x$. Jolie at run-time explores the tree $y$ node-wise and for all initialized sub-nodes in $y$, it assigns the value of each of them to the corresponding sub-node rooted in $x$. This means that if $x$ already had sub-nodes initialized that match to some ones rooted in $y$, $x \, << \, y$ will overwrite them, leaving all the others initialized nodes of $x$ unaffected. This operator can be used also as syntax sugar for creating a data structure. Basing on the previous example of the doctor data structure, in can be re-written as in the following example.
 \begin{lstlisting}[language=jolie]
 	doctor << {
 		name = "Marco"
@@ -319,8 +320,9 @@ The \textit{(deepCopy)} operator copies the entire structure of a tree $y$ into 
 		email = "marco.rossi@gmail.com"
 	}
 \end{lstlisting}
-\textbf{Fault handling:} Jolie has constructs to handle faults. The primitives meant for this purpose are: \textcolor{color:keyword}{scope}, \textcolor{color:keyword}{install} and \textcolor{color:keyword}{throw}. For more details see \cite{Jol}.
-\subsubsection{Deployment}
+\subsubsection{Fault handling}
+Jolie has constructs to handle faults. The primitives meant for this purpose are: \textcolor{color:keyword}{scope}, \textcolor{color:keyword}{install} and \textcolor{color:keyword}{throw}. For more details see \cite{Jol}.
+\subsection{Deployment}
 The deployment is the part of a Jolie program in which all the necessary information for establishing communication channels between services are established. The basic primitives are \textit{input ports} and \textit{output ports} which are based on \textit{data types} and \textit{interfaces}. A deployment $D$ is simply a list of deployment instructions among which we can have input and output ports, type definitions, and interfaces \cite{Jol}:
 %{\setstretch{0.4}
 \begin{align*}
@@ -331,19 +333,16 @@ The deployment is the part of a Jolie program in which all the necessary informa
 	|& \> \textcolor{color:keyword}{execution}\{\, M \,\}\\
 	|& \> E
 \end{align*}
-where 
-\[ M \>\> \Coloneqq \>\> \textcolor{color:keyword}{single} \> | \> \textcolor{color:keyword}{sequential} \> | \> \textcolor{color:keyword}{concurrent} \]
-\[ E \>\> \Coloneqq \>\> \textcolor{color:keyword}{embedded}\,\{\, E_{type}:\>path\,\big[\,\textcolor{color:keyword}{in} \> OP \, \big] \, \} \]
-\[ E_{type} \>\> \Coloneqq \>\> \textcolor{color:keyword}{Jolie} \> | \> \textcolor{color:keyword}{Java} \> | \> \textcolor{color:keyword}{JavaScript} \]
 %}
-\textbf{Communication ports} are primitives that define \textit{how} communications with other services are handled. There are two kind of ports. $(inputPort)$ that exposes input operations to other services. Alternatively, $(outputPort)$ permits the invocation of other services' operations.\\The syntax for input and output port is the following.
+\subsubsection{Communication ports}
+Communication ports are primitives that define \textit{how} communications with other services are handled. There are two kind of ports. $(inputPort)$ that exposes input operations to other services. Alternatively, $(outputPort)$ permits the invocation of other services' operations.\\The syntax for input and output port is the following.
 %{\setstretch{0.4}
 \begin{align*}
 	IP \quad \Coloneqq \> &\textcolor{color:keyword}{inputPort}: \, id \> \{\\
 	&\textcolor{color:keyword}{location}: \, URI\\
 	&\textcolor{color:keyword}{protocol}: \, p\\
 	&\textcolor{color:keyword}{interfaces}: \, I_1,\,I_2,...,\,I_n\\
-	& \big[ \textcolor{color:keyword}{aggregates}: OP_1,...,OP_n\big]\\
+	& \big[ \textcolor{color:keyword}{aggregates}: OPid_1,...,OPid_n\big]\\
 	&\}
 \end{align*}
 \begin{align*}
@@ -354,7 +353,9 @@ where
 	&\}
 \end{align*}
 %}
-These ports are based on three concepts of $location$, $protocol$ and $interface$. The former two define the concrete binding between the program and other services. In particular the $location$ must specify the communication medium. The mediums supported are: \textit{local} (jolie in-memory communication), \textit{socket}, \textit{btl2cap} (Bluetooth L2CAP), \textit{rmi} (Java RMI) and \textit{localsocket} (Unix local sockets). The $protocol$ indicates the data format. Jolie supports the following protocols: \textit{HTTP}, \textit{HTTPS}, \textit{JSON-RPC}, \textit{XML-RPC}, \textit{SOAP}, \textit{SODEP} (created and developed for Jolie), \textit{SODEPS} and \textit{RMI}. More details about the mediums and protocols can be found at \cite{JolieDoc}. The $interface$ defines a bind between the deployment and the behavior: more specifically it defines type information that is expected to be satisfied by the behavior that uses the ports.\\\textbf{Data types and interfaces}. Interfaces are a collection of operation types. The latter defines the type of the data to be communicated over each specified operation. Following the data type syntax.
+These ports are based on three concepts of $location$, $protocol$ and $interface$. The former two define the concrete binding between the program and other services. In particular the $location$ must specify the communication medium. The mediums supported are: \textit{local} (jolie in-memory communication), \textit{socket}, \textit{btl2cap} (Bluetooth L2CAP), \textit{rmi} (Java RMI) and \textit{localsocket} (Unix local sockets). The $protocol$ indicates the data format. Jolie supports the following protocols: \textit{HTTP}, \textit{HTTPS}, \textit{JSON-RPC}, \textit{XML-RPC}, \textit{SOAP}, \textit{SODEP} (created and developed for Jolie), \textit{SODEPS} and \textit{RMI}. More details about the mediums and protocols can be found at \cite{JolieDoc}. The $interface$ defines a bind between the deployment and the behavior: more specifically it defines type information that is expected to be satisfied by the behavior that uses the ports.
+\subsubsection{Data types and interfaces} 
+Interfaces are a collection of operation types. The latter defines the type of the data to be communicated over each specified operation. Following the data type syntax.
 \[ 
 	T_{def} \>\> \Coloneqq \>\> \textcolor{color:keyword}{type} \> id \> T
 \]
@@ -406,25 +407,101 @@ More generally, a type $T$, can be either a basic type with (optionally) a list 
 \[OW \>\> \Coloneqq \>\> id(\,OT\,) \]
 \[RR \>\> \Coloneqq \>\> id(\,OT_{req}\,)(\,OT_{res}\,)\]
 \[OT \>\> \Coloneqq \>\> BT \, | \, customTypeName \]
-An interface $I$ is a list of possible one-way ($OW$) and request-response ($RR$) operation declarations. An $OW$ definition consists of an operation name $id$ and the type $OT$ of its message. Similarly, an $RR$ definition is composed by its name and both the type of the request message $OT_{req}$ and the type of the response message $OT_{res}$. The deployment permits the type checking of the behaviors. Whenever a message is sent or received through a port, its type is checked against the one specified for its operation in the port's interface. If the type does not match, a \verb|TypeMismatch| fault is sent to the invoker. The same fault is thrown for an output statement trying to send a message with the wrong type.\\\textbf{Architectural composition.}
-%\begin{lstlisting}[language=jolie]
-%main
-%{
-%	[ twice( req )( res ) {
-%		println@Console( "Received a twice request" )()
-%		res = 2 
+An interface $I$ is a list of possible one-way ($OW$) and request-response ($RR$) operation declarations. An $OW$ definition consists of an operation name $id$ and the type $OT$ of its message. Similarly, an $RR$ definition is composed by its name and both the type of the request message $OT_{req}$ and the type of the response message $OT_{res}$. The deployment permits the type checking of the behaviors. Whenever a message is sent or received through a port, its type is checked against the one specified for its operation in the port's interface. If the type of a message received through an input port does not match to the one defined in the interface, a \verb|TypeMismatch| fault is sent to the invoker. The same fault is thrown for an output statement trying to send a message with the wrong type.
+\subsubsection{Behavior instances}
+A service participates in a session by executing an instance of its behavior \cite{Jol}. A session can be executed \textit{one time}, multiple times in \textit{sequence} or multiple times in \textit{parallel}. For this purpose, Jolie allows to reuse behavioral definition multiple times with the \textit{execution modality} deployment primitive before shown \textcolor{color:keyword}{execution}\{$M$\} where $M$ syntax is defined as it follows:
+\[ M \>\> \Coloneqq \>\> \textcolor{color:keyword}{single} \> | \> \textcolor{color:keyword}{sequential} \> | \> \textcolor{color:keyword}{concurrent}\]
+\textcolor{color:keyword}{single} allows the execution of the behavior one time. \textcolor{color:keyword}{sequential} permits the execution of the behavior multiple times, more precisely it causes the program to be available again after the current instance is terminated. Finally, \textcolor{color:keyword}{concurrent} causes the program behavior to be instantiated and executed whenever its first input statement can receive a message \cite{Jol}. In the latter two cases, the behavioral definition must be an input statement or an input choice. The state of a single behavior instance is not shared between the other instances, meaning that all the variables used are local to the behavior instance. Despite this, Jolie provides global variable support through the keyword \textcolor{color:keyword}{global}, which is used as a prefix on variable names. Following an example:
+\begin{lstlisting}[language=jolie]
+	global.x = 5 //global variable x
+	y = 3 // local variable y
+\end{lstlisting}
+This permits sharing data between different behavior instances, which access can be restricted through \textcolor{color:keyword}{synchronized} blocks
+\[B \>\> \Coloneqq \>\>...\>|\>\textcolor{color:keyword}{synchronized} \> (\,token\,)\>\{\,B\,\} \]
+that allows only one process at a time to enter any \textcolor{color:keyword}{synchronized} with the same $token$.
+\subsubsection{Architectural composition}
+Architectural composition is a different kind of composition that a deployment definition can obtain abstracting from the specific behavioral definitions of the involved services \cite{Jol}. Architectural composition can be divided in two categories:
+\begin{itemize}
+	\item \textsc{the execution context}: a service may execute other services in the same execution context. The linguistic primitive which allows the programming of execution contexts is the embedding \cite{JolieDoc} which can be distinguished between \textit{static} and \textit{dynamic}. In this thesis only the static embedding is presented, for more details and the dynamic embedding see \cite{Jol,JolieDoc};
+	\item \textsc{the communication topology}: it permits the programming of the connections between services in a micro-service architecture \cite{JolieDoc}. The primitive presented is the \textit{aggregation}, while \textit{redirection}, \textit{couriers} and \textit{collection} can be studied at \cite{Jol,JolieDoc}.
+\end{itemize}
+\textbf{Static embedding} is a mechanism for executing multiple services in the same virtual machine. A service, called \textit{embedder}, can embed another service, called \textit{embedded}
+service, by targeting it with the \textcolor{color:keyword}{embedded} primitive \cite{Jol}. 
 
-%	  } 
-%	] { println@Console( "Twice response sent" )() }
-%	
-%	[ terminate( message ) ] {
-%	 println@Console( message )()
-%	 exit 
-%	 }
-%}
-%\end{lstlisting}
+\[ E \>\> \Coloneqq \>\> \textcolor{color:keyword}{embedded}\,\{\, E_{type}:\>path\,\big[\,\textcolor{color:keyword}{in} \> OP \, \big] \, \} \]
+\[ E_{type} \>\> \Coloneqq \>\> \textcolor{color:keyword}{Jolie} \> | \> \textcolor{color:keyword}{Java} \> | \> \textcolor{color:keyword}{JavaScript} \]
+$E_{type}$ specifies the technology of the service to embed, $path$ is a URL pointing to the service definition to embed. Jolie currently supports the three technologies mentioned in the syntax definition, making embedding a \textit{cross-technology} mechanism. An output port $OP$ may be optionally specified. In this case, as soon as the service is loaded, the output port $OP$ is bound to the "local" communication input port of the embedded service \cite{Jol}. For the specific case of embedding a Jolie service into another, the communication medium local must be explicitly indicated in the input port of the embedded service, with no necessity of specifying the protocol, as local medium use an in-memory communication. In an hierarchical perspective, the \textit{embedder} is the parent service of the embedded ones. As a consequence, whenever a service is terminated, all his embedded services are recursively terminated. The hierarchy is also useful for performance: in-memory communications are faster as the services are running inside the same virtual machine. Following a simple example of how embedding with Jolie works.
+\begin{lstlisting}[language=jolie]
+	//service that computes the length of a string
+	interface lengthInterface {
+		RequestResponse: length( string )( int )
+	}
+	inputPort LengthService {
+		location: "local"
+		interface: lengthInterface	
+	}
+	main 
+	{
+		length( request )( response ) {
+			response = #request
+		}		
+	}
+\end{lstlisting}
 
-%The aforementioned designed methodology led to heterogeneous scenario formed by different technologies and specifications, meaning that each different SOC technology target different requirements and cannot be integrated without ad-hoc interventions.\\Jolie
+\begin{lstlisting}[language=jolie]
+	//embedder service
+	include "console.iol"
+	
+	interface lengthInterface {
+		RequestResponse: length( string )( int )
+	}
+	
+	outputPort LengthService {
+		interfaces: lengthInterface
+	}
+	
+	embedded {
+		Jolie: "length_service.ol" in LengthService
+	}
+	
+	include "console.iol"
+	main {
+		string = "Hello World!"
+		length@LengthService( string )( result )
+		println@Console( result )()
+	}
+\end{lstlisting}
+\textbf{Aggregation} is a generalization of network proxies that allows a service to expose
+operations without implementing them in its behavior, but instead delegating them to other services \cite{Jol}. The syntax, as shown previously, $\textcolor{color:keyword}{aggregates}: \> OPid_1,...,\,OPid_n$ extends that for input ports, where $OPid$ is the $id$ of an output port. The interfaces of the aggregated output ports must not share any operation name. Whenever an input port $IP$ receives a message for operation $opName$, there are three possible cases:
+\begin{itemize}
+	\item $opName$ is an operation declared in one of the interfaces of $IP$. In this case, the message in treated normally as previously described.
+	\item $opName$ is declared in the interface of an output port $OP$ aggregated by $IP$, hence the message is forwarded to $OP$ as an output message of the \textit{aggregator}.
+	\item Neither in the interface of the aggregated output ports nor in the $IP$'s interfaces $opName$ is declared. Consequently, the message is rejected and an \verb|IOException| fault is sent to the invoker.  
+\end{itemize}
+Aggregation, therefore, is a mechanism that merges of the aggregated output ports and make them accessible through a single input port. From the invoker perspective, all the aggregated services are seen as a single one. Following an example of aggregation and embedding.
+\begin{lstlisting}[language=jolie]
+	outputPort A {
+	 	location: "socket://someurlA.com:80/"
+		protocol: soap
+		interfaces: InterfaceA
+	}
+	
+	outputPort B {
+		location: "socket://someurlB.com:80/"
+		protocol: jsonrpc
+		interfaces: InterfaceB
+	}
+	
+	embedded { Java: "example.serviceB" in B }
+	
+	inputPort M { 
+		location: "socket://urlM.com:8000/"
+		protocol: sodep
+		aggregates: A, B
+	}
+\end{lstlisting}
+Observe that service B is actually a Java service (for details regarding Java services, see reference \cite{JolieDoc}), therefore it must be embedded in a output port in order to be able to forward messages to it.
+
 \section{Language Server Protocol}
 Implementing advanced features like auto-complete, hover information, diagnostics and go to definition for a programming language can take a significant effort. Typically, this work has to be repeated for every editor or IDE as each of them might offer different APIs for implementing the same feature. A Language Server is a software program that is intended to provide the aforementioned language-specific features and communicate with a development tool through a communication protocol.\\The Language Server Protocol was developed by Microsoft to standardize the protocol for how such servers and IDEs communicate. Therefore, on one hand, the single Language Server can be reused for each development tool that implements the aforementioned protocol, on the other hand, the editor can support multiple languages with minimal effort.
 \subsection{How LSP works}

@@ -2,28 +2,29 @@
 \BOOKMARK [0][-]{chapter.1}{Introduction}{}% 2
 \BOOKMARK [0][-]{chapter.2}{Jolie and the Language Server Protocol}{}% 3
 \BOOKMARK [1][-]{section.2.1}{Jolie: Java Orchestration Language Interpreter Engine}{chapter.2}% 4
-\BOOKMARK [2][-]{subsection.2.1.1}{Language basics: behavior and deployment}{section.2.1}% 5
-\BOOKMARK [1][-]{section.2.2}{Language Server Protocol}{chapter.2}% 6
-\BOOKMARK [2][-]{subsection.2.2.1}{How LSP works}{section.2.2}% 7
-\BOOKMARK [0][-]{chapter.3}{Analysis of the problem}{}% 8
-\BOOKMARK [1][-]{section.3.1}{Language Server Protocol features}{chapter.3}% 9
-\BOOKMARK [1][-]{section.3.2}{Functional Requirements}{chapter.3}% 10
-\BOOKMARK [1][-]{section.3.3}{Non-functional requirements}{chapter.3}% 11
-\BOOKMARK [2][-]{subsection.3.3.1}{Complying with the Language Server Protocol specification}{section.3.3}% 12
-\BOOKMARK [2][-]{subsection.3.3.2}{Distributed}{section.3.3}% 13
-\BOOKMARK [2][-]{subsection.3.3.3}{Modular}{section.3.3}% 14
-\BOOKMARK [0][-]{chapter.4}{Design of the system}{}% 15
-\BOOKMARK [1][-]{section.4.1}{Architecture}{chapter.4}% 16
-\BOOKMARK [2][-]{subsection.4.1.1}{Modules, interfaces, communication}{section.4.1}% 17
-\BOOKMARK [1][-]{section.4.2}{What needs to be implemented}{chapter.4}% 18
-\BOOKMARK [0][-]{chapter.5}{Implementation}{}% 19
-\BOOKMARK [1][-]{section.5.1}{Choosing a language: Jolie \(why\)}{chapter.5}% 20
-\BOOKMARK [1][-]{section.5.2}{Implementation details}{chapter.5}% 21
-\BOOKMARK [2][-]{subsection.5.2.1}{Complying with LSP's JSON-RPC protocol}{section.5.2}% 22
-\BOOKMARK [0][-]{chapter.6}{Validation}{}% 23
-\BOOKMARK [1][-]{section.6.1}{Met requirements \(screenshots\)}{chapter.6}% 24
-\BOOKMARK [1][-]{section.6.2}{Unmet requirements}{chapter.6}% 25
-\BOOKMARK [0][-]{chapter.7}{Conclusions: review, what needs to be done}{}% 26
-\BOOKMARK [-1][-]{part.1}{I Appendici}{}% 27
-\BOOKMARK [0][-]{appendix.A}{Altro capitolo}{part.1}% 28
-\BOOKMARK [0][-]{appendix*.8}{Bibliography}{part.1}% 29
+\BOOKMARK [2][-]{subsection.2.1.1}{Behavior}{section.2.1}% 5
+\BOOKMARK [2][-]{subsection.2.1.2}{Deployment}{section.2.1}% 6
+\BOOKMARK [1][-]{section.2.2}{Language Server Protocol}{chapter.2}% 7
+\BOOKMARK [2][-]{subsection.2.2.1}{How LSP works}{section.2.2}% 8
+\BOOKMARK [0][-]{chapter.3}{Analysis of the problem}{}% 9
+\BOOKMARK [1][-]{section.3.1}{Language Server Protocol features}{chapter.3}% 10
+\BOOKMARK [1][-]{section.3.2}{Functional Requirements}{chapter.3}% 11
+\BOOKMARK [1][-]{section.3.3}{Non-functional requirements}{chapter.3}% 12
+\BOOKMARK [2][-]{subsection.3.3.1}{Complying with the Language Server Protocol specification}{section.3.3}% 13
+\BOOKMARK [2][-]{subsection.3.3.2}{Distributed}{section.3.3}% 14
+\BOOKMARK [2][-]{subsection.3.3.3}{Modular}{section.3.3}% 15
+\BOOKMARK [0][-]{chapter.4}{Design of the system}{}% 16
+\BOOKMARK [1][-]{section.4.1}{Architecture}{chapter.4}% 17
+\BOOKMARK [2][-]{subsection.4.1.1}{Modules, interfaces, communication}{section.4.1}% 18
+\BOOKMARK [1][-]{section.4.2}{What needs to be implemented}{chapter.4}% 19
+\BOOKMARK [0][-]{chapter.5}{Implementation}{}% 20
+\BOOKMARK [1][-]{section.5.1}{Choosing a language: Jolie \(why\)}{chapter.5}% 21
+\BOOKMARK [1][-]{section.5.2}{Implementation details}{chapter.5}% 22
+\BOOKMARK [2][-]{subsection.5.2.1}{Complying with LSP's JSON-RPC protocol}{section.5.2}% 23
+\BOOKMARK [0][-]{chapter.6}{Validation}{}% 24
+\BOOKMARK [1][-]{section.6.1}{Met requirements \(screenshots\)}{chapter.6}% 25
+\BOOKMARK [1][-]{section.6.2}{Unmet requirements}{chapter.6}% 26
+\BOOKMARK [0][-]{chapter.7}{Conclusions: review, what needs to be done}{}% 27
+\BOOKMARK [-1][-]{part.1}{I Appendici}{}% 28
+\BOOKMARK [0][-]{appendix.A}{Altro capitolo}{part.1}% 29
+\BOOKMARK [0][-]{appendix*.13}{Bibliography}{part.1}% 30
