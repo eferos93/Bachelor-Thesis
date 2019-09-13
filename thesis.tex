@@ -309,9 +309,14 @@ The \textit{(deepCopy)} operator copies the entire structure of a tree $y$ into 
 	doctor << {
 		name = "Marco"
 		surname = "Rossi"
-		age = 45
+		birthDate << {
+			day = 25
+			month = 5
+			year = 1971
+		}
 		specialization[0] = "Cardiology"
 		specialization[1] = "General Surgery"
+		email = "marco.rossi@gmail.com"
 	}
 \end{lstlisting}
 \textbf{Fault handling:} Jolie has constructs to handle faults. The primitives meant for this purpose are: \textcolor{color:keyword}{scope}, \textcolor{color:keyword}{install} and \textcolor{color:keyword}{throw}. For more details see \cite{Jol}.
@@ -319,11 +324,17 @@ The \textit{(deepCopy)} operator copies the entire structure of a tree $y$ into 
 The deployment is the part of a Jolie program in which all the necessary information for establishing communication channels between services are established. The basic primitives are \textit{input ports} and \textit{output ports} which are based on \textit{data types} and \textit{interfaces}. A deployment $D$ is simply a list of deployment instructions among which we can have input and output ports, type definitions, and interfaces \cite{Jol}:
 %{\setstretch{0.4}
 \begin{align*}
-	D \quad \Coloneqq& \> IP \quad (inputPort)\\
+	D \>\> \Coloneqq& \>\> IP \quad (inputPort)\\
 	|& \> OP \quad (outputPort)\\
 	|& \> T_{def} \quad (typeDefinition)\\
-	|& \> I \quad (interface)
+	|& \> I \quad (interface)\\
+	|& \> \textcolor{color:keyword}{execution}\{\, M \,\}\\
+	|& \> E
 \end{align*}
+where 
+\[ M \>\> \Coloneqq \>\> \textcolor{color:keyword}{single} \> | \> \textcolor{color:keyword}{sequential} \> | \> \textcolor{color:keyword}{concurrent} \]
+\[ E \>\> \Coloneqq \>\> \textcolor{color:keyword}{embedded}\,\{\, E_{type}:\>path\,\big[\,\textcolor{color:keyword}{in} \> OP \, \big] \, \} \]
+\[ E_{type} \>\> \Coloneqq \>\> \textcolor{color:keyword}{Jolie} \> | \> \textcolor{color:keyword}{Java} \> | \> \textcolor{color:keyword}{JavaScript} \]
 %}
 \textbf{Communication ports} are primitives that define \textit{how} communications with other services are handled. There are two kind of ports. $(inputPort)$ that exposes input operations to other services. Alternatively, $(outputPort)$ permits the invocation of other services' operations.\\The syntax for input and output port is the following.
 %{\setstretch{0.4}
@@ -343,7 +354,7 @@ The deployment is the part of a Jolie program in which all the necessary informa
 	&\}
 \end{align*}
 %}
-These ports are based on three concepts of $location$, $protocol$ and $interface$. The former two define the concrete binding between the program and other services. In particular the $location$ must specify the communication medium. The mediums supported are: \textit{local} (jolie in-memory communication), \textit{socket}, \textit{btl2cap} (Bluetooth L2CAP), \textit{rmi} (Java RMI) and \textit{localsocket} (Unix local sockets). The $protocol$ indicates the data format. Jolie supports the following protocols: \textit{HTTP}, \textit{HTTPS}, \textit{JSON-RPC}, \textit{XML-RPC}, \textit{SOAP}, \textit{SODEP} (created and developed for Jolie), \textit{SODEPS} and \textit{RMI}. More details about the mediums and protocols can be found at \cite{JolieDoc}. The $interface$ defines a bind between the deployment and the behavior: more specifically it defines type information that is expected to be satisfied by the behavior that uses the ports.\\\textbf{Data types and interfaces}. Interfaces are a collection of operation types. The latter defines the type of the data to be communicated over each specified operation. Follwoing the data type syntax.
+These ports are based on three concepts of $location$, $protocol$ and $interface$. The former two define the concrete binding between the program and other services. In particular the $location$ must specify the communication medium. The mediums supported are: \textit{local} (jolie in-memory communication), \textit{socket}, \textit{btl2cap} (Bluetooth L2CAP), \textit{rmi} (Java RMI) and \textit{localsocket} (Unix local sockets). The $protocol$ indicates the data format. Jolie supports the following protocols: \textit{HTTP}, \textit{HTTPS}, \textit{JSON-RPC}, \textit{XML-RPC}, \textit{SOAP}, \textit{SODEP} (created and developed for Jolie), \textit{SODEPS} and \textit{RMI}. More details about the mediums and protocols can be found at \cite{JolieDoc}. The $interface$ defines a bind between the deployment and the behavior: more specifically it defines type information that is expected to be satisfied by the behavior that uses the ports.\\\textbf{Data types and interfaces}. Interfaces are a collection of operation types. The latter defines the type of the data to be communicated over each specified operation. Following the data type syntax.
 \[ 
 	T_{def} \>\> \Coloneqq \>\> \textcolor{color:keyword}{type} \> id \> T
 \]
@@ -358,12 +369,51 @@ These ports are based on three concepts of $location$, $protocol$ and $interface
 \[
 	BT \>\> \Coloneqq \>\> \textcolor{color:keyword}{int}\,|\,\textcolor{color:keyword}{string}\,|\,\textcolor{color:keyword}{void}\,|\,\textcolor{color:keyword}{bool}\,|\,\textcolor{color:keyword}{long} \,|\, \textcolor{color:keyword}{double} \,|\, \textcolor{color:keyword}{raw} \,|\, \textcolor{color:keyword}{double}
 \]
+A data type describes the structure of a data tree, the type of its nodes and the cardinality of each node, namely the number of admitted occurrences of a node. Basing on the \verb|doctor| data tree, I give its type definition.
+\begin{lstlisting}[language=jolie]
+	type Doctor: void {
+		name: string
+		surname: string
+		age : Date
+		specialization*: string
+		email[0,1]: string
+	}
+	
+	type Date: void {
+		day: int
+		month: int
+		year: int
+	}
+\end{lstlisting}
+Doctor's root has type \textcolor{color:keyword}{void}, thus it must not contain any value. Whereas its nodes, except for \verb|email|, must contain values of the specified type. \verb|email| is an optional node, as its cardinality suggests, hence it is not mandatory to insert it in the data tree. The cardinality, if omitted, is set as [1,1] (which can be read "from one to one occurrences"). The $*$ defines an unlimited number of occurrences, more in detail, it is a syntax sugar for [1,*] ("from one to unlimited occurrences"). The cardinality [0,1] can be written also with the shortcut \verb|?|. Note that since Jolie 1.8.0 release, if the type of the root is \textcolor{color:keyword}{void}, there is no necessity to express it . Therefore the above defined type can be written as it follows.
+\begin{lstlisting}[language=jolie]
+	type Doctor {
+		name: string
+		surname: string
+		age : Date
+		specialization*: string
+		email?: string
+	}
+	
+	type Date {
+		day: int
+		month: int
+		year: int
+	}
+\end{lstlisting}
+More generally, a type $T$, can be either a basic type with (optionally) a list of named sub-nodes $BT$, or \textcolor{color:keyword}{undefined}, which makes the type accepting any sub-tree. Each sub-type comes with its $id$, its cardinality (or range) $R$, which can be an interval from $min$ (integer greater or equal than zero) to $max$ (integer greater or equal than $min$ or $*$) and, finally, its type $T$.\\The interface syntax is defined as it follows.
+\[I \>\> \Coloneqq \>\> \textcolor{color:keyword}{interface} \> id \> \{ \> \big[\,\textcolor{color:keyword}{OneWay}:\,OW_1,...,\,OW_n\, \big]\> \big[\textcolor{color:keyword}{RequestResponse}:\, \big[\, RR_1,...,\,RR_n \, \big] \> \} \]
+\[OW \>\> \Coloneqq \>\> id(\,OT\,) \]
+\[RR \>\> \Coloneqq \>\> id(\,OT_{req}\,)(\,OT_{res}\,)\]
+\[OT \>\> \Coloneqq \>\> BT \, | \, customTypeName \]
+An interface $I$ is a list of possible one-way ($OW$) and request-response ($RR$) operation declarations. An $OW$ definition consists of an operation name $id$ and the type $OT$ of its message. Similarly, an $RR$ definition is composed by its name and both the type of the request message $OT_{req}$ and the type of the response message $OT_{res}$. The deployment permits the type checking of the behaviors. Whenever a message is sent or received through a port, its type is checked against the one specified for its operation in the port's interface. If the type does not match, a \verb|TypeMismatch| fault is sent to the invoker. The same fault is thrown for an output statement trying to send a message with the wrong type.\\\textbf{Architectural composition.}
 %\begin{lstlisting}[language=jolie]
 %main
 %{
 %	[ twice( req )( res ) {
 %		println@Console( "Received a twice request" )()
-%		res = 2 * req
+%		res = 2 
+
 %	  } 
 %	] { println@Console( "Twice response sent" )() }
 %	
