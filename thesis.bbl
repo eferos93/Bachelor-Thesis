@@ -10,6 +10,12 @@
 \newblock Jolie documentation.
 \newblock \url{https://jolielang.gitbook.io/docs/}.
 
+\bibitem{LSPSpec}
+Microsoft.
+\newblock Language server protocol specification.
+\newblock
+  \url{https://microsoft.github.io/language-server-protocol/specification}.
+
 \bibitem{Som11}
 Ian Sommerville.
 \newblock {\em Software Engineering}.
