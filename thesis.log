@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2019/dev/Debian) (preloaded format=pdflatex 2019.9.5)  16 SEP 2019 22:01
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2019/dev/Debian) (preloaded format=pdflatex 2019.9.5)  17 SEP 2019 12:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -618,11 +618,11 @@ File: local_arch.png Graphic file (type png)
 <use local_arch.png>
 Package pdftex.def Info: local_arch.png  used on input line 674.
 (pdftex.def)             Requested size: 492.95131pt x 307.24268pt.
-<distr_arch.png, id=558, 806.01125pt x 431.6125pt>
+<distr_arch.png, id=558, 876.27374pt x 460.72125pt>
 File: distr_arch.png Graphic file (type png)
 <use distr_arch.png>
 Package pdftex.def Info: distr_arch.png  used on input line 678.
-(pdftex.def)             Requested size: 492.95131pt x 263.96815pt.
+(pdftex.def)             Requested size: 492.95131pt x 259.18318pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
@@ -637,62 +637,50 @@ Package pdftex.def Info: legenda.png  used on input line 683.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [24 <./local_arch.png> <./distr_arch.png>] [25 <./legenda.png>] [26]
+ [24 <./local_arch.png> <./distr_arch.png>] [25 <./legenda.png>] [26] [27] [28
+
+]
 Chapter 5.
-
-LaTeX Warning: Hyper reference `cap:FR' on page 27 undefined on input line 709.
-
-
-
-LaTeX Warning: Hyper reference `cap:FR' on page 27 undefined on input line 709.
-
-
-[27
-
-] [28]
+[29] [30]
 Chapter 6.
-[29
-
-] [30]
-Chapter 7.
 [31
 
-] [32] [33
+] [32]
+Chapter 7.
+[33
 
-] [34]
+] [34] [35
+
+] [36]
 Appendix A.
-[35
+[37
 
-] [36] (./thesis.bbl [37
+] [38] (./thesis.bbl [39
 
-] [38]
+] [40]
 Underfull \hbox (badness 10000) in paragraph at lines 14--18
 []\OT1/cmr/m/n/10.95 Microsoft.  Lan-guage server pro-to-col spec-i-fi-ca-tion.
   []$\OT1/cmtt/m/n/10.95 https : / / microsoft . github . io /
  []
 
 )
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 747.
- [39
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 755.
+ [41
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 747.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 755.
  (./thesis.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 747.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 747.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 755.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 755.
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 7BE16A1A946FD5FDE9251B12559BBC86;1937.
-
-
-LaTeX Warning: There were undefined references.
-
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 747.
+(rerunfilecheck)             Checksum: 906467B38BBAA610855A0B6E1077C2AB;1937.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 755.
  ) 
 Here is how much of TeX's memory you used:
- 11200 strings out of 492615
- 161295 string characters out of 6131391
+ 11202 strings out of 492615
+ 161312 string characters out of 6131391
  290379 words of memory out of 5000000
- 14622 multiletter control sequences out of 15000+600000
+ 14621 multiletter control sequences out of 15000+600000
  15680 words of font info for 55 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  36i,12n,72p,2387b,1943s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -712,10 +700,10 @@ r8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><
 /share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share
 /texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texli
 ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on thesis.pdf (49 pages, 491753 bytes).
+Output written on thesis.pdf (51 pages, 500011 bytes).
 PDF statistics:
- 777 PDF objects out of 1000 (max. 8388607)
- 697 compressed objects within 7 object streams
- 309 named destinations out of 1000 (max. 500000)
+ 789 PDF objects out of 1000 (max. 8388607)
+ 706 compressed objects within 8 object streams
+ 312 named destinations out of 1000 (max. 500000)
  258 words of extra memory for PDF output out of 10000 (max. 10000000)
 
