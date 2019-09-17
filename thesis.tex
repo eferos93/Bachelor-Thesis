@@ -684,9 +684,9 @@ In this section I present two architectures according to NFR 4. One architecture
 \end{figure}
 
 The hexagon represents a \textit{macroservice}, which is an unique execution context for a set of services. A macroservice exhibit only the public available ports of the inner services \cite{JolieDoc}.
-\subsection{Services}
+\section{Services}
 Each service presented in the model has a set of operations. The main difference between the two models is that in the distributed model there is one more service deployed in the development tool machine that acts as a forwarder. This is necessary as the client process expects a child process that contains the server. The client then will communicate with this service that forwards all its messages to the real Language Server deployed in a remote machine.
-\subsubsection{Main service}
+\subsection{Main service}
 The main service presents two input ports and three output ports. One input port is used to receive the requests and notifications sent by the client, the other is used by an another service, called \textit{utils}, with the purpose to receive all the notifications to be sent to the client through one of the output ports. The remaining two output ports, point to the two main services of the server, \textit{textDocument} and \textit{workspace} and they should be aggregated by the first mentioned input port, therefore every message si automatically forward to the respective service.\\The operations offered by this service are those necessary for initialization and termination of the server. For more details see reference \cite{LSPSpec}. The service must handle at least the following requests and notifications:
 \begin{itemize}
 	\item \verb|initialize| request which content contains the \textit{client capabilities}. The response consists of the \textit{server capabilities};
@@ -694,7 +694,7 @@ The main service presents two input ports and three output ports. One input port
 	\item \verb|shutdown| request. Empty message that expects an empty response;
 	\item \verb|exit| notification. After receiving the \verb|shutdown| response, a notification is sent and the server must terminate its execution.	
 \end{itemize}
-\subsubsection{Text Document service}
+\subsection{Text Document service}
 The service \textit{textDocument} handles all the text document messages. In order to meet the \hyperref[sec:FR]{functional requirements} the service must serve the following messages:
 \begin{itemize}
 	\item \verb|textDocument/completion| request. This request is sent with a cursor position and expects a response with a list of completion items that will be presented in the user interface;
@@ -705,26 +705,26 @@ The service \textit{textDocument} handles all the text document messages. In ord
 	\item \verb|textDocument/references| request is sent in order to resolve project-wide reference of the symbol denoted by the given text document position.
 \end{itemize}
 For all the text document messages, see reference \cite{LSPSpec}.
-\subsubsection{Workspace service}
+\subsection{Workspace service}
 All the workspace messages, are handled by this service. More details regarding this type of messages can be studied at reference \cite{LSPSpec}.
-\subsubsection{Utils service}
+\subsection{Utils service}
 \textit{Utils} service provide functionalities such as syntax checking and document synchronization. For each time a document synchronization message, e.g. \verb|textDocument/didChange|, is received by \textit{textDocument} service, the latter forwards it to \textit{Utils} service that keeps a data structure with all the documents that are open in a specific moment. Subsequently, a syntax check is executed on the updated or newly opened document, and the result is sent to the main service which in turn forwards it to the client.
-\subsubsection{Forwarder service}
+\subsection{Forwarder service}
 The \textit{forwarder} service is an additional service used for the distributed system. The input port exposed to the development tool aggregates the output port used for contacting the server. Jolie is \textit{protocol agnostic}. This means that the communication between the forwarder and the Language Server does not need to use the JSON-RPC protocol: the aggregator, which in our case is the forwarder, automatically transforms the messages thus granting a transparent composition of the server.
 \chapter{Implementation}
+\label{sec:impl}
 For implementing the Language Server for Jolie, modeled in the previous chapter, I used the language Jolie itself for the following reasons:
 \begin{itemize}
-	\item \textbf{Service orientation}: Jolie, as described in Chapter 2, is microservice-oriented language, which is perfect for the non-functional requirements described in \hyperref[sec:Analysis]{Chapter 3}, in particular NFR 1, as Jolie already supports the JSON-RPC protocol over HTTP, therefore it must be adapted to the protocol used by LSP, by extending its functionalities. Moreover, Jolie has a service included in the standard library, called \textit{Inspector}, that provides code inspection operations for analyzing Jolie source code, therefore useful in order to meet \hyperref[sec:FR]{FR 1} and \hyperref[sec:FR]{FR 2}.
-	\item The macroservice concept is realized with the \textit{static embedding} primitive: the main service embeds all the other three service, therefore all four services will run in the same virtual machine. This will reflect in faster internal communications. Furthermore, the main service \textit{aggregates} the output ports pointed respectively to the services \textit{workspace} and \textit{textDocument} to guarantee an automatic forward of the messages that are not of its concern.
+	\item \textbf{Service orientation}: Jolie, as described in \hyperref[sec:JolieLSP]{Chapter 2}, is microservice-oriented language, which is perfect for the non-functional requirements described in \hyperref[sec:Analysis]{Chapter 3}, in particular NFR 1, as Jolie already supports the JSON-RPC protocol over HTTP, therefore it must be adapted to the protocol used by LSP, by extending its functionalities. Moreover, Jolie has a service included in the standard library, called \textit{Inspector}, that provides code inspection operations for analyzing Jolie source code, therefore useful in order to meet \hyperref[sec:FR]{FR 1} and \hyperref[sec:FR]{FR 2}.
+	\item The macroservice concept is realized with the \textit{static embedding} primitive: the main service embeds all the other three services, therefore all four services will run in the same virtual machine. This will reflect in faster internal communications. Furthermore, the main service \textit{aggregates} the output ports pointed respectively to the services \textit{workspace} and \textit{textDocument} to guarantee an automatic forward of the messages that are not of its concern.
 \end{itemize}
-\label{sec:impl}
-\section{Choosing a language: Jolie (why)}
-
-\section{Implementation details}
-\subsection{Complying with LSP's JSON-RPC protocol}
-% TODO rivedere testo, far capire che c'è stato un problema di compatibilità tra i protocolli
-% e come si è risolto
-The JSON-RPC 2.0 is a remote procedure call protocol that uses the JSON, a lightweight data-interchange format which is language independent. As stated in \hyperref[sec:JolieLSP]{Chapter 2}, an LSP message supports only two headers (\textit{Content-Lenghth} and \textit{Content-Type}), while the Jolie protocol runs over HTTP. This incompatibility led to a complex rework on the aforementioned Jolie protocol in order to meet the FR 1.\\ Further details can be read in \hyperref[sec:impl]{Chapter 5}.
+The implementation phase was based on the local architecture model described in the previous chapter and it was characterized by the following two steps:
+\begin{enumerate}
+	\item \textbf{Complying with the LSP's JSON-RPC specifications}: LSP uses a simplified version of JSON-RPC protocol, whereas Jolie internal JSON-RPC protocol uses it over HTTP. Therefore, the protocol was extended in order to be capable of handling also LSP messages. Moreover, the Jolie interpreter, when receiving a JSON-RPC message is able to redirect it to the correct operation by using the \textit{method} field in the JSON-RPC message. Despite this, most of the method names in LSP have prefixes, for instance \verb|textDocument/didOpen|, which is problematic as operation names in Jolie does not support special characters such as the "/". As a consequence, Jolie's protocol must be extended in order to alias the operation names properly. 
+	\item \textbf{Implementation of the Language Server}: define all the services with their deployment parts (ports, types and interfaces) and their behavior (computations).
+\end{enumerate}
+\subsection{Complying with LSP specifications}
+\subsection{Server implementation}
 \chapter{Validation}
 \section{Met requirements (screenshots)}
 \section{Unmet requirements}

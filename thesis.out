@@ -15,15 +15,19 @@
 \BOOKMARK [2][-]{subsection.3.3.3}{Modular}{section.3.3}% 15
 \BOOKMARK [0][-]{chapter.4}{System architecture}{}% 16
 \BOOKMARK [1][-]{section.4.1}{Architecture}{chapter.4}% 17
-\BOOKMARK [2][-]{subsection.4.1.1}{Services}{section.4.1}% 18
-\BOOKMARK [0][-]{chapter.5}{Implementation}{}% 19
-\BOOKMARK [1][-]{section.5.1}{Choosing a language: Jolie \(why\)}{chapter.5}% 20
-\BOOKMARK [1][-]{section.5.2}{Implementation details}{chapter.5}% 21
-\BOOKMARK [2][-]{subsection.5.2.1}{Complying with LSP's JSON-RPC protocol}{section.5.2}% 22
-\BOOKMARK [0][-]{chapter.6}{Validation}{}% 23
-\BOOKMARK [1][-]{section.6.1}{Met requirements \(screenshots\)}{chapter.6}% 24
-\BOOKMARK [1][-]{section.6.2}{Unmet requirements}{chapter.6}% 25
-\BOOKMARK [0][-]{chapter.7}{Conclusions: review, what needs to be done}{}% 26
-\BOOKMARK [-1][-]{part.1}{I Appendici}{}% 27
-\BOOKMARK [0][-]{appendix.A}{Altro capitolo}{part.1}% 28
-\BOOKMARK [0][-]{appendix*.18}{Bibliography}{part.1}% 29
+\BOOKMARK [1][-]{section.4.2}{Services}{chapter.4}% 18
+\BOOKMARK [2][-]{subsection.4.2.1}{Main service}{section.4.2}% 19
+\BOOKMARK [2][-]{subsection.4.2.2}{Text Document service}{section.4.2}% 20
+\BOOKMARK [2][-]{subsection.4.2.3}{Workspace service}{section.4.2}% 21
+\BOOKMARK [2][-]{subsection.4.2.4}{Utils service}{section.4.2}% 22
+\BOOKMARK [2][-]{subsection.4.2.5}{Forwarder service}{section.4.2}% 23
+\BOOKMARK [0][-]{chapter.5}{Implementation}{}% 24
+\BOOKMARK [1][-]{section.5.1}{Implementation details}{chapter.5}% 25
+\BOOKMARK [2][-]{subsection.5.1.1}{Complying with LSP's JSON-RPC protocol}{section.5.1}% 26
+\BOOKMARK [0][-]{chapter.6}{Validation}{}% 27
+\BOOKMARK [1][-]{section.6.1}{Met requirements \(screenshots\)}{chapter.6}% 28
+\BOOKMARK [1][-]{section.6.2}{Unmet requirements}{chapter.6}% 29
+\BOOKMARK [0][-]{chapter.7}{Conclusions: review, what needs to be done}{}% 30
+\BOOKMARK [-1][-]{part.1}{I Appendici}{}% 31
+\BOOKMARK [0][-]{appendix.A}{Altro capitolo}{part.1}% 32
+\BOOKMARK [0][-]{appendix*.13}{Bibliography}{part.1}% 33
