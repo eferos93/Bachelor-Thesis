@@ -528,7 +528,7 @@ Content-Length: ...\r\n
 	}
 }
 \end{lstlisting}
-The Language Server is started by the development tool when certain conditions occur (e.g. when it detects the language in question), therefore the server is required to be spawn as a child process of the client, and the communication between the two can be either via \textit{stdio}, \textit{ipc} or \textit{socket}. More precisely, it is needed to add an extension that must include all the necessary configurations (for which language, conditions that must trigger the extension to start, etc.) in the development tool. This extension must be written in TypeScript/JavaScript and must override the method \textit{activate} of the LSP libraries. This method states all the server and client options, namely the server module, the transport kind (and all the information required accordingly to specific kind of transport), the document selector and other options. The extension is invoked when the triggering conditions aforementioned occur.\\
+The Language Server is started by the development tool when certain conditions occur (e.g. when it detects the language in question), therefore the server is required to be spawned as a child process of the client, and the communication between the two can be either via \textit{stdio}, \textit{ipc} or \textit{socket}. More precisely, it is needed to add an extension that must include all the necessary configurations (for which language, conditions that must trigger the extension to start, etc.) in the development tool. This extension must be written in TypeScript/JavaScript and must override the method \textit{activate} of the LSP libraries. This method states all the server and client options, namely the server module, the transport kind (and all the information required accordingly to specific kind of transport), the document selector and other options. The aforementioned extension is invoked when the triggering conditions aforementioned occur.\\
 Following a simplified sequence diagram that shows a slice of interaction between a client and a server.
 
 \begin{figure}[H]
@@ -613,8 +613,8 @@ Functional requirements are statements of services the system should provide, pa
 		FR 5 & The server provides the type signature to the client every time the latter sends an hover request.\\\hline
 		FR 6 & The server computes and sends the operation definition every time it receives a definition. request\\\hline
 		FR 7 & The server provides a list or hierarchy of symbols of a specific document requested by the client.\\\hline
-		FR 8 & Information regarding the workspace are sent to the client and updated every time the client requests them (workspace symbols for example).\\\hline
-		FR 9 & The server resolves project wide references of a given symbol.\\\hline 
+		%FR 8 & Information regarding the workspace are sent to the client and updated every time the client requests them (workspace symbols for example).\\\hline
+		FR 8 & The server resolves project wide references of a given symbol.\\\hline 
 	\end{tabularx}
 \end{table}
 
@@ -665,6 +665,7 @@ Not every Language Server can support all features defined by the protocol. LSP 
 \end{table}
 
 \chapter{System architecture}
+\label{sec:arch}
 The architecture of a system identifies the components that form a system and the relationships between them. Graphical models are the best technique to abstractly represent a system architecture. Software architecture is important because it affects the performance, robustness,
 distributability, and maintainability of a system (Bosch, 2000) \cite{Som11}. In order to satisfy the non-functional, in particular NFR 2 and NFR 5 requirements defined in \hyperref[sec:Analysis]{Chapter 3}, the architecture adopted is the Service Oriented Architecture. Instead of a monolithic architecture, SOC is more scalable: the direct communication with the client is handled by a single service which deals with the initialization and the termination of the entire server while it forwards all the other requests and notifications sent by the development tool to the service responsible for treating the specific message (e.g. the message \verb|textDocument/didOpen|, when received by the main service, named \textit{orchestrator}, forwards the message to the textDocument service, namely the service that handles all the textDocument messages).
 \section{Architecture}
@@ -723,8 +724,125 @@ The implementation phase was based on the local architecture model described in 
 	\item \textbf{Complying with the LSP's JSON-RPC specifications}: LSP uses a simplified version of JSON-RPC protocol, whereas Jolie internal JSON-RPC protocol uses it over HTTP. Therefore, the protocol was extended in order to be capable of handling also LSP messages. Moreover, the Jolie interpreter, when receiving a JSON-RPC message is able to redirect it to the correct operation by using the \textit{method} field in the JSON-RPC message. Despite this, most of the method names in LSP have prefixes, for instance \verb|textDocument/didOpen|, which is problematic as operation names in Jolie does not support special characters such as the "/". As a consequence, Jolie's protocol must be extended in order to alias the operation names properly. 
 	\item \textbf{Implementation of the Language Server}: define all the services with their deployment parts (ports, types and interfaces) and their behavior (computations).
 \end{enumerate}
-\subsection{Complying with LSP specifications}
-\subsection{Server implementation}
+\section{Complying with LSP JSON-RPC specifications}
+\subsection{LSP message and parser}
+In order to extend Jolie JSON-RPC protocol, \textit{protocol parameters} were exploited. Input port protocol definitions could be extended with parameters, namely a list of options regarding compression, debug settings, etc.. The parameter added, called \textit{transport} is a simple string. Following an example of an input port using JSON-RPC with the aforementioned parameter.
+\begin{lstlisting}[language=jolie]
+	inputPort Input {
+		location:JolieLS
+		protocol: jsonrpc {
+			transport = "lsp"
+		}
+		interfaces:...
+		...		
+		}
+\end{lstlisting}
+Jolie, when it identifies this parameter, must not use JSON-RPC over HTTP, but according to LSP specification. In order to do this, the modifications made in the Jolie protocol are:
+\begin{itemize}
+	\item Definition of two new classes: \verb|LSPMessage| and \verb|LSPParser|. The first represents an LSP message, according to the specifications defined in \hyperref[sec:LSPJol]{Chapter 2}, the second is a parser used on the data read from the buffer, in order to extract headers and the JSON object properly, therefore, the latter is parsed by the \verb|JsUtils| class in order to obtain a Jolie value representation of the original JSON message.
+	\item Modified \verb|JsonRpcProtocol| class definition which now checks if there is the parameter \textit{transport} with value \verb|"lsp"|, and, according to the result of this check, uses the appropriate parser (HTTP or LSP).
+\end{itemize}
+
+Following the \verb|LSPMessage| class definition:
+\begin{lstlisting}[language=java]
+	public class LSPMessage {
+		
+    	private byte[] content = null;
+    	final private Map< String, String > propMap = new HashMap<>();
+
+    	public String getProperty( String name ) {
+        	String property = getPropMap().get( name.toLowerCase() );
+        	if(property!=null)
+            	property=property.trim();
+        	return property;
+    	}
+
+    	protected Map<String, String > getPropMap() {
+        	return propMap;
+    	}
+    	public void setContent( byte[] content ) {
+        	this.content = content;
+    	}
+
+    	public void setProperty(String name, String value) {
+        	propMap.put( name.toLowerCase(), value );
+    	}
+
+    	public Collection< Entry< String, String > > getProperties() {
+        	return propMap.entrySet();
+    	}
+
+    	public int size() {
+        	if ( content == null )
+            	return 0;
+        	return content.length;
+    	}
+
+    	public byte[] content() {
+        	return content;
+    	}
+	}
+\end{lstlisting}
+where the field \verb|content| represent the JSON message, while \verb|propMap| is an \verb|HashMap| containing the header names and their relative values.
+\subsection{Aliasing LSP method names to Jolie operation names}
+Similarly to the problem presented in the previous section, aliasing must be handled at protocol level. Therefore we used the parameter \verb|osc|, acronym for \textit{operation specific parameter}, for each operation name to be aliased.
+\begin{lstlisting}[language=jolie]
+	inputPort Input {
+		location:JolieLS
+		protocol: jsonrpc {
+			transport = "lsp"
+			osc.didOpen.alias = "textDocument/didOpen"
+			osc.didClose.alias = "textDocument/didClose"
+			osc.completion.alias = "textDocument/completion"
+			...
+		}
+		interfaces:...
+		...		
+	}
+\end{lstlisting}
+The above example demonstrate that protocol parameter is a Jolie \textit{data tree}. The parameter \verb|osc| must have a child node with the name of the operation and in turn a child node name \verb|alias| with a string value that represents the alias.\\The modifications made in the \verb|JsonRpcProtocol| class were substantially the following:
+\begin{itemize}
+	\item When \textbf{receiving} a message, after the parsing phase, given the LSP method name contained in the subnode \verb|method|, compute the correspondent operation name in the Jolie program, by visiting the \verb|osc| tree.
+	\item When \textbf{sending} a message, the steps are analogue, but the aliasing is done before parsing the Jolie value to a JSON string and it is from the Jolie operation name to the LSP method name.
+\end{itemize}
+Following the code for aliasing operation names when receiving a message.
+\begin{lstlisting}[language=java]
+	String operation = value.getFirstChild( "method" ).strValue();
+                        
+	// Resolving aliases
+	if ( hasParameter( Parameters.OSC ) ) {
+		Value osc = getParameterFirstValue( Parameters.OSC );
+		for( Entry<String, ValueVector> ev : osc.children().entrySet() ) {
+			Value v = ev.getValue().get( 0 );
+			if ( v.hasChildren( Parameters.ALIAS ) ) {
+				if ( v.getFirstChild( Parameters.ALIAS ).strValue().equals( operation ) ) {
+					operation = ev.getKey();
+				}
+			}
+		}
+	}
+\end{lstlisting}
+
+Where the variable \textcolor{color:keyword}{operation} contains the name of the LSP method name (e.g. \verb|textDocument/didOpen|), the variable \textcolor{color:keyword}{osc} is the root of the data tree. \textcolor{color:keyword}{Value} and \textcolor{color:keyword}{ValueVector} are the classes used to represent data trees in Jolie. Each single node of a tree in Jolie is a \textcolor{color:keyword}{ValueVector} containing one or more objects \textcolor{color:keyword}of type \textcolor{color:keyword}{Value} which contains basic type value and its children nodes, which in turn are \textcolor{color:keyword}{ValueVector} objects.\\The code for aliasing an outgoing message is analogue.
+\begin{lstlisting}[language=java]
+	String operationNameAliased = message.operationName();
+		//resolving aliases
+	if ( hasParameter( Parameters.OSC ) ) {
+		Value osc = getParameterFirstValue( Parameters.OSC );
+		for( Entry<String, ValueVector> ev : osc.children().entrySet() ) {
+			Value v = ev.getValue().get( 0 );
+			if ( v.hasChildren( Parameters.ALIAS ) ) {
+				if ( ev.getKey().equals( operationNameAliased ) ) {
+					operationNameAliased = v.getFirstChild( Parameters.ALIAS ).strValue();
+				}
+			}
+		}
+	}
+\end{lstlisting}
+\section{Server implementation}
+The server structure is the presented in \hyperref[sec:arch]{Chapter 4}, thus it will be composed by four Jolie programs together with the files with respectively the types definitions and the interfaces used by the various ports.
+\subsection{Types}
+Though Jolie operations can be type as \textcolor{color:keyword}{undefined}, I preferred define all the types basing on the LSP specification, in order to type check every message to be received and sent. Therefore, maintainability will be affected positively, as changes in the type definitions of LSP messages that might be applied in future releases of the protocol, can be identified immediately as if a type check fails, an error will sent to the invoker or 
 \chapter{Validation}
 \section{Met requirements (screenshots)}
 \section{Unmet requirements}
