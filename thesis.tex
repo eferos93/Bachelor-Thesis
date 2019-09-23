@@ -211,14 +211,14 @@ where D is the Deployment and B is the Behavior. The \textcolor{color:keyword}{m
 \subsection{Behavior}
 Jolie syntax is a combination of the message passing and the imperative programming styles. 
 Following a selection of the Jolie behavioral syntax:\\
-{\setstretch{0.4}
+
 \begin{align*}
 	B \quad \Coloneqq&\, \eta \quad (input)\\
 	|& \, \bar{\eta} \quad (output)\\
 	|& \, \textcolor{color:keyword}{if}(e) \> B_1 \> \big[else \> B_2\big] \quad (condition)\\
 	|& \, \textcolor{color:keyword}{while}(e) \> B \quad (while)\\
 	|& \, \textcolor{color:keyword}{for}(init,\,cond,\,incr)\> B \quad (forLoop)\\
-	|& \, \textcolor{color:keyword}{for}(x \, in \, y)\> B \quad (arrayIteration)\\
+	|& \, \textcolor{color:keyword}{for}(x \, \textcolor{color:keyword}{in} \, y)\> B \quad (arrayIteration)\\
 	|& \, B_1 \, ; \, B_2 \quad (sequential)\\
 	|& \, B_1 \, | \, B_2 \quad (parallel)\\
 	|& \, \{\, B \,\} \quad (block)\\
@@ -241,7 +241,7 @@ and
 	\bar{\eta} \quad \Coloneqq&\, opName\textcolor{color:keyword}{@}OP(e) \quad (notification)\\
 	|&\, opName\textcolor{color:keyword}{@}OP(e)(x) \quad (SolcitResponse)
 \end{align*}
-}
+
 \subsubsection{Communications}
 Communications are implemented through \textit{Rules} \textit{(input)}, \textit{(output)} and \textit{(inputChoice)}. Input $\boldsymbol\eta$ can be either a \textit{OneWay} or a \textit{RequestResponse}. The first receives a message for the operation \textit{opName} and saves its content in variable \verb|x|, while the second receives a message for operation \textit{opName} in variable \verb|x|, executes behavior \textit{B} and sends the value of the evaluation of the expression \textit{e} to the invoker. \textit{(notification)} and \textit{(SolcitResponse)}  implement the output towards the input . The first sends a message with the evaluation of \textit{e}, the second does the same thing and waits for the response from the invoked service which is stored in the var \verb|x|. \textit{OP} denotes the \textbf{output port name} that references an \textcolor{color:keyword}{outputPort}. The latter is specified in the deployment definition and it contains all the necessary information in order to contact the target service. Lastly, the \textit{(inputChoice)} supports the receiving of a message for any of the inputs. When a message for the input $\eta_i$ is received, all the remaining branches are deactivated and $\eta_i$ is executed. Afterwards, $B_i$ is executed. The interpreter enforces that $\eta_i \neq \eta_j,\,\forall i,j \in [1,n] \, | \, i \neq j$, which means that there cannot be two inputs with the same operation.\\\textbf{Statement compositions}, such that \textit{(condition)}, \textit{(while)}, \textit{(forLoop)}, \textit{(arrayIteration)} and \textit{(block)}, resembles the ones used in classic imperative styles. Rule \textit{sequential} sequentially compose the two behaviors: when $B_1$ is terminated, $B_2$ can start its execution (remark: the separator \textit{;} is now optional). On the contrary, \textit{(parallel)} permits the parallel execution of the two behaviors.\\\textbf{Assignment and aliasing}: \textit{(assign)} evaluates the expression \textit{e} and assigns its value to the variable \verb|x|. \textit{(alias)} permits to define a variable $a$ that points to $x$ variable path.\\\textbf{Handling data} Jolie is dynamically-typed meaning that there is no necessity of type declarations and that the type of a variable value is checked at runtime. The language handles the following basic data types:
 \begin{itemize}
@@ -739,7 +739,7 @@ In order to extend Jolie JSON-RPC protocol, \textit{protocol parameters} were ex
 \end{lstlisting}
 Jolie, when it identifies this parameter, must not use JSON-RPC over HTTP, but according to LSP specification. In order to do this, the modifications made in the Jolie protocol are:
 \begin{itemize}
-	\item Definition of two new classes: \verb|LSPMessage| and \verb|LSPParser|. The first represents an LSP message, according to the specifications defined in \hyperref[sec:LSPJol]{Chapter 2}, the second is a parser used on the data read from the buffer, in order to extract headers and the JSON object properly, therefore, the latter is parsed by the \verb|JsUtils| class in order to obtain a Jolie value representation of the original JSON message.
+	\item Definition of two new classes: \verb|LSPMessage| and \verb|LSPParser|. The first represents an LSP message, according to the specifications defined in \hyperref[sec:JolieLSP]{Chapter 2}, the second is a parser used on the data read from the buffer, in order to extract headers and the JSON object properly, therefore, the latter is parsed by the \verb|JsUtils| class in order to obtain a Jolie value representation of the original JSON message.
 	\item Modified \verb|JsonRpcProtocol| class definition which now checks if there is the parameter \textit{transport} with value \verb|"lsp"|, and, according to the result of this check, uses the appropriate parser (HTTP or LSP).
 \end{itemize}
 
@@ -840,9 +840,145 @@ Where the variable \textcolor{color:keyword}{operation} contains the name of the
 	}
 \end{lstlisting}
 \section{Server implementation}
-The server structure is the presented in \hyperref[sec:arch]{Chapter 4}, thus it will be composed by four Jolie programs together with the files with respectively the types definitions and the interfaces used by the various ports.
-\subsection{Types}
-Though Jolie operations can be type as \textcolor{color:keyword}{undefined}, I preferred define all the types basing on the LSP specification, in order to type check every message to be received and sent. Therefore, maintainability will be affected positively, as changes in the type definitions of LSP messages that might be applied in future releases of the protocol, can be identified immediately as if a type check fails, an error will sent to the invoker or 
+The server structure is the presented in \hyperref[sec:arch]{Chapter 4}, thus it will be composed by four Jolie programs together with the files with respectively the types definitions and the interfaces used by the various ports. The full implementation of the server can be viewed at the reference \cite{JolieLangSupport}.
+\subsection{Operation types and interfaces}
+Though Jolie operations can be type as \textcolor{color:keyword}{undefined}, I preferred define all the operation types basing on the LSP specification, in order to type check every message to be received and sent. Therefore, \textbf{maintainability} will be affected positively, as changes in the type definitions of LSP messages that might be applied in future releases of the protocol, can be identified immediately as the type check could fail, sending a fault to the invoker or to the server itself.\\Following the interface definitions for all the ports used in the service.
+\begin{lstlisting}[language=jolie]
+	include "types/lsp.iol"
+
+	interface GeneralInterface {
+  		OneWay:
+    		initialized( InitializedParams ),
+    		onExit( void ),
+    		cancelRequest //cancelRequest( undefined )
+  		RequestResponse:
+    		initialize( InitializeParams )( InitializeResult ),
+    		shutdown( void )( void )
+	}
+
+	interface TextDocumentInterface {
+  		OneWay:
+    		didOpen( DidOpenTextDocumentParams ),
+    		didChange( DidChangeTextDocumentParams ),
+    		willSave( WillSaveTextDocumentParams ),
+    		didSave( DidSaveTextDocumentParams ),
+    		didClose( DidCloseTextDocumentParams )
+  		RequestResponse:
+    		willSaveWaitUntil( WillSaveTextDocumentParams )( WillSaveWaitUntilResponse ),
+    		completion( CompletionParams )( CompletionResult ),
+    		hover( TextDocumentPositionParams )( HoverInformations ),
+    		documentSymbol( DocumentSymbolParams )( DocumentSymbolResult ),
+    		signatureHelp( TextDocumentPositionParams )( SignatureHelpResponse )
+	}
+
+	interface WorkspaceInterface {
+  		OneWay:
+    		didChangeWatchedFiles( DidChangeWatchedFilesParams ),
+    		didChangeWorkspaceFolders( DidChangeWorkspaceFoldersParams ),
+    		didChangeConfiguration( DidChangeConfigurationParams )
+  		RequestResponse:
+    		symbol( WorkspaceSymbolParams )( undefined ),
+    		executeCommand( ExecuteCommandParams )( ExecuteCommandResult )
+	}
+
+	interface ServerToClient {
+  		OneWay:
+    		publishDiagnostics( PublishDiagnosticParams )
+	}
+
+	interface UtilsInterface {
+  		RequestResponse:
+    		getDocument( string )( TextDocument )
+  		OneWay:
+    		insertNewDocument( DidOpenTextDocumentParams ),
+    		updateDocument( DocumentModifications ),
+    		deleteDocument( DidCloseTextDocumentParams )
+	}
+
+\end{lstlisting}
+The full type definitions can be viewed at the reference \cite{LSPSpec}.
+\subsection{Main service}
+The main service handles the initialization and termination of the server. Furthermore it \textit{orchestrates} the messages sent by the development tool to the services that are concerned.
+\begin{lstlisting}[language=jolie]
+	/*
+ 	 * Main Service that communicates directly with the client and provides the basic
+ 	 * operations
+	 */
+	execution { sequential }
+
+	include "internal/deployment.iol"
+
+	include "console.iol"
+	include "string_utils.iol"
+	include "runtime.iol"
+
+	init {
+  		Client.location -> global.clientLocation
+  		println@Console( "Jolie Language Server started" )()
+  		global.receivedShutdownReq = false
+	}
+
+	main {
+    	[ initialize( initializeParams )( serverCapabilities ) {
+      		println@Console( "Initialize message received" )()
+      		global.processId = initializeParams.processId
+      		global.rootUri = initializeParams.rootUri
+      		global.clientCapabilities << initializeParams.capabilities
+      		//for full serverCapabilities spec, see
+      		// https://microsoft.github.io/language-server-protocol/specification
+      		// and types.iol
+      		serverCapabilities.capabilities << {
+        		textDocumentSync = 1 //0 = none, 1 = full, 2 = incremental
+        		completionProvider << {
+          		resolveProvider = false
+          		triggerCharacters[0] = "@"
+        		}
+        		//signatureHelpProvider.triggerCharacters[0] = "("
+        		definitionProvider = false
+        		hoverProvider = true
+        		documentSymbolProvider = false
+        		referenceProvider = false
+        		//experimental;
+      		}
+    	} ]
+
+    	[ initialized( initializedParams ) ] {
+      		println@Console( "Initialization done " )()
+    	}
+
+    	[ shutdown( req )( res ) {
+        	println@Console( "Shutdown request received..." )()
+        	global.receivedShutdownReq = true
+    	} ]
+
+    	[ onExit( notification ) ] {
+      		if( !global.receivedShutdownReq ) {
+        		println@Console( "Did not receive the shutdown request, exiting anyway..." )()
+      		}
+      		println@Console( "Exiting Jolie Language server..." )()
+      		exit
+    	}
+    	//received from utils.ol
+    	[ publishDiagnostics( diagnosticParams ) ] {
+      		println@Console( "publishing diagnostics for " + diagnosticParams.uri )()
+      		publishDiagnostics@Client( diagnosticParams )
+    	}
+
+    	[ cancelRequest( cancelReq ) ] {
+        	println@Console( "cancelRequest received ID: " + cancelReq.id )()
+        	//TODO
+    	}
+	}
+\end{lstlisting}
+The \textit{deployment} part of this service is imported from another file with the primitive \textcolor{color:keyword}{include}. The \textit{behavior} is an input choice, in which initialization and termination of the server are handled. When the service receives an \verb|initialize| message, it executes the behavior of the input \textit{initialize} where the client capabilities are saved in a data structure and the \verb|serverCapabilities| are computed and sent to the invoker. Consequently, the client, after receiving the language server capabilities it sends an \verb|initilized| notification with no content and the interaction can start. \textbf{Termination} follows the same steps: first, the client send an empty \verb|shutdown| request, and after receiving the response, it sends a \textit{exit} notification, aliased to \verb|onExit| as \textcolor{color:keyword}{exit} is a reserved word, where the server must terminate its execution.
+\subsection{Utils service}
+Utils service has four input operations:
+\begin{itemize}
+	\item \textbf{insertNewDocument}: after receiving a \verb|textDocument/didOpen| message from the development tool, the document received is inspected through the \textit{Inspector} service, which extracts information like output and input ports, their interfaces with the operation definitions and the type definition of the latters. Nonetheless, if the there is a syntax error in the document received, the \textit{Inspector} provides a string containing all the information related to the aforementioned error, including the position. This is used two build a \verb|diagnosticParam| structure to be sent to the main service previously described, which in turn forwards it to the client. When the latter receives the diagnostics, it will publish them through its UI. If the document does not have any error, the document data, namely the \textit{uri}, the \textit{source code}, the \textit{inspection result} and an array containing the lines of code, are saved normally in a global variable. This variable is an array containing all the documents that opened in the development tool.
+	\item \textbf{updateDocument}: the message received through the notification \verb|textDocument/didChange| is forwarded to this input operation, that similarly achieves what \verb|insertDocument| does. Unlikely the latter, \verb|updateDocument| publishes also the empty diagnostics, in order to clear the client's UI when a syntax error is corrected by the user.
+	\item \textbf{deleteDocument}: input operation that receives a document URI and deletes the array element containing the correspondent URI.
+	\item \textbf{getDocument}: request-response operation that sends to the invoker the full data structure with the corresponding URI received. This operation is used by Text Document service in order to perform tasks like \verb|completion| and \verb|hover|.
+\end{itemize}
 \chapter{Validation}
 \section{Met requirements (screenshots)}
 \section{Unmet requirements}

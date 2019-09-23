@@ -21,4 +21,10 @@ Ian Sommerville.
 \newblock {\em Software Engineering}.
 \newblock Pearson, 2011.
 
+\bibitem{JolieLangSupport}
+Jolie~Development team.
+\newblock Jolie language support.
+\newblock
+  \url{https://marketplace.visualstudio.com/items?itemName=jolie.vscode-jolie&ssr=false}.
+
 \end{thebibliography}

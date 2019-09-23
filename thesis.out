@@ -26,11 +26,13 @@
 \BOOKMARK [2][-]{subsection.5.1.1}{LSP message and parser}{section.5.1}% 26
 \BOOKMARK [2][-]{subsection.5.1.2}{Aliasing LSP method names to Jolie operation names}{section.5.1}% 27
 \BOOKMARK [1][-]{section.5.2}{Server implementation}{chapter.5}% 28
-\BOOKMARK [2][-]{subsection.5.2.1}{Types}{section.5.2}% 29
-\BOOKMARK [0][-]{chapter.6}{Validation}{}% 30
-\BOOKMARK [1][-]{section.6.1}{Met requirements \(screenshots\)}{chapter.6}% 31
-\BOOKMARK [1][-]{section.6.2}{Unmet requirements}{chapter.6}% 32
-\BOOKMARK [0][-]{chapter.7}{Conclusions: review, what needs to be done}{}% 33
-\BOOKMARK [-1][-]{part.1}{I Appendici}{}% 34
-\BOOKMARK [0][-]{appendix.A}{Altro capitolo}{part.1}% 35
-\BOOKMARK [0][-]{appendix*.13}{Bibliography}{part.1}% 36
+\BOOKMARK [2][-]{subsection.5.2.1}{Operation types and interfaces}{section.5.2}% 29
+\BOOKMARK [2][-]{subsection.5.2.2}{Main service}{section.5.2}% 30
+\BOOKMARK [2][-]{subsection.5.2.3}{Utils service}{section.5.2}% 31
+\BOOKMARK [0][-]{chapter.6}{Validation}{}% 32
+\BOOKMARK [1][-]{section.6.1}{Met requirements \(screenshots\)}{chapter.6}% 33
+\BOOKMARK [1][-]{section.6.2}{Unmet requirements}{chapter.6}% 34
+\BOOKMARK [0][-]{chapter.7}{Conclusions: review, what needs to be done}{}% 35
+\BOOKMARK [-1][-]{part.1}{I Appendici}{}% 36
+\BOOKMARK [0][-]{appendix.A}{Altro capitolo}{part.1}% 37
+\BOOKMARK [0][-]{appendix*.13}{Bibliography}{part.1}% 38
