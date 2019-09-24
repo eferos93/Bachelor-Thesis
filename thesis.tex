@@ -74,7 +74,8 @@
  belowcaptionskip=10mm,
  breaklines=false,
  columns=fullflexible,
- linewidth= 0.8\linewidth
+ linewidth= 0.8\linewidth,
+  literate=*{\$}{{{\textcolor{black}\$}}}{1}
 }
 
 
@@ -109,7 +110,7 @@
          {7}{{{\color{numb}7}}}{1}
          {8}{{{\color{numb}8}}}{1}
          {9}{{{\color{numb}9}}}{1}
-         {\$}{{{\color{numb}{\$}}}}{1}
+         {\$}{{{\color{numb}\$}}}{1}
 }
 %\lstdefinelanguage{json}{
 %    basicstyle=\normalfont\ttfamily,
@@ -575,7 +576,7 @@ All the data types illustrated are language agnostic, meaning that can be applie
 		"items": {
 			"label": "println@Console",
 			"kind": 2,
-			"insertText": "println@Console(  )(  )",
+			"insertText": "println@Console( $1 )( $2 )",
 			"insertTextFormat": 2
 		}
 	}
@@ -979,6 +980,117 @@ Utils service has four input operations:
 	\item \textbf{deleteDocument}: input operation that receives a document URI and deletes the array element containing the correspondent URI.
 	\item \textbf{getDocument}: request-response operation that sends to the invoker the full data structure with the corresponding URI received. This operation is used by Text Document service in order to perform tasks like \verb|completion| and \verb|hover|.
 \end{itemize}
+\subsection{Text Document service}
+The purpose of this service is to handles all the text document messages sent by the development tool, for instance \verb|textDocument/didOpen| or \verb|textDocument/completion|. Two main features has been implemented: \textbf{auto-completion} for operation definitions and keywords, and \textbf{hover} information of both input and output operation definitions.
+\subsubsection{Completion}
+Given a text document position, the server ought to compute a list of possible completion item to integrate what is already present the aforementioned position. I implemented this functionality for auto-completing output statements. For instance, if in the given text document position the server finds "pri", it ought to compute a list of output operations that are found in the interfaces of the outpurt ports of the service. In this case, the server will return the following list: ["print@Console( \$0 )( \$1 )", "println@Console( \$1 )( \$2 )"]. These completion items are in the form of \textbf{snippets}. A \textbf{snippet} is a small and reusable piece of code, in which tab stops and placeholders can be defined with the "\$1", "\$2" and "\$\{3:foo\}". "\$0" identifies the end of the snippet. Placeholders with equal identifiers are linked, that is typing in one will update the others too \cite{LSPSpec}.\\Following the code of the \verb|completion| input operation.
+\begin{lstlisting}[language=jolie]
+	/*
+   * RR sent sent from the client when requesting a completion
+   * works for anything callable
+   * @Request: CompletionParams, see types/lsp.iol
+   * @Response: CompletionResult, see types/lsp.iol
+   */
+  [ completion( completionParams )( completionRes ) {
+      println@Console( "Completion Req Received" )()
+      completionRes.isIncomplete = false
+      txtDocUri -> completionParams.textDocument.uri
+      position -> completionParams.position
+
+      if ( is_defined( completionParams.context ) ) {
+        triggerChar -> completionParams.context.triggerCharacter
+      }
+
+      getDocument@Utils( txtDocUri )( document )
+      //character that triggered the completion (@)
+      //might be not defined
+
+      program -> document.jolieProgram
+      codeLine = document.lines[position.line]
+      trim@StringUtils( codeLine )( codeLineTrimmed )
+      portFound = false
+      
+      for ( port in program.outputPorts ) {
+        for ( iFace in port.interfaces ) {
+          for ( op in iFace.operations ) {
+            if ( !is_defined( triggerChar ) ) {
+              //was not '@' to trigger the completion
+              contains@StringUtils( op.name {
+                substring = codeLineTrimmed
+              } )( operationFound ) // TODO: fuzzy search
+              undef( temp )
+              if ( operationFound ) {
+                snippet = op.name + "@" + port.name
+                label = snippet
+                kind = CompletionItemKind_Method
+              }
+            } else {
+              //@ triggered the completion
+              operationFound = ( op.name == codeLineTrimmed )
+
+              label = port.name
+              snippet = label
+              kind = CompletionItemKind_Class
+            }
+
+            if ( operationFound ) {
+              //build the rest of the snippet to be sent
+              if ( is_defined( op.responseType ) ) {
+                //is a reqRes operation
+                reqVar = op.requestType.name
+                
+                resVar = op.responseType.name
+                if ( resVar == NATIVE_TYPE_VOID ) {
+                  resVar = ""
+                }
+                snippet += "( {1:" + reqVar + "} )( {2:" + resVar + "} )"
+              } else {
+                //is a OneWay operation
+                notificationVar = op.requestType.name
+                
+                snippet = "( {1:" + notificationVar + "} )"
+              }
+
+              //build the completionItem
+              portFound = true
+              completionItem << {
+                label = label
+                kind = kind
+                insertTextFormat = 2
+                insertText = snippet
+              }
+              completionRes.items[#completionRes.items] << completionItem
+            }
+          }
+        }
+      }
+
+      //loop for completing reservedWords completion
+      //for (kewyword in global.keywordSnippets.snippet)
+      //doesn't work, used a classic for with counter
+      keyword -> global.keywordSnippets
+      for ( i=0, i<#keyword.snippet, i++ ) {
+        contains@StringUtils( keyword.snippet[i] {
+          substring = codeLineTrimmed
+        } )( keywordFound )
+
+        if ( keywordFound ) {
+          completionItem << {
+            label = keyword.snippet[i]
+            kind = CompletionItemKind_Keyword
+            insertTextFormat = 2
+            insertText = keyword.snippet[i].body
+          }
+          completionRes.items[#completionRes.items] << completionItem
+        }
+      }
+      
+      if ( !foundPort && !keywordFound ) {
+        completionRes.items = void
+      }
+      println@Console( "Sending completion Item to the client" )()
+  } ]
+\end{lstlisting}
 \chapter{Validation}
 \section{Met requirements (screenshots)}
 \section{Unmet requirements}
