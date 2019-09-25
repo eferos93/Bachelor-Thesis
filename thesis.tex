@@ -75,7 +75,7 @@
  breaklines=false,
  columns=fullflexible,
  linewidth= 0.8\linewidth,
-  literate=*{\$}{{{\textcolor{black}\$}}}{1}
+ literate=*{\$}{{{\textcolor{black}\$}}}{1}
 }
 
 
@@ -255,7 +255,7 @@ Communications are implemented through \textit{Rules} \textit{(input)}, \textit{
 	\item \verb|void|: the empty type.
 \end{itemize}
 Jolie supports basic arithmetic and logic operators like in Java and also pre-/post-increment and pre-/post-decrement operators. Furthermore, it is possible to cast variables to other types with the following casting functions: \verb|bool()|, \verb|int()|, \verb|long()|, \verb|double()| and \verb|string()|. For instance:
-\begin{lstlisting}[language=jolie]
+\begin{lstlisting}[language=Jolie]
 	d = "1.5"
 	n = double( d ) // n = 1.5
 	n = int( n ) // n = 1
@@ -265,22 +265,22 @@ A variable type can be checked at run-time with the \textcolor{color:keyword}{in
 Variables are undefined until they are assigned a value. Until then, their state is set to \textcolor{color:keyword}{undefined} (equivalent to \verb|NULL|, \verb|null| or \verb|nil| in other languages). The predicate \textcolor{color:keyword}{is\_defined} is used for checking is a variable is defined or not. Following the syntax:
 \[ \textcolor{color:keyword}{is\_defined} (\, variable\_name \,)\]
 An example:
-\begin{lstlisting}[language=jolie]
+\begin{lstlisting}[language=Jolie]
 	x = 2
 	if ( is_defined( x ) ) {
 		println@Console( "Variable x is defined" )
 	}
 \end{lstlisting}
 Arrays in Jolie are handled dynamically and can be accessed using the \verb|[]| operator. To be more precise, in Jolie \textbf{every} variable is a dynamic array. So for example this assignment
-\begin{lstlisting}[language=jolie]
+\begin{lstlisting}[language=Jolie]
 	x = 7
 \end{lstlisting}
 is equivalent to the following
-\begin{lstlisting}[language=jolie]
+\begin{lstlisting}[language=Jolie]
 	x[0] = 7
 \end{lstlisting}
 thus managing complex data is easier. To compute the size of an array Jolie provides the size operator \verb|#|. Together with this operator, the aforementioned \textit{forLoop} can be used to traverse an array. Alternatively, \textit{(arrayIteration)} has the same purpose. The example below shows the usage of the mentioned constructs.
-\begin{lstlisting}[language=jolie]
+\begin{lstlisting}[language=Jolie]
 	x[0] = 1
 	x[1] = 2
 	x[2] = 3
@@ -296,7 +296,7 @@ thus managing complex data is easier. To compute the size of an array Jolie prov
 \end{lstlisting}
 \subsubsection{Data Structures}
 Data structures in Jolie are tree-like, similarly to XML or JSON data trees. The operator \verb|.| is used to traverse a data structure. Following an example.
-\begin{lstlisting}[language=jolie]
+\begin{lstlisting}[language=Jolie]
 	doctor.name = "Marco"
 	doctor.surname = "Rossi"
 	doctor.age = 45
@@ -306,7 +306,7 @@ Data structures in Jolie are tree-like, similarly to XML or JSON data trees. The
 The above data tree is catheterized by \verb|doctor| as root with \verb|void| type and by three children: \verb|name|, \verb|surname| and \verb|specialization| which respectively have the types \verb|string|, \verb|string|, \verb|int| and \verb|string|. The \textcolor{color:keyword}{undef} operator is used to erase an entire structure. Syntax:
 \[\textcolor{color:keyword}{undef}(\,variable\_name\,) \]
 The \textit{(deepCopy)} operator copies the entire structure of a tree $y$ into a tree $x$. Jolie at run-time explores the tree $y$ node-wise and for all initialized sub-nodes in $y$, it assigns the value of each of them to the corresponding sub-node rooted in $x$. This means that if $x$ already had sub-nodes initialized that match to some ones rooted in $y$, $x \, << \, y$ will overwrite them, leaving all the others initialized nodes of $x$ unaffected. This operator can be used also as syntax sugar for creating a data structure. Basing on the previous example of the doctor data structure, in can be re-written as in the following example.
-\begin{lstlisting}[language=jolie]
+\begin{lstlisting}[language=Jolie]
 	doctor << {
 		name = "Marco"
 		surname = "Rossi"
@@ -371,7 +371,7 @@ Interfaces are a collection of operation types. The latter defines the type of t
 	BT \>\> \Coloneqq \>\> \textcolor{color:keyword}{int}\,|\,\textcolor{color:keyword}{string}\,|\,\textcolor{color:keyword}{void}\,|\,\textcolor{color:keyword}{bool}\,|\,\textcolor{color:keyword}{long} \,|\, \textcolor{color:keyword}{double} \,|\, \textcolor{color:keyword}{raw} \,|\, \textcolor{color:keyword}{double}
 \]
 A data type describes the structure of a data tree, the type of its nodes and the cardinality of each node, namely the number of admitted occurrences of a node. Basing on the \verb|doctor| data tree, I give its type definition.
-\begin{lstlisting}[language=jolie]
+\begin{lstlisting}[language=Jolie]
 	type Doctor: void {
 		name: string
 		surname: string
@@ -387,7 +387,7 @@ A data type describes the structure of a data tree, the type of its nodes and th
 	}
 \end{lstlisting}
 Doctor's root has type \textcolor{color:keyword}{void}, thus it must not contain any value. Whereas its nodes, except for \verb|email|, must contain values of the specified type. \verb|email| is an optional node, as its cardinality suggests, hence it is not mandatory to insert it in the data tree. The cardinality, if omitted, is set as [1,1] (which can be read "from one to one occurrences"). The $*$ defines an unlimited number of occurrences, more in detail, it is a syntax sugar for [1,*] ("from one to unlimited occurrences"). The cardinality [0,1] can be written also with the shortcut \verb|?|. Note that since Jolie 1.8.0 release, if the type of the root is \textcolor{color:keyword}{void}, there is no necessity to express it . Therefore the above defined type can be written as it follows.
-\begin{lstlisting}[language=jolie]
+\begin{lstlisting}[language=Jolie]
 	type Doctor {
 		name: string
 		surname: string
@@ -412,7 +412,7 @@ An interface $I$ is a list of possible one-way ($OW$) and request-response ($RR$
 A service participates in a session by executing an instance of its behavior \cite{Jol}. A session can be executed \textit{one time}, multiple times in \textit{sequence} or multiple times in \textit{parallel}. For this purpose, Jolie allows to reuse behavioral definition multiple times with the \textit{execution modality} deployment primitive before shown \textcolor{color:keyword}{execution}\{$M$\} where $M$ syntax is defined as it follows:
 \[ M \>\> \Coloneqq \>\> \textcolor{color:keyword}{single} \> | \> \textcolor{color:keyword}{sequential} \> | \> \textcolor{color:keyword}{concurrent}\]
 \textcolor{color:keyword}{single} allows the execution of the behavior one time. \textcolor{color:keyword}{sequential} permits the execution of the behavior multiple times, more precisely it causes the program to be available again after the current instance is terminated. Finally, \textcolor{color:keyword}{concurrent} causes the program behavior to be instantiated and executed whenever its first input statement can receive a message \cite{Jol}. In the latter two cases, the behavioral definition must be an input statement or an input choice. The state of a single behavior instance is not shared between the other instances, meaning that all the variables used are local to the behavior instance. Despite this, Jolie provides global variable support through the keyword \textcolor{color:keyword}{global}, which is used as a prefix on variable names. Following an example:
-\begin{lstlisting}[language=jolie]
+\begin{lstlisting}[language=Jolie]
 	global.x = 5 //global variable x
 	y = 3 // local variable y
 \end{lstlisting}
@@ -431,7 +431,7 @@ service, by targeting it with the \textcolor{color:keyword}{embedded} primitive 
 \[ E \>\> \Coloneqq \>\> \textcolor{color:keyword}{embedded}\,\{\, E_{type}:\>path\,\big[\,\textcolor{color:keyword}{in} \> OP \, \big] \, \} \]
 \[ E_{type} \>\> \Coloneqq \>\> \textcolor{color:keyword}{Jolie} \> | \> \textcolor{color:keyword}{Java} \> | \> \textcolor{color:keyword}{JavaScript} \]
 $E_{type}$ specifies the technology of the service to embed, $path$ is a URL pointing to the service definition to embed. Jolie currently supports the three technologies mentioned in the syntax definition, making embedding a \textit{cross-technology} mechanism. An output port $OP$ may be optionally specified. In this case, as soon as the service is loaded, the output port $OP$ is bound to the "local" communication input port of the embedded service \cite{Jol}. For the specific case of embedding a Jolie service into another, the communication medium local must be explicitly indicated in the input port of the embedded service, with no necessity of specifying the protocol, as local medium use an in-memory communication. In an hierarchical perspective, the \textit{embedder} is the parent service of the embedded ones. As a consequence, whenever a service is terminated, all his embedded services are recursively terminated. The hierarchy is also useful for performance: in-memory communications are faster as the services are running inside the same virtual machine. Following a simple example of how embedding with Jolie works.
-\begin{lstlisting}[language=jolie]
+\begin{lstlisting}[language=Jolie]
 	//service that computes the length of a string
 	interface lengthInterface {
 		RequestResponse: length( string )( int )
@@ -448,7 +448,7 @@ $E_{type}$ specifies the technology of the service to embed, $path$ is a URL poi
 	}
 \end{lstlisting}
 
-\begin{lstlisting}[language=jolie]
+\begin{lstlisting}[language=Jolie]
 	//embedder service
 	include "console.iol"
 	
@@ -479,7 +479,7 @@ operations without implementing them in its behavior, but instead delegating the
 	\item Neither in the interface of the aggregated output ports nor in the $IP$'s interfaces $opName$ is declared. Consequently, the message is rejected and an \verb|IOException| fault is sent to the invoker.  
 \end{itemize}
 Aggregation, therefore, is a mechanism that merges of the aggregated output ports and make them accessible through a single input port. From the invoker perspective, all the aggregated services are seen as a single one. Following an example of aggregation and embedding.
-\begin{lstlisting}[language=jolie]
+\begin{lstlisting}[language=Jolie]
 	outputPort A {
 	 	location: "socket://someurlA.com:80/"
 		protocol: soap
@@ -728,7 +728,7 @@ The implementation phase was based on the local architecture model described in 
 \section{Complying with LSP JSON-RPC specifications}
 \subsection{LSP message and parser}
 In order to extend Jolie JSON-RPC protocol, \textit{protocol parameters} were exploited. Input port protocol definitions could be extended with parameters, namely a list of options regarding compression, debug settings, etc.. The parameter added, called \textit{transport} is a simple string. Following an example of an input port using JSON-RPC with the aforementioned parameter.
-\begin{lstlisting}[language=jolie]
+\begin{lstlisting}[language=Jolie]
 	inputPort Input {
 		location:JolieLS
 		protocol: jsonrpc {
@@ -787,7 +787,7 @@ Following the \verb|LSPMessage| class definition:
 where the field \verb|content| represent the JSON message, while \verb|propMap| is an \verb|HashMap| containing the header names and their relative values.
 \subsection{Aliasing LSP method names to Jolie operation names}
 Similarly to the problem presented in the previous section, aliasing must be handled at protocol level. Therefore we used the parameter \verb|osc|, acronym for \textit{operation specific parameter}, for each operation name to be aliased.
-\begin{lstlisting}[language=jolie]
+\begin{lstlisting}[language=Jolie]
 	inputPort Input {
 		location:JolieLS
 		protocol: jsonrpc {
@@ -844,7 +844,7 @@ Where the variable \textcolor{color:keyword}{operation} contains the name of the
 The server structure is the presented in \hyperref[sec:arch]{Chapter 4}, thus it will be composed by four Jolie programs together with the files with respectively the types definitions and the interfaces used by the various ports. The full implementation of the server can be viewed at the reference \cite{JolieLangSupport}.
 \subsection{Operation types and interfaces}
 Though Jolie operations can be type as \textcolor{color:keyword}{undefined}, I preferred define all the operation types basing on the LSP specification, in order to type check every message to be received and sent. Therefore, \textbf{maintainability} will be affected positively, as changes in the type definitions of LSP messages that might be applied in future releases of the protocol, can be identified immediately as the type check could fail, sending a fault to the invoker or to the server itself.\\Following the interface definitions for all the ports used in the service.
-\begin{lstlisting}[language=jolie]
+\begin{lstlisting}[language=Jolie]
 	include "types/lsp.iol"
 
 	interface GeneralInterface {
@@ -900,7 +900,7 @@ Though Jolie operations can be type as \textcolor{color:keyword}{undefined}, I p
 The full type definitions can be viewed at the reference \cite{LSPSpec}.
 \subsection{Main service}
 The main service handles the initialization and termination of the server. Furthermore it \textit{orchestrates} the messages sent by the development tool to the services that are concerned.
-\begin{lstlisting}[language=jolie]
+\begin{lstlisting}[language=Jolie]
 	/*
  	 * Main Service that communicates directly with the client and provides the basic
  	 * operations
@@ -984,7 +984,7 @@ Utils service has four input operations:
 The purpose of this service is to handles all the text document messages sent by the development tool, for instance \verb|textDocument/didOpen| or \verb|textDocument/completion|. Two main features has been implemented: \textbf{auto-completion} for operation definitions and keywords, and \textbf{hover} information of both input and output operation definitions.
 \subsubsection{Completion}
 Given a text document position, the server ought to compute a list of possible completion item to integrate what is already present the aforementioned position. I implemented this functionality for auto-completing output statements. For instance, if in the given text document position the server finds "pri", it ought to compute a list of output operations that are found in the interfaces of the outpurt ports of the service. In this case, the server will return the following list: ["print@Console( \$0 )( \$1 )", "println@Console( \$1 )( \$2 )"]. These completion items are in the form of \textbf{snippets}. A \textbf{snippet} is a small and reusable piece of code, in which tab stops and placeholders can be defined with the "\$1", "\$2" and "\$\{3:foo\}". "\$0" identifies the end of the snippet. Placeholders with equal identifiers are linked, that is typing in one will update the others too \cite{LSPSpec}.\\Following the code of the \verb|completion| input operation.
-\begin{lstlisting}[language=jolie]
+\begin{lstlisting}[language=Jolie]
 	/*
    * RR sent sent from the client when requesting a completion
    * works for anything callable
@@ -1066,8 +1066,6 @@ Given a text document position, the server ought to compute a list of possible c
       }
 
       //loop for completing reservedWords completion
-      //for (kewyword in global.keywordSnippets.snippet)
-      //doesn't work, used a classic for with counter
       keyword -> global.keywordSnippets
       for ( i=0, i<#keyword.snippet, i++ ) {
         contains@StringUtils( keyword.snippet[i] {
@@ -1089,6 +1087,114 @@ Given a text document position, the server ought to compute a list of possible c
         completionRes.items = void
       }
       println@Console( "Sending completion Item to the client" )()
+  } ]
+\end{lstlisting}
+Given the text document URI and the text document position, retrieve the text document by sending a \verb|getDocument| message to the Utils service, thus extract the code line of interest (lines 9-24). Subsequently, traverse all the operations in each interface for each output port present in the program and each matching element found, a snippet is built and inserted in the response to be sent (lines 26-79). Afterwards, the same search is done inside a data structure containing the keywords' snippets (lines 82-97). If nothing is found, an empty array is sent to the invoker (lines 99-101).\\
+Let $n$ be the number of operations defined in all the output ports present in the program. Let $m$ be the number of elements in the array containing the keywords' snippets. The complexity of this algorithm is therefore $T(n,m) = O(n)+O(m)$. Though, the number of is keywords is constant therefore the time complexity is $T(n) = O(n)$. In order to improve performance in terms of execution time, Jolie parallel constructs could have been used, namely perform a parallel search for each output port. However, this solution is not convenient as Jolie interpreter would spawn a determinant number of threads, and as in a program there would not be more than an hundred operations to be searched, using the sequential linear search is the best solution.
+\subsubsection{Hover}
+\begin{lstlisting}[language=jolie]
+  /*
+   * RR sent sent from the client when requesting a hover
+   * @Request: TextDocumentPositionParams, see types.iol
+   * @Response: HoverResult, see types.iol
+   */
+  [ hover( hoverReq )( hoverResp ) {
+    found = false
+    println@Console( "hover req received.." )()
+    textDocUri -> hoverReq.textDocument.uri
+    getDocument@Utils( textDocUri )( document )
+    
+    line = document.lines[hoverReq.position.line]
+    program -> document.jolieProgram
+    trim@StringUtils( line )( trimmedLine )
+    //regex that identifies a message sending to a port
+    trimmedLine.regex = "([A-z]+)@([A-z]+)\\(.*"
+    //.group[1] is operaion name, .group[2] port name
+    find@StringUtils( trimmedLine )( findRes )
+    if ( findRes == 0 ) {
+      trimmedLine.regex = "\\[? ?( ?[A-z]+ ?)\\( ?[A-z]* ?\\)\\(? ?[A-z]* ?\\)? ?\\]? ?\\{?"
+      //in this case, we have only group[1] as op name
+      find@StringUtils( trimmedLine )( findRes )
+    }
+
+    //if we found somenthing, we have to send a hover item, otherwise void
+    if ( findRes == 1 ) {
+      // portName might NOT be defined
+      portName -> findRes.group[2]
+      operationName -> findRes.group[1]
+      undef( trimmedLine.regex )
+      hoverInfo = operationName
+
+      if ( is_defined( portName ) ) {
+        hoverInfo += "@" + portName
+        ports -> program.outputPorts
+      } else {
+        ports -> program.inputPorts
+      }
+
+      for ( port in ports ) {
+        if ( is_defined( portName ) ) {
+          ifGuard = port.name == portName && is_defined( port.interfaces )
+        } else {
+          //we do not know the port name, so we search for each port we have
+          //in the program
+          ifGuard = is_defined( port.interfaces )
+        }
+
+        if ( ifGuard ) {
+          for ( iFace in port.interfaces ) {
+            for ( op in iFace.operations ) {
+              if ( op.name == operationName ) {
+                found = true
+                if ( !is_defined( portName ) ) {
+                  hoverInfo += port.name
+                }
+
+                reqType = op.requestType
+
+                if ( is_defined( op.responseType ) ) {
+                  resType = op.responseType
+                  // resTypeCode = op.responseType.code
+                } else {
+                  resType = ""
+                }
+              }
+            }
+          }
+        }
+      }
+
+      hoverInfo += "( " + reqType + " )"
+      //build the info
+      if ( resType != "" ) {
+        //the operation is a RR
+        hoverInfo += "( " + resType + " )"
+      }
+
+      //setting the content of the response
+      if ( found ) {
+        hoverResp.contents << {
+          language = "jolie"
+          value = hoverInfo
+        }
+
+        //computing and setting the range
+        length@StringUtils( line )( endCharPos )
+        line.word = trimmedLine
+        indexOf@StringUtils( line )( startChar )
+
+        hoverResp.range << {
+          start << {
+            line = hoverReq.position.line
+            character = startChar
+          }
+          end << {
+            line = hoverReq.position.line
+            character = endCharPos
+          }
+        }
+      }
+    }
   } ]
 \end{lstlisting}
 \chapter{Validation}
