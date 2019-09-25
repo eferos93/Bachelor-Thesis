@@ -1092,6 +1092,7 @@ Given a text document position, the server ought to compute a list of possible c
 Given the text document URI and the text document position, retrieve the text document by sending a \verb|getDocument| message to the Utils service, thus extract the code line of interest (lines 9-24). Subsequently, traverse all the operations in each interface for each output port present in the program and each matching element found, a snippet is built and inserted in the response to be sent (lines 26-79). Afterwards, the same search is done inside a data structure containing the keywords' snippets (lines 82-97). If nothing is found, an empty array is sent to the invoker (lines 99-101).\\
 Let $n$ be the number of operations defined in all the output ports present in the program. Let $m$ be the number of elements in the array containing the keywords' snippets. The complexity of this algorithm is therefore $T(n,m) = O(n)+O(m)$. Though, the number of is keywords is constant therefore the time complexity is $T(n) = O(n)$. In order to improve performance in terms of execution time, Jolie parallel constructs could have been used, namely perform a parallel search for each output port. However, this solution is not convenient as Jolie interpreter would spawn a determinant number of threads, and as in a program there would not be more than an hundred operations to be searched, using the sequential linear search is the best solution.
 \subsubsection{Hover}
+The hover request-response operation works similarly to the previously explained.
 \begin{lstlisting}[language=jolie]
   /*
    * RR sent sent from the client when requesting a hover
@@ -1109,7 +1110,7 @@ Let $n$ be the number of operations defined in all the output ports present in t
     trim@StringUtils( line )( trimmedLine )
     //regex that identifies a message sending to a port
     trimmedLine.regex = "([A-z]+)@([A-z]+)\\(.*"
-    //.group[1] is operaion name, .group[2] port name
+    //findRes.group[1] is operaion name, findRes.group[2] port name
     find@StringUtils( trimmedLine )( findRes )
     if ( findRes == 0 ) {
       trimmedLine.regex = "\\[? ?( ?[A-z]+ ?)\\( ?[A-z]* ?\\)\\(? ?[A-z]* ?\\)? ?\\]? ?\\{?"
@@ -1197,6 +1198,7 @@ Let $n$ be the number of operations defined in all the output ports present in t
     }
   } ]
 \end{lstlisting}
+Given a text document URI and position, the text document referred is sent by the Utils service, subsequently, the line of code of interest is extract and saved in a variable (lines 9-12). Lines 16-23 permits to extract information from the code line reffered by the text document position. 
 \chapter{Validation}
 \section{Met requirements (screenshots)}
 \section{Unmet requirements}
