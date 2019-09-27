@@ -41,6 +41,7 @@
 \contentsline {subsection}{\numberline {5.2.4}Text Document service}{36}{subsection.5.2.4}% 
 \contentsline {subsubsection}{Completion}{37}{section*.12}% 
 \contentsline {subsubsection}{Hover}{39}{section*.13}% 
+\contentsline {subsection}{\numberline {5.2.5}Workspace service}{42}{subsection.5.2.5}% 
 \contentsline {chapter}{\numberline {6}Validation}{43}{chapter.6}% 
 \contentsline {section}{\numberline {6.1}Met requirements (screenshots)}{43}{section.6.1}% 
 \contentsline {section}{\numberline {6.2}Unmet requirements}{43}{section.6.2}% 

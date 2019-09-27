@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2019/dev/Debian) (preloaded format=pdflatex 2019.9.5)  25 SEP 2019 17:40
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2019/dev/Debian) (preloaded format=pdflatex 2019.9.5)  27 SEP 2019 10:14
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -551,7 +551,7 @@ LaTeX Info: Redefining \nameref on input line 169.
 \openout3 = `thesis.out'.
 
 \c@lstlisting=\count141
-<UdineLogo.pdf, id=160, 245.2885pt x 406.51875pt>
+<UdineLogo.pdf, id=164, 245.2885pt x 406.51875pt>
 File: UdineLogo.pdf Graphic file (type pdf)
 <use UdineLogo.pdf>
 Package pdftex.def Info: UdineLogo.pdf  used on input line 173.
@@ -610,7 +610,7 @@ Underfull \hbox (badness 2961) in paragraph at lines 517--517
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [15]
-<lsp.png, id=487, 1017.8025pt x 402.50375pt>
+<lsp.png, id=492, 1017.8025pt x 402.50375pt>
 File: lsp.png Graphic file (type png)
 <use lsp.png>
 Package pdftex.def Info: lsp.png  used on input line 536.
@@ -625,12 +625,12 @@ Chapter 3.
 
 ] [20] [21] [22]
 Chapter 4.
-<local_arch.png, id=603, 871.255pt x 543.02875pt>
+<local_arch.png, id=608, 871.255pt x 543.02875pt>
 File: local_arch.png Graphic file (type png)
 <use local_arch.png>
 Package pdftex.def Info: local_arch.png  used on input line 676.
 (pdftex.def)             Requested size: 492.95131pt x 307.24268pt.
-<distr_arch.png, id=604, 876.27374pt x 460.72125pt>
+<distr_arch.png, id=609, 876.27374pt x 460.72125pt>
 File: distr_arch.png Graphic file (type png)
 <use distr_arch.png>
 Package pdftex.def Info: distr_arch.png  used on input line 680.
@@ -641,7 +641,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
  [23
 
 ]
-<legenda.png, id=609, 260.975pt x 531.9875pt>
+<legenda.png, id=614, 260.975pt x 531.9875pt>
 File: legenda.png Graphic file (type png)
 <use legenda.png>
 Package pdftex.def Info: legenda.png  used on input line 685.
@@ -733,6 +733,12 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [41]
+Overfull \hbox (36.68341pt too wide) in paragraph at lines 1203--1204
+\OT1/cmr/m/n/10.95 Workspace ser-vice is just a skele-ton for im-ple-ment-ing t
+he workspace re-lated mes-sages (e.g. [][]\OT1/cmtt/m/n/10.95 workspace/symbols
+[]\OT1/cmr/m/n/10.95 ),
+ []
+
 [42]
 Chapter 6.
 [43
@@ -756,24 +762,24 @@ Underfull \hbox (badness 10000) in paragraph at lines 14--18
  []
 
 )
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1229.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1231.
  [53
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1229.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1231.
  (./thesis.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1229.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1229.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1231.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1231.
 
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: BB3B6B617C154A87DBE9DA0069484178;2667.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1229.
+(rerunfilecheck)             Checksum: E1F54FCB55DA541DA3FC47A06355E659;2738.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1231.
  ) 
 Here is how much of TeX's memory you used:
- 11889 strings out of 492615
- 172155 string characters out of 6131391
+ 11891 strings out of 492615
+ 172189 string characters out of 6131391
  489466 words of memory out of 5000000
- 14865 multiletter control sequences out of 15000+600000
+ 14866 multiletter control sequences out of 15000+600000
  16134 words of font info for 57 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  36i,12n,72p,2387b,1982s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -793,10 +799,10 @@ r8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><
 /share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share
 /texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texli
 ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on thesis.pdf (62 pages, 538526 bytes).
+Output written on thesis.pdf (62 pages, 539689 bytes).
 PDF statistics:
- 1403 PDF objects out of 1440 (max. 8388607)
- 1303 compressed objects within 14 object streams
- 751 named destinations out of 1000 (max. 500000)
- 338 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1408 PDF objects out of 1440 (max. 8388607)
+ 1308 compressed objects within 14 object streams
+ 752 named destinations out of 1000 (max. 500000)
+ 346 words of extra memory for PDF output out of 10000 (max. 10000000)
 

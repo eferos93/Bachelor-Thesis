@@ -1198,7 +1198,9 @@ The hover request-response operation works similarly to the previously explained
     }
   } ]
 \end{lstlisting}
-Given a text document URI and position, the text document referred is sent by the Utils service, subsequently, the line of code of interest is extract and saved in a variable (lines 9-12). Lines 16-23 permits to extract information from the code line reffered by the text document position. 
+Given a text document URI and position, the text document referred is sent by the Utils service, subsequently, the line of code of interest is extract and saved in a variable (lines 9-12). Lines 16-23 permits to extract information from the code line referred by the text document position. Lines 16-23 capture information from the code line. For now, the program captures only if the user is hovering an output or input statement. The first is captured by regular expression \verb|([A-z]+)@([A-z]+)\\(.*| while the second is more complex \verb|\\[? ?( ?[A-z]+ ?)\\( ?[A-z]* ?\\)\\(? ?[A-z]* ?\\)? ?\\]? ?\\{|. The regular expressions aforementioned capture first information (e.g. operation name and port name) permitting to extract the full type signature of the operation of interest (lines 26-38). Afterwards, the program traverses all the input ports or the output ports, depending on what the user is hovering at, in order to extract the type of the statement (lines 40-70). Finally, the  full hover response message is build with the label to be shown, and the position to highlight (lines 72-102).
+\subsection{Workspace service}
+Workspace service is just a skeleton for implementing the workspace related messages (e.g. \verb|workspace/symbols|), as my main objective was to implement the features previously described. Therefore, due to the lack of time, no workspace feature was implemented.
 \chapter{Validation}
 \section{Met requirements (screenshots)}
 \section{Unmet requirements}
