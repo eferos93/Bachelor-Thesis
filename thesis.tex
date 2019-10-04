@@ -216,7 +216,7 @@ Following a selection of the Jolie behavioral syntax:\\
 \begin{align*}
 	B \quad \Coloneqq&\, \eta \quad (input)\\
 	|& \, \bar{\eta} \quad (output)\\
-	|& \, \textcolor{color:keyword}{if}(e) \> B_1 \> \big[else \> B_2\big] \quad (condition)\\
+	|& \, \textcolor{color:keyword}{if}(e) \> B_1 \> \big[\textcolor{color:keyword}{else} \> B_2\big] \quad (condition)\\
 	|& \, \textcolor{color:keyword}{while}(e) \> B \quad (while)\\
 	|& \, \textcolor{color:keyword}{for}(init,\,cond,\,incr)\> B \quad (forLoop)\\
 	|& \, \textcolor{color:keyword}{for}(x \, \textcolor{color:keyword}{in} \, y)\> B \quad (arrayIteration)\\
@@ -840,6 +840,8 @@ Where the variable \textcolor{color:keyword}{operation} contains the name of the
 		}
 	}
 \end{lstlisting}
+\subsection{Improvements for Jolie's jsonrpc protocol}
+JsonRpcProtocol class avails of a utility library, named \verb|jolie.js.JsUtils|, which provides functionalities to convert Jolie values to JSON strings and vice versa. Namely, the method \verb|valueToJsonString(Value value, boolean extendedRoot, Type type, StringBuilder builder)|, given a Jolie value, the type of the value and a \verb|StringBuilder|, generates a JSON string and saves it in the last mentioned argument.\\ The third argument of type \verb|Type|, which, in the Jolie interpreter, represents the full type description of a Jolie message. This argument accepts a \verb|Null| object and, in this situation, the method is able to perform its task by using the structure of the first argument. Nonetheless, this conversion is not
 \section{Server implementation}
 The server structure is the presented in \hyperref[sec:arch]{Chapter 4}, thus it will be composed by four Jolie programs together with the files with respectively the types definitions and the interfaces used by the various ports. The full implementation of the server can be viewed at the reference \cite{JolieLangSupport}.
 \subsection{Operation types and interfaces}
@@ -1202,6 +1204,37 @@ Given a text document URI and position, the text document referred is sent by th
 \subsection{Workspace service}
 Workspace service is just a skeleton for implementing the workspace related messages (e.g. \verb|workspace/symbols|), as my main objective was to implement the features previously described. Therefore, due to the lack of time, no workspace feature was implemented.
 \chapter{Validation}
+Validation is a process in which the software is tested in order to check if the requirements are satisfied. 
+\begin{table}[H]
+	\caption{Functional Requirements}
+	\begin{tabularx}{\textwidth}{c|X}
+		\hline
+		\textbf{Functional r. No.} & \textbf{Description}\\
+		\hline\hline
+		FR 1 & The server must provide information of eventual programming errors and warnings every time a document is opened/modified.\\\hline
+		FR 2 & Every time the user starts typing an operation name, the server returns a list of possible completion items that consists of the full operation name and the output port.\\\hline
+		FR 3 & Every time the user starts typing a reserved word, the server provides a list of possible completion items.\\\hline
+		FR 4 & Every time a document is opened/modified/closed, the server saves/updates/deletes the information in his memory like the text, URI and a data structure containing all the information regarding the Jolie program (an abstract syntax tree of the \textit{behavior} and data regarding the \textit{deployment}).\\\hline
+		FR 5 & The server provides the type signature to the client every time the latter sends an hover request.\\\hline
+		FR 6 & The server computes and sends the operation definition every time it receives a definition. request\\\hline
+		FR 7 & The server provides a list or hierarchy of symbols of a specific document requested by the client.\\\hline
+		%FR 8 & Information regarding the workspace are sent to the client and updated every time the client requests them (workspace symbols for example).\\\hline
+		FR 8 & The server resolves project wide references of a given symbol.\\\hline 
+	\end{tabularx}
+\end{table}
+\begin{table}[H]
+	\caption{Non-Functional Requirements}
+	\begin{tabularx}{\textwidth}{c|X}
+		\hline
+		\textbf{Non-functional r. No.} & \textbf{Description}\\
+		\hline\hline
+		NFR 1 & The server must support the LSP's JSON-RPC protocol.\\\hline
+		NFR 2 & The server must be designed to be modular.\\\hline
+		NFR 3 & The server must be able to respond to a client request as soon as possible.\\\hline
+		NFR 4 & The server must work both when deployed in a different machine and when deployed in a local machine, with respect of the client location. As a consequence, it has to support the socket channel of communication.\\\hline
+		NFR 5 & The server if distributed, must be able to handle more clients sending multiple requests at the same time.\\\hline
+	\end{tabularx}
+\end{table}
 \section{Met requirements (screenshots)}
 \section{Unmet requirements}
 
