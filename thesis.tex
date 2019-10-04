@@ -4,7 +4,7 @@
 %% Valori ammessi per target: bach (tesi triennale), mst (tesi magistrale), phd (tesi di dottorato).
 \documentclass[target=bach]{thud}[2014/03/11]
 \usepackage{adjustbox}
-\usepackage{tabularx}
+\usepackage{tabularx, colortbl}
 \usepackage{float}
 \usepackage{hyperref}
 \usepackage{graphicx}
@@ -609,11 +609,11 @@ Functional requirements are statements of services the system should provide, pa
 		\hline\hline
 		FR 1 & The server must provide information of eventual programming errors and warnings every time a document is opened/modified.\\\hline
 		FR 2 & Every time the user starts typing an operation name, the server returns a list of possible completion items that consists of the full operation name and the output port.\\\hline
-		FR 3 & Every time the user starts typing a reserved word, the server provides a list of possible completion items.\\\hline
+		FR 3 & Every time the user starts typing a keyword, the server provides a list of possible completion items.\\\hline
 		FR 4 & Every time a document is opened/modified/closed, the server saves/updates/deletes the information in his memory like the text, URI and a data structure containing all the information regarding the Jolie program (an abstract syntax tree of the \textit{behavior} and data regarding the \textit{deployment}).\\\hline
 		FR 5 & The server provides the type signature to the client every time the latter sends an hover request.\\\hline
-		FR 6 & The server computes and sends the operation definition every time it receives a definition. request\\\hline
-		FR 7 & The server provides a list or hierarchy of symbols of a specific document requested by the client.\\\hline
+		FR 6 & The server provides a list or hierarchy of symbols of a specific document requested by the client.\\\hline
+		FR 7 & The server computes and sends the operation definition every time it receives a definition request\\\hline
 		%FR 8 & Information regarding the workspace are sent to the client and updated every time the client requests them (workspace symbols for example).\\\hline
 		FR 8 & The server resolves project wide references of a given symbol.\\\hline 
 	\end{tabularx}
@@ -841,7 +841,32 @@ Where the variable \textcolor{color:keyword}{operation} contains the name of the
 	}
 \end{lstlisting}
 \subsection{Improvements for Jolie's jsonrpc protocol}
-JsonRpcProtocol class avails of a utility library, named \verb|jolie.js.JsUtils|, which provides functionalities to convert Jolie values to JSON strings and vice versa. Namely, the method \verb|valueToJsonString(Value value, boolean extendedRoot, Type type, StringBuilder builder)|, given a Jolie value, the type of the value and a \verb|StringBuilder|, generates a JSON string and saves it in the last mentioned argument.\\ The third argument of type \verb|Type|, which, in the Jolie interpreter, represents the full type description of a Jolie message. This argument accepts a \verb|Null| object and, in this situation, the method is able to perform its task by using the structure of the first argument. Nonetheless, this conversion is not
+JsonRpcProtocol class avails of a utility library, named \verb|jolie.js.JsUtils|, which provides functionalities to convert Jolie values to JSON strings and vice versa. Namely, the method \verb|valueToJsonString(Value value, boolean extendedRoot, Type type, StringBuilder builder)|, given a Jolie value, the type of the value and a \verb|StringBuilder|, generates a JSON string and saves it in the last mentioned argument.\\ The third argument of type \verb|Type|, which, in the Jolie interpreter, represents the full type description of a Jolie message, could accept either an \verb|undefined| type and, in this situation, the method is able to perform its task by using the structure of the first argument, or a type, obtained by the interfaces of the Jolie program. Nonetheless, the aforementioned conversion is not \textit{strict}. Following an example showing the the input an output with argument type as \verb|undefined|.\\
+Given the following type of a Jolie value
+\begin{lstlisting}[language=jolie]
+	type T_root {
+		node[1,*]: int
+	}
+\end{lstlisting}
+and a value of the above type
+\begin{lstlisting}[language=jolie]
+	v << {
+		node = 1
+	}
+\end{lstlisting}
+if type \verb|undefined| is passed for the \verb|Type| argument of the aforementioned method the following JSON string is obtained
+\begin{lstlisting}[language=json]
+	{
+		"node" : 1
+	}
+\end{lstlisting}
+while, if the type above described is passed to the method, the result is the following.
+\begin{lstlisting}[language=json]
+	{
+		"node": [1]	
+	}
+\end{lstlisting}
+This behavior is due to the fact that the parser will set \verb|"node"| as an array only if there are at least two elements in the Jolie node. Therefore in order to force the parser to produce the last result listed, the type of the value must be passed as an argument to the method.\\The implementation of the JSON-RPC protocol in Jolie was \textit{always} passing an \verb|undefined| type to the method, despite the Jolie value had a defined type structure in an interface. The fix consisted in extracting the type of the message from the interfaces.
 \section{Server implementation}
 The server structure is the presented in \hyperref[sec:arch]{Chapter 4}, thus it will be composed by four Jolie programs together with the files with respectively the types definitions and the interfaces used by the various ports. The full implementation of the server can be viewed at the reference \cite{JolieLangSupport}.
 \subsection{Operation types and interfaces}
@@ -1204,40 +1229,99 @@ Given a text document URI and position, the text document referred is sent by th
 \subsection{Workspace service}
 Workspace service is just a skeleton for implementing the workspace related messages (e.g. \verb|workspace/symbols|), as my main objective was to implement the features previously described. Therefore, due to the lack of time, no workspace feature was implemented.
 \chapter{Validation}
-Validation is a process in which the software is tested in order to check if the requirements are satisfied. 
+Validation is a process in which the software is tested in order to eventually extract new requirements and verify if the already existing ones are satisfied.\\The tests were made on the server itself (hover) or on small services created just for this purpose.\\
+\section{Functional requirements}
+Following the table indicating which functional requirements are met (\textcolor{green}{green}), partially met (\textcolor{yellow}{yellow}) and unmet (\textcolor{red}{red}).
 \begin{table}[H]
 	\caption{Functional Requirements}
 	\begin{tabularx}{\textwidth}{c|X}
 		\hline
 		\textbf{Functional r. No.} & \textbf{Description}\\
 		\hline\hline
+		\rowcolor{yellow}
 		FR 1 & The server must provide information of eventual programming errors and warnings every time a document is opened/modified.\\\hline
+		\rowcolor{green}
 		FR 2 & Every time the user starts typing an operation name, the server returns a list of possible completion items that consists of the full operation name and the output port.\\\hline
-		FR 3 & Every time the user starts typing a reserved word, the server provides a list of possible completion items.\\\hline
+		\rowcolor{green}
+		FR 3 & Every time the user starts typing a keyword, the server provides a list of possible completion items.\\\hline
+		\rowcolor{green}
 		FR 4 & Every time a document is opened/modified/closed, the server saves/updates/deletes the information in his memory like the text, URI and a data structure containing all the information regarding the Jolie program (an abstract syntax tree of the \textit{behavior} and data regarding the \textit{deployment}).\\\hline
+		\rowcolor{green}
 		FR 5 & The server provides the type signature to the client every time the latter sends an hover request.\\\hline
-		FR 6 & The server computes and sends the operation definition every time it receives a definition. request\\\hline
-		FR 7 & The server provides a list or hierarchy of symbols of a specific document requested by the client.\\\hline
+		\rowcolor{red}
+		FR 6 & The server provides a list or hierarchy of symbols of a specific document requested by the client.\\\hline
+		\rowcolor{red}
+		FR 7 & The server computes and performs a go-to definition for a symbol every time it receives a definition request\\\hline
+
 		%FR 8 & Information regarding the workspace are sent to the client and updated every time the client requests them (workspace symbols for example).\\\hline
+		\rowcolor{red}
 		FR 8 & The server resolves project wide references of a given symbol.\\\hline 
 	\end{tabularx}
 \end{table}
+\subsection{FR 1}
+The FR 1 is partially met as only the errors are displayed. This is due to the fact that the \verb|Inspector| service, when generating a Jolie program returns the stack trace of eventual errors that would prevent the execution of the service. \verb|Inspector| uses the Jolie parser, which is limited at the moment and also not precise when providing the location of the error. Following an example.
+\begin{figure}[H]
+	\centering
+	\caption{FR 1}
+	\includegraphics[width=\textwidth]{tests/screenshots/diagnostics_cropped.png}
+\end{figure}
+
+\subsection{FR 2 and FR 3}
+FR 2 and 3 are fully met, following two screenshots of the result.
+\begin{figure}[H]
+	\centering
+	\caption{FR 2 and result}
+	\includegraphics[width=\textwidth]{tests/screenshots/completion_operation_cropped.png}
+	\includegraphics[width=\textwidth]{tests/screenshots/compl_operation_result_cropped.png}
+	
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\caption{Fr 3 and result}
+	\includegraphics[width=\textwidth]{tests/screenshots/completion_keywords_cropped.png}
+	\includegraphics[width=\textwidth]{tests/screenshots/completion_keywords_result_cropped.png}
+\end{figure}
+\subsection{FR 4}
+This is managed by the Utils service. In order to verify the requirement, URIs of the actual documents saved in the server memory were printed in the console every time a \verb|didOpen| or \verb|didClose| message were received.\\The example below, shows that after opening the third document, the Language Server prints the URIs of the documents in memory
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{tests/screenshots/synch_1.png}
+\end{figure}
+and when the file \textit{utils.iol} is closed, it prints the URIs of the remaining two.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{tests/screenshots/synch_2.png}
+\end{figure}
+\subsection{FR 5}
+FR 5 is met, as shown below.
+\begin{figure}[H]
+	\centering
+	\caption{FR 5}
+	\includegraphics[width=\textwidth]{tests/screenshots/hover_cropped.png}
+\end{figure}
+\subsection{Unmet Functional requirements: FR 6, 7 and 8}
+Functional requirements 6, 7 and 8 are unmet. This is due to the fact that at the moment it is not possible to provide a hierarchy or symbols to the client and there was not enough time to develop such functionality. The \verb|Inspector| service, provides a syntax check and a full description of the deployment part, but not of the behavior, namely it is not possible to identify the symbols and their location.
+\section{Non-Functional requirements}
+The non-functional requirements defined at \hyperref[sec:NFR]{Chapter 3} are all met, except for NFR 4 (partial) and 5 (unmet).
 \begin{table}[H]
 	\caption{Non-Functional Requirements}
 	\begin{tabularx}{\textwidth}{c|X}
 		\hline
 		\textbf{Non-functional r. No.} & \textbf{Description}\\
 		\hline\hline
+		\rowcolor{green}
 		NFR 1 & The server must support the LSP's JSON-RPC protocol.\\\hline
+		\rowcolor{green}
 		NFR 2 & The server must be designed to be modular.\\\hline
+		\rowcolor{green}
 		NFR 3 & The server must be able to respond to a client request as soon as possible.\\\hline
+		\rowcolor{yellow}
 		NFR 4 & The server must work both when deployed in a different machine and when deployed in a local machine, with respect of the client location. As a consequence, it has to support the socket channel of communication.\\\hline
+		\rowcolor{red}
 		NFR 5 & The server if distributed, must be able to handle more clients sending multiple requests at the same time.\\\hline
 	\end{tabularx}
 \end{table}
-\section{Met requirements (screenshots)}
-\section{Unmet requirements}
-
+The actual implementation of the server corresponds to the local architecture presented in \hyperref[sec:arch]{Chapter 4}, there was not enough time to develop and test the distributed one. Despite this, it should not be difficult to develop it, as it just require to deploy the local server implementation in a remote machine and create a \textit{forwarder} service located in the clients machine, which stands in between of the development tool and the server.\\NFR 5 is a direct consequence of the previous requirements. However, setting the execution modality both of the forwarder and of the server to \textit{concurrent}.
 \chapter{Conclusions: review, what needs to be done}
 
 %% Fine dei capitoli normali, inizio dei capitoli-appendice (opzionali)
