@@ -303,7 +303,7 @@ Data structures in Jolie are tree-like, similarly to XML or JSON data trees. The
 	doctor.specialization[0] = "Cardiology"
 	doctor.specialization[1] = "General Surgery"
 \end{lstlisting}
-The above data tree is catheterized by \verb|doctor| as root with \verb|void| type and by three children: \verb|name|, \verb|surname| and \verb|specialization| which respectively have the types \verb|string|, \verb|string|, \verb|int| and \verb|string|. The \textcolor{color:keyword}{undef} operator is used to erase an entire structure. Syntax:
+The above data tree is catheterized by \verb|doctor| as root with \verb|void| type and by three children: \verb|name|, \verb|surname|, \verb|int| and \verb|specialization| which respectively have the types \verb|string|, \verb|string|, \verb|int| and \verb|string|. The \textcolor{color:keyword}{undef} operator is used to erase an entire structure. Syntax:
 \[\textcolor{color:keyword}{undef}(\,variable\_name\,) \]
 The \textit{(deepCopy)} operator copies the entire structure of a tree $y$ into a tree $x$. Jolie at run-time explores the tree $y$ node-wise and for all initialized sub-nodes in $y$, it assigns the value of each of them to the corresponding sub-node rooted in $x$. This means that if $x$ already had sub-nodes initialized that match to some ones rooted in $y$, $x \, << \, y$ will overwrite them, leaving all the others initialized nodes of $x$ unaffected. This operator can be used also as syntax sugar for creating a data structure. Basing on the previous example of the doctor data structure, in can be re-written as in the following example.
 \begin{lstlisting}[language=Jolie]
@@ -1323,7 +1323,17 @@ The non-functional requirements defined at \hyperref[sec:NFR]{Chapter 3} are all
 \end{table}
 The actual implementation of the server corresponds to the local architecture presented in \hyperref[sec:arch]{Chapter 4}, there was not enough time to develop and test the distributed one. Despite this, it should not be difficult to develop it, as it just require to deploy the local server implementation in a remote machine and create a \textit{forwarder} service located in the clients machine, which stands in between of the development tool and the server.\\NFR 5 is a direct consequence of the previous requirements. However, setting the execution modality both of the forwarder and of the server to \textit{concurrent}.
 \chapter{Conclusions: review, what needs to be done}
+I have provided a description of my work done over the four months at the Concurrency and Logic research team, with an introduction to Jolie, an innovative programming language for developing distributed system based on microservice architectures, and the Language Server Protocol, a JSON-RPC-based protocol that standardize the communication between an IDE and a Language Server.
+\section{Project review}
+The project consisted in:
+\begin{enumerate}
+	\item extracting the requirements for the Jolie Language Server, where functional ones where dictated by the Language Server Protocol Specifications while the non-functional ones were established with my internship supervisor, Professor Fabrizio Montesi, in order to have a software that can be \textbf{easily extended} with new \textbf{capabilities};
+	\item modeling the software architecture that reflects the requirements defined, especially the non-functional ones. The architecture was therefore based on microservices;
+	\item due to the nature of the architecture, Jolie was the perfect programming language to be used for the implementation. I implemented the \textbf{completion} feature for keywords and operations, \textbf{hover} functionality for operations and  \textbf{diagnostics}, providing linting for errors in the code.
+	\item the program was tested on itself and also by writing simple ones.
+\end{enumerate} 
 
+\section{Unmet requirements}
 %% Fine dei capitoli normali, inizio dei capitoli-appendice (opzionali)
 \appendix
 
