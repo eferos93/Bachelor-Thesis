@@ -1329,9 +1329,15 @@ The project consisted in:
 \begin{enumerate}
 	\item extracting the requirements for the Jolie Language Server, where functional ones where dictated by the Language Server Protocol Specifications while the non-functional ones were established with my internship supervisor, Professor Fabrizio Montesi, in order to have a software that can be \textbf{easily extended} with new \textbf{capabilities};
 	\item modeling the software architecture that reflects the requirements defined, especially the non-functional ones. The architecture was therefore based on microservices;
-	\item due to the nature of the architecture, Jolie was the perfect programming language to be used for the implementation. I implemented the \textbf{completion} feature for keywords and operations, \textbf{hover} functionality for operations and  \textbf{diagnostics}, providing linting for errors in the code.
+	\item due to the nature of the architecture, Jolie was the perfect programming language to be used for the implementation. This required some improvements in the Jolie JSON-RPC protocol in order to make it compatible with the LSP counterpart. Those improvements included:
+	\begin{enumerate}
+		\item creating two new classes, \verb|LSPMessage| and \verb|LSPParser|, which respectively represents a full LSP message and the its parser;
+		\item modifying \verb|JsonRpcProtocol| class in order to handle the aforementioned messages;
+	\end{enumerate}	 
+	\item the language features implemented were the \textbf{completion} for keywords and operations, \textbf{hover} functionality for operations and  \textbf{diagnostics}, providing linting for errors in the code;
 	\item the program was tested on itself and also by writing simple ones.
 \end{enumerate} 
+
 
 \section{Unmet requirements}
 %% Fine dei capitoli normali, inizio dei capitoli-appendice (opzionali)
