@@ -545,7 +545,7 @@ Following a simplified sequence diagram that shows a slice of interaction betwee
 	\item \textbf{The user closes the document}: the tool notifies the server when the user closes the document, which cease to exist in the tool memory. The server erases all the information regarding the aforementioned document. 
 \end{enumerate}
 
-All the data types illustrated are language agnostic, meaning that can be applied to all the programming languages. This is due to the protocol simplicity: it is more simple to standardize a document URI or a position inside a it, that standardizing an abstract syntax tree and compiler symbol across different programming languages.\\The aforementioned simplicity is shown in the following JSON-RPC objects that refers to the completion request and response:\\
+All the data types illustrated are language agnostic, meaning that can be applied to all the programming languages. This is due to the protocol simplicity: it is more simple to standardize a document URI or a position inside a it, that standardizing an \textit{Abstract Syntax Tree} and compiler symbol across different programming languages.\\The aforementioned simplicity is shown in the following JSON-RPC objects that refers to the completion request and response:\\
 \textbf{Request}:
 \begin{lstlisting}[language=json]
 {
@@ -610,7 +610,7 @@ Functional requirements are statements of services the system should provide, pa
 		FR 1 & The server must provide information of eventual programming errors and warnings every time a document is opened/modified.\\\hline
 		FR 2 & Every time the user starts typing an operation name, the server returns a list of possible completion items that consists of the full operation name and the output port.\\\hline
 		FR 3 & Every time the user starts typing a keyword, the server provides a list of possible completion items.\\\hline
-		FR 4 & Every time a document is opened/modified/closed, the server saves/updates/deletes the information in his memory like the text, URI and a data structure containing all the information regarding the Jolie program (an abstract syntax tree of the \textit{behavior} and data regarding the \textit{deployment}).\\\hline
+		FR 4 & Every time a document is opened/modified/closed, the server saves/updates/deletes the information in his memory like the text, URI and a data structure containing all the information regarding the Jolie program (an Abstract Syntax Tree of the \textit{behavior} and data regarding the \textit{deployment}).\\\hline
 		FR 5 & The server provides the type signature to the client every time the latter sends an hover request.\\\hline
 		FR 6 & The server provides a list or hierarchy of symbols of a specific document requested by the client.\\\hline
 		FR 7 & The server computes and sends the operation definition every time it receives a definition request\\\hline
@@ -1244,8 +1244,8 @@ Following the table indicating which functional requirements are met (\textcolor
 		FR 2 & Every time the user starts typing an operation name, the server returns a list of possible completion items that consists of the full operation name and the output port.\\\hline
 		\rowcolor{green}
 		FR 3 & Every time the user starts typing a keyword, the server provides a list of possible completion items.\\\hline
-		\rowcolor{green}
-		FR 4 & Every time a document is opened/modified/closed, the server saves/updates/deletes the information in his memory like the text, URI and a data structure containing all the information regarding the Jolie program (an abstract syntax tree of the \textit{behavior} and data regarding the \textit{deployment}).\\\hline
+		\rowcolor{yellow}
+		FR 4 & Every time a document is opened/modified/closed, the server saves/updates/deletes the information in his memory like the text, URI and a data structure containing all the information regarding the Jolie program (an Abstract Syntax Tree of the \textit{behavior} and data regarding the \textit{deployment}).\\\hline
 		\rowcolor{green}
 		FR 5 & The server provides the type signature to the client every time the latter sends an hover request.\\\hline
 		\rowcolor{red}
@@ -1292,6 +1292,7 @@ and when the file \textit{utils.iol} is closed, it prints the URIs of the remain
 	\centering
 	\includegraphics[width=\textwidth]{tests/screenshots/synch_2.png}
 \end{figure}
+Utils uses the \textit{Inspector} service for generating a data structure containing all the information regarding the \textbf{deployment}, and no information regarding the \textbf{behavior}.
 \subsection{FR 5}
 FR 5 is met, as shown below.
 \begin{figure}[H]
@@ -1323,7 +1324,7 @@ The non-functional requirements defined at \hyperref[sec:NFR]{Chapter 3} are all
 \end{table}
 The actual implementation of the server corresponds to the local architecture presented in \hyperref[sec:arch]{Chapter 4}, there was not enough time to develop and test the distributed one. Despite this, it should not be difficult to develop it, as it just require to deploy the local server implementation in a remote machine and create a \textit{forwarder} service located in the clients machine, which stands in between of the development tool and the server.\\NFR 5 is a direct consequence of the previous requirements. However, setting the execution modality both of the forwarder and of the server to \textit{concurrent}.
 \chapter{Conclusions: review, what needs to be done}
-I have provided a description of my work done over the four months at the Concurrency and Logic research team, with an introduction to Jolie, an innovative programming language for developing distributed system based on microservice architectures, and the Language Server Protocol, a JSON-RPC-based protocol that standardize the communication between an IDE and a Language Server.
+I have provided a description of my work done over the four months at the Concurrency and Logic research team, with an introduction to Jolie, an innovative programming language for developing distributed system based on microservice architectures, and the Language Server Protocol, a JSON-RPC-based protocol that standardizes the communication between an IDE and a Language Server.
 \section{Project review}
 The project consisted in:
 \begin{enumerate}
@@ -1332,7 +1333,7 @@ The project consisted in:
 	\item due to the nature of the architecture, Jolie was the perfect programming language to be used for the implementation. This required some improvements in the Jolie JSON-RPC protocol in order to make it compatible with the LSP counterpart. Those improvements included:
 	\begin{enumerate}
 		\item creating two new classes, \verb|LSPMessage| and \verb|LSPParser|, which respectively represents a full LSP message and the its parser;
-		\item modifying \verb|JsonRpcProtocol| class in order to handle the aforementioned messages;
+		\item modifying \verb|JsonRpcProtocol| class in order to handle the aforementioned messages, including some improvements when converting a Jolie value to a JSON string and vice-versa;
 	\end{enumerate}	 
 	\item the language features implemented were the \textbf{completion} for keywords and operations, \textbf{hover} functionality for operations and  \textbf{diagnostics}, providing linting for errors in the code;
 	\item the program was tested on itself and also by writing simple ones.
@@ -1340,7 +1341,10 @@ The project consisted in:
 
 
 \section{Unmet requirements}
-%% Fine dei capitoli normali, inizio dei capitoli-appendice (opzionali)
+Capabilities like the \textbf{go-to definition} and \textbf{find references} were not possible to implement due to the lack of a tool for obtaining an \textit{Abstract Syntax Tree} of the behavior, and there was not enough time in other to implement the aforementioned tool. As a consequence, completion feature is supported only for \textbf{output ports} and \textbf{keywords}, while it is not possible to auto-complete variables. Regarding the architecture, I was not able to implement the \textit{distributed} version of the Language Server due to the lack of time, as it would require a mechanism of handling sessions, by using \textit{Correlation Sets} \cite{Jol}.
+
+\section{Future Work}
+Future work include both extending the Jolie library and refactoring the actual Language Server code. The first consists in integrate the \textit{Inspector} service in order to be able to provide, together with information regarding the \textit{deployment}, a data structure representing the \textit{Abstract Syntax Tree} of the program, from which, by extending the \verb|completion| operation, the Language Server will be able to provide also a list of possible completion items for \textbf{variables}. Moreover, it can be extended in order to create a hierarchy of symbols to be sent to the development tool, granting the possibility to implement features like \textbf{got-to definition} and \textbf{find references}. The second consists of refactor the actual searching algorithm, which is a simple \textit{linear search}, to a more sophisticated one, like the \textit{Approximate String Matching}, also referred as Fuzzy search. The general goal is to perform string matching of a pattern in a text where one or both of them have suffered some kind of (undesirable) corruption \cite{Navarro99aguided}.
 \appendix
 
 \part{Appendici}
