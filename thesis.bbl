@@ -16,6 +16,11 @@ Microsoft.
 \newblock
   \url{https://microsoft.github.io/language-server-protocol/specification}.
 
+\bibitem{Navarro99aguided}
+Gonzalo Navarro.
+\newblock A guided tour to approximate string matching.
+\newblock {\em ACM COMPUTING SURVEYS}, 33:2001, 1999.
+
 \bibitem{Som11}
 Ian Sommerville.
 \newblock {\em Software Engineering}.
