@@ -684,28 +684,31 @@ Not every Language Server can support all features defined by the protocol. LSP 
 		NFR 2 & The server must be designed to be modular.\\\hline
 		NFR 3 & The server must be able to respond to a client request as soon as possible.\\\hline
 		NFR 4 & The server must work both when deployed in a different machine and when deployed in a local machine, with respect of the client location. As a consequence, it has to support the socket channel of communication.\\\hline
-		NFR 5 & The server if distributed, must be able to handle more clients sending multiple requests at the same time.\\\hline
+		NFR 5 & The server, must be able to handle more clients sending multiple requests concurrently.\\\hline
 	\end{tabularx}
 \end{table}
 
 \chapter{System architecture}
 \label{sec:arch}
 The architecture of a system identifies the components that form a system and the relationships between them. Graphical models are the best technique to abstractly represent a system architecture. Software architecture is important because it affects the performance, robustness,
-distributability, and maintainability of a system (Bosch, 2000) \cite{Som11}. In order to satisfy the non-functional, in particular NFR 2 and NFR 5 requirements defined in \hyperref[sec:Analysis]{Chapter 3}, the architecture adopted is the Service Oriented Architecture. Instead of a monolithic architecture, SOC is more scalable: the direct communication with the client is handled by a single service which deals with the initialization and the termination of the entire server while it forwards all the other requests and notifications sent by the development tool to the service responsible for treating the specific message (e.g. the message \verb|textDocument/didOpen|, when received by the main service, named \textit{orchestrator}, forwards the message to the textDocument service, namely the service that handles all the textDocument messages).
+distributability, and maintainability of a system \cite{Bosch:2000:DUS:339362}. In order to satisfy the non-functional, in particular NFR 2 and NFR 5 requirements defined in \hyperref[sec:Analysis]{Chapter 3}, we adopt the Service Oriented Architecture (SOA). Instead of a monolithic architecture, SOA is more scalable: the direct communication with the client is handled by a single service which deals with the initialization and the termination of the entire server while it forwards all the other requests and notifications sent by the development tool to the service responsible for treating the specific message (e.g. the message \verb|textDocument/didOpen|, when received by the main service, named \textit{orchestrator}, forwards the message to the textDocument service, namely the service that handles all the textDocument messages).
 \section{Architecture}
-In this section I present two architectures according to NFR 4. One architecture, represents the system with the Language Server deployed in the same machine as the development tool, while the other describes the architecture of the system when the Language Server is deployed in a different machine than the client.
-\begin{figure}[H]
-	\caption{Architecture in L.S. and dev. tool in a single machine}
+In this section we will see two architectures according to NFR 4. One architecture, represents the system with the Language Server deployed in the same machine as the development tool, while the other describes the architecture of the system when the Language Server is deployed in a different machine than the client.
+\begin{figure}[t]
 	\includegraphics[width=\textwidth]{local_arch.png}
+	\caption{Architecture in L.S. and dev. tool in a single machine}
+	\label{localArch}
 \end{figure}
-\begin{figure}[H]
-	\caption{L.S. and dev. tool in different machines}
+\begin{figure}[t]
 	\includegraphics[width=\textwidth]{distr_arch.png}
+	\caption{L.S. and dev. tool in different machines}
+	\label{distrArch}
 \end{figure}
-\begin{figure}[H]
+\begin{figure}[t]
 	\centering
-	\caption{Legenda}
 	\includegraphics[height=10cm]{legenda.png}
+	\caption{Legenda}
+	\label{legenda}
 \end{figure}
 
 The hexagon represents a \textit{macroservice}, which is an unique execution context for a set of services. A macroservice exhibit only the public available ports of the inner services \cite{JolieDoc}.

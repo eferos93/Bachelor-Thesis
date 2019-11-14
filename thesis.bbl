@@ -1,8 +1,14 @@
 \begin{thebibliography}{1}
 
+\bibitem{Bosch:2000:DUS:339362}
+Jan Bosch.
+\newblock {\em Design and Use of Software Architectures: Adopting and Evolving
+  a Product-line Approach}.
+\newblock ACM Press/Addison-Wesley Publishing Co., New York, NY, USA, 2000.
+
 \bibitem{Jol}
 {Fabrizio Montesi and Claudio Guidi and Gianluigi Zavattaro}.
-\newblock Service-oriented programming with jolie.
+\newblock Service-oriented programming with {Jolie}.
 \newblock \url{https://www.fabriziomontesi.com/files/mgz14.pdf}.
 
 \bibitem{JolieDoc}
@@ -12,7 +18,7 @@
 
 \bibitem{LSPSpec}
 Microsoft.
-\newblock Language server protocol specification.
+\newblock Language {Server} {Protocol} specification.
 \newblock
   \url{https://microsoft.github.io/language-server-protocol/specification}.
 
