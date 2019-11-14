@@ -547,18 +547,20 @@ Following a simplified sequence diagram that shows a slice of interaction betwee
 
 \begin{figure}[H]
 	\includegraphics[width=\textwidth]{lsp.png}
+	\caption{Sequence Diagram LSP}
+	\label{seqDiagLSP}
 \end{figure}
 
 \begin{enumerate}
-	\item \textbf{The user opens a file (referred as a \textit{document})}: the tool notifies the server that a document is open ("textDocument/didOpen"), meaning that it is kept in the tool memory. The server will therefore save the language representation of the document in ITS memory.
-	\item \textbf{The user edits the document}: the tool notifies the server about a change made by the user on the document ("textDocument/didChange"). The server updates the language representation of the document.
-	\item \textbf{The tool execute the "Completion Request"}: the request ("textDocument/completion") is triggered by the aforementioned changes. The parameter, \textit{completionParams}, is essentially a JSON object with all the necessary information (documentURI, position, triggerKind) that the server needs to compute the response. Note that this call is \textit{asynchronous}: the tool can send other notifications or request while waiting for the completion response, same for the Language Server.
-	\item \textbf{The server publishes errors and warnings}: after the change notification, the server computes and notifies the tool with a list of eventual errors and warnings in the code ("textDocument/publishDiagnostics"). The parameters of this notification contains all the necessary information in order to permit the tool flags errors and warnings.
-	\item \textbf{The server replies to the "Completion Request"}: the server after computing a list of possible completion items, replies to the completion request made before by the tool. The latter lists the items received in order to let the user decide which suites the best.
+	\item \textbf{The user opens a file (referred as a \textit{document})}: the tool notifies the server that a document is open (textDocument/didOpen), meaning that it is kept in the tool memory. The server will therefore save the language representation of the document in its memory.
+	\item \textbf{The user edits the document}: the tool notifies the server about a change made by the user on the document (textDocument/didChange). The server updates the language representation of the document.
+	\item \textbf{The tool execute the Completion Request}: the request (textDocument/completion) is triggered by the aforementioned changes. The parameter, \textit{completionParams}, is essentially a JSON object with all the necessary information (documentURI, position, triggerKind) that the server needs to compute the response. Note that this call is \textit{asynchronous}: the tool can send other notifications or request while waiting for the completion response, correspondingly the Language Server can answer asynchronously.
+	\item \textbf{The server publishes errors and warnings}: after the change notification, the server computes and notifies the tool with a list of eventual errors and warnings in the code (textDocument/publishDiagnostics). The parameters of this notification contains all the necessary information in order to permit the tool flags errors and warnings.
+	\item \textbf{The server replies to the Completion Request}: the server after computing a list of possible completion items, replies to the completion request made before by the tool. The latter lists the items received in order to let the user decide which suites the best.
 	\item \textbf{The user closes the document}: the tool notifies the server when the user closes the document, which cease to exist in the tool memory. The server erases all the information regarding the aforementioned document. 
 \end{enumerate}
 
-All the data types illustrated are language agnostic, meaning that can be applied to all the programming languages. This is due to the protocol simplicity: it is more simple to standardize a document URI or a position inside a it, that standardizing an \textit{Abstract Syntax Tree} and compiler symbol across different programming languages.\\The aforementioned simplicity is shown in the following JSON-RPC objects that refers to the completion request and response:\\
+All the data types illustrated are language agnostic, meaning that can be applied to all the programming languages. This is due to the protocol simplicity: it is simpler to standardize a document URI or a position inside a it, than standardizing an \textit{Abstract Syntax Tree} and compiler symbol across different programming languages.\\This simplicity is shown in the following JSON-RPC objects that refers to the completion request and response:\\
 \textbf{Request}:
 \begin{lstlisting}[language=json]
 {
@@ -596,11 +598,8 @@ All the data types illustrated are language agnostic, meaning that can be applie
 }
 \end{lstlisting}
 
-A Language Server in order to work with LSP does not need to implement all the features. LSP provide \textbf{capabilities}. A capability groups a set of language features. The protocol permits the server to notify the tool which capabilities supports, therefore the tool adapts itself in order to send notifications and requests of the capabilities supported.
-\chapter{Analysis of the problem}
-\label{sec:Analysis}
-In this chapter I will identify the requirements, gathered during the analysis of the Language Server Protocol and over a series of meetings with the supervisor.
-\section{Language Server Protocol features}
+A Language Server in order to work with LSP does not need to implement all the features. LSP provide \textbf{capabilities}. A capability groups a set of language features. The protocol permits the server to notify the tool which capabilities supports, therefore the tool adapts itself in order to send notifications and requests of the supported capabilities.
+\subsection{Server Protocol features}
 LSP supports six key feature which are:
 \begin{enumerate}
 	\item \textbf{Code completion}: feature that speeds up the process of coding applications by reducing typos and other common mistakes;
@@ -610,10 +609,14 @@ LSP supports six key feature which are:
 	\item \textbf{Find references}: given a symbol, this features lists all the project wide references;
 	\item \textbf{Diagnostics}: the tool flags syntax errors, warnings together with a description.
 \end{enumerate}
-The protocol supports many other features that are all linked to the above listed. The requirements elicitation phase was based on these main ones.
+The protocol supports many other features that are all linked to these ones. The requirements elicitation phase was based on these main ones.
+
+\chapter{Analysis of the problem}
+\label{sec:Analysis}
+In this chapter we will identify the requirements, gathered during the analysis of the Language Server Protocol and over a series of meetings with the supervisor.
 \section{Functional Requirements}
 \label{sec:FR}
-Functional requirements are statements of services the system should provide, particularly how it should react to particular inputs \cite{Som11}. From the features analyzed in the previous section, we extracted the following functional requirements, listed in ascending order of importance.
+Functional requirements are statements of services the system should provide, particularly how it should react to particular inputs \cite{Som11}. From the features analyzed in the previous section, we extracted the following functional requirements, listed in descending order of importance.
 \begin{table}[H]
 	\caption{Functional Requirements}
 	\begin{tabularx}{\textwidth}{c|X}
@@ -634,9 +637,15 @@ Functional requirements are statements of services the system should provide, pa
 
 \section{Non-functional requirements}
 \label{sec:NFR}
-Non-functional requirements are requirements that are not directly concerned with the specific services delivered by the system to its users. They may relate to emergent system properties such as reliability, response time, and store occupancy. Alternatively, they may define constraints on the system implementation such as the capabilities of I/O devices or the data representations used in interfaces with other systems \cite{Som11}.\\ Regarding the aforementioned non-functional requirements, the response time is critical for the project, as the server should be able to respond to the client as soon as possible. Nonetheless, this kind of calculations (such as code completion) are not computationally heavy.\\Other non-functional requirements, are listed below.
+Non-functional requirements are requirements that are not directly concerned with the specific services delivered by the system to its users. They may relate to emergent system properties such as reliability, response time, and store occupancy. Alternatively, they may define constraints on the system implementation such as the capabilities of I/O devices or the data representations used in interfaces with other systems \cite{Som11}.
+
+Regarding the aforementioned non-functional requirements, the response time is critical for the project, as the server should be able to respond to the client as soon as possible. Nonetheless, this kind of calculations (such as code completion) are not computationally heavy.\\Other non-functional requirements, are listed below.
 \subsection{Complying with the Language Server Protocol specification}
-The Language Server Protocol defines a common language, between a tool and a Language Server. As a consequence, the latter must be able to recognize different requests received from the client and send back proper responses that the client is able to interpret and compute.\\Following an example: the request-response method \verb|initialize|, that provides the server client's capabilities and it expects a response with the server capabilities, has the following type:\\\textbf{Request type}
+The Language Server Protocol defines a common language, between a tool and a Language Server. As a consequence, the latter must be able to recognize different requests received from the client and send back proper responses that the client is able to interpret and compute.
+
+Following an example: the request-response method \verb|initialize|, that provides the server client's capabilities and it expects a response with the server capabilities, has the following type:
+
+\textbf{Request type}
 \begin{lstlisting}[language=javascript]
 interface InitializeParams {
 	processId: number | null;
@@ -648,6 +657,7 @@ interface InitializeParams {
 	workspaceFolders?: WorkspaceFolder[] | null;
 }
 \end{lstlisting}
+
 \textbf{Response type}
 \begin{lstlisting}[language=javascript]
 interface InitializeResult {
@@ -659,9 +669,9 @@ interface InitializeResult {
 \end{lstlisting}
 \subsubsection{JSON-RPC 2.0 Protocol}
 Regarding the communication protocol, LSP supports a custom version of the JSON-RPC 2.0 protocol, as mentioned in \hyperref[sec:JolieLSP]{Chapter 2}. A message is characterized by an header part, which can contain up to two headers (Content-Length, which is mandatory, and Content-Type) and a content part, with the actual message represented with the JSON-RPC notation.\\Jolie supports JSON-RPC, but it runs over HTTP, therefore Jolie's JSON-RPC will expect HTTP headers before the Content-Length and Content-Type. As a consequence, Jolie's JSON-RPC protocol must be extended in order to make it compatible with LSP messages.
-\subsection{Distributed}
-The server must be adapted to the LSP, in order to make it works with different tools that uses the protocol concerned. Therefore, it must be \textbf{editor-agnostic} and it should be designed and implemented in order to be deployed both locally and in a different machine with respect to the clients, so it can interact with different tools at the same time. The LSP specifications indicates that when the development tool starts the plug-in, the latter will immediately start  Consequently the best communication channel to use is the socket.
-\subsection{Modular}
+\subsection{Distributed architecture}
+The server must be adapted to the LSP, in order to make it works with different tools that uses the protocol concerned. Therefore, it must be \textbf{editor-agnostic} and it should be designed and implemented in order to be deployed both locally and in a different machine with respect to the clients, so it can interact with different tools at the same time. The LSP specifications indicates that when the development tool starts the plug-in, the latter will immediately start. Consequently the best communication channel to use is the TCP socket, in order to guarantee the platform independence.
+\subsection{Modularity}
 Not every Language Server can support all features defined by the protocol. LSP therefore provides, the previous mentioned, \textbf{capabilities}, as stated in \hyperref[sec:JolieLSP]{Chapter 2}. A capability groups a set of language features. A development tool and the Language Server announce their supported features using capabilities. For instance, the server announces that it can handle the \verb|textDocument/hover| request, but it might not support the \verb|textDocument/references| request. Similarly, a development tool announces its ability to provide \verb|textDocument/didChange| notification when a document is modified, so that a server can compute textual edits to format the edited document.\\On account of this, the server must be designed in order to easily add new capabilities or improve the existing ones. After implementing a new feature, the programmer just need to modify the server capabilities thus the client can start sending requests regarding the newly activated capability.
 
 \begin{table}[H]
