@@ -20,7 +20,7 @@
 \BOOKMARK [2][-]{subsection.4.2.2}{Text Document service}{section.4.2}% 20
 \BOOKMARK [2][-]{subsection.4.2.3}{Workspace service}{section.4.2}% 21
 \BOOKMARK [2][-]{subsection.4.2.4}{Utils service}{section.4.2}% 22
-\BOOKMARK [2][-]{subsection.4.2.5}{Forwarder service}{section.4.2}% 23
+\BOOKMARK [2][-]{subsection.4.2.5}{Proxy service}{section.4.2}% 23
 \BOOKMARK [0][-]{chapter.5}{Implementation}{}% 24
 \BOOKMARK [1][-]{section.5.1}{Complying with LSP JSON-RPC specifications}{chapter.5}% 25
 \BOOKMARK [2][-]{subsection.5.1.1}{LSP message and parser}{section.5.1}% 26
