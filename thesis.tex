@@ -16,6 +16,13 @@
 \usepackage{mathtools}
 %\usepackage{cite}
 \usepackage{dirtytalk}
+\usepackage{amssymb}% http://ctan.org/pkg/amssymb
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}
+\newcommand{\greenc}{{\color{green}\cmark}}
+\newcommand{\orangec}{{\color{orange}\cmark}}
+\newcommand{\redx}{{\color{red}\xmark}}
 
 \definecolor{lightgray}{rgb}{0.95, 0.95, 0.95}
 \definecolor{darkgray}{rgb}{0.4, 0.4, 0.4}
@@ -697,7 +704,7 @@ In this section we will see two architectures according to NFR 4. One architectu
 
 The distributed architecture shows that the single Language Server is capable of serving more clients concurrently, however this introduces the  could be implemented also in a single machine, having a single Language Server running that serves one or more editors. This requires the use of a \emph{Proxy Service} which is spawned directly by the client, as the latter expects a child process containing the server. The local architecture presented, at the contrary, expects that there is more that one instance of the LS, namely for each different client opened an LS program is spawned, therefore there is no need of the proxy. 
 
-The LS is \emph{stateful}, meaning that it keeps track of the state of interaction. In particular, the state is kept in memory and it is \emph{transient}. This means that if for some reason, outside the normal termination behavior, the LS terminates its execution, the state is lost. This implies that, in the distributed model, the LS must be able to distinguish which client the information kept belongs to by using \emph{sessions}, which must be handled in parallel.
+The LS is \emph{stateful}, meaning that it keeps track of the state of interaction. In particular, the state is kept in memory and it is \emph{transient}. This means that if for some reason the LS terminates its execution, the state is lost. This implies that, in the distributed model, the LS must be able to distinguish which client the information kept belongs to by using \emph{sessions}, which must be handled in parallel.
 
 \begin{figure}[t]
 	\includegraphics[width=\textwidth]{local_arch.png}
@@ -748,14 +755,14 @@ All the workspace messages, are handled by this service. More details regarding 
 The \emph{Proxy Service} is an additional service used for the distributed system. The input port exposed to the development tool aggregates the output port used for contacting the server. Jolie is \emph{protocol agnostic}. This means that the communication between the proxy and the Language Server does not need to use the JSON-RPC protocol: the aggregator, which in our case is the proxy, automatically transforms the messages thus granting a transparent composition of the server.
 \chapter{Implementation}
 \label{sec:impl}
-For implementing the Language Server for Jolie, modeled in the previous chapter, I used the language Jolie itself for the following reasons:
+For implementing the Language Server for Jolie, modeled in the previous chapter, we used the language Jolie itself for the following reasons:
 \begin{itemize}
-	\item \textbf{Service orientation}: Jolie, as described in \hyperref[sec:JolieLSP]{Chapter 2}, is microservice-oriented language, which is perfect for the non-functional requirements described in \hyperref[sec:Analysis]{Chapter 3}, in particular NFR 1, as Jolie already supports the JSON-RPC protocol over HTTP, therefore it must be adapted to the protocol used by LSP, by extending its functionalities. Moreover, Jolie has a service included in the standard library, called \emph{Inspector}, that provides code inspection operations for analyzing Jolie source code, therefore useful in order to meet \hyperref[sec:FR]{FR 1} and \hyperref[sec:FR]{FR 2}.
+	\item \textbf{Service orientation}: Jolie, as described in \hyperref[sec:JolieLSP]{Chapter 2}, is microservice-oriented language, which is perfect for the non-functional requirements described in \hyperref[sec:Analysis]{Chapter 3}, in particular NFR 1, as Jolie already supports the JSON-RPC protocol over HTTP, therefore it must be adapted to the protocol used by LSP, in order to recognize LSP messages and parse them properly. This required the implementation of a parser able to parse LSP headers correctly and pass the actual JSON message to the already existing parsing libraries, converting a JSON string into a Jolie Value (and vice versa). Moreover, Jolie has a service included in the standard library, called \emph{Inspector}, that provides code inspection operations for analyzing Jolie source code, therefore useful in order to meet \hyperref[sec:FR]{FR 1} and \hyperref[sec:FR]{FR 2}.
 	\item The macroservice concept is realized with the \emph{static embedding} primitive: the main service embeds all the other three services, therefore all four services will run in the same virtual machine. This will reflect in faster internal communications. Furthermore, the main service \emph{aggregates} the output ports pointed respectively to the services \emph{workspace} and \emph{textDocument} to guarantee an automatic forward of the messages that are not of its concern.
 \end{itemize}
 The implementation phase was based on the local architecture model described in the previous chapter and it was characterized by the following two steps:
 \begin{enumerate}
-	\item \textbf{Complying with the LSP's JSON-RPC specifications}: LSP uses a simplified version of JSON-RPC protocol, whereas Jolie internal JSON-RPC protocol uses it over HTTP. Therefore, the protocol was extended in order to be capable of handling also LSP messages. Moreover, the Jolie interpreter, when receiving a JSON-RPC message is able to redirect it to the correct operation by using the \emph{method} field in the JSON-RPC message. Despite this, most of the method names in LSP have prefixes, for instance \verb|textDocument/didOpen|, which is problematic as operation names in Jolie does not support special characters such as the "/". As a consequence, Jolie's protocol must be extended in order to alias the operation names properly. 
+	\item \textbf{Complying with the LSP's JSON-RPC specifications}: LSP uses a simplified version of JSON-RPC protocol, whereas Jolie internal JSON-RPC protocol uses it over HTTP. Therefore, the protocol was extended in order to be capable of handling also LSP messages. Moreover, the Jolie interpreter, when receiving a JSON-RPC message is able to redirect it to the correct operation by using the \emph{method} field in the JSON-RPC message. Despite this, most of the method names in LSP have prefixes, for instance \verb|textDocument/didOpen|, which is problematic as operation names in Jolie does not support special characters such as the \say{/}. As a consequence, Jolie's protocol must be extended in order to alias the operation names properly. 
 	\item \textbf{Implementation of the Language Server}: define all the services with their deployment parts (ports, types and interfaces) and their behavior (computations).
 \end{enumerate}
 \section{Complying with LSP JSON-RPC specifications}
@@ -771,6 +778,7 @@ In order to extend Jolie JSON-RPC protocol, \emph{protocol parameters} were expl
 		...		
 		}
 \end{lstlisting}
+
 Jolie, when it identifies this parameter, must not use JSON-RPC over HTTP, but according to LSP specification. In order to do this, the modifications made in the Jolie protocol are:
 \begin{itemize}
 	\item Definition of two new classes: \verb|LSPMessage| and \verb|LSPParser|. The first represents an LSP message, according to the specifications defined in \hyperref[sec:JolieLSP]{Chapter 2}, the second is a parser used on the data read from the buffer, in order to extract headers and the JSON object properly, therefore, the latter is parsed by the \verb|JsUtils| class in order to obtain a Jolie value representation of the original JSON message.
@@ -834,6 +842,7 @@ Similarly to the problem presented in the previous section, aliasing must be han
 		...		
 	}
 \end{lstlisting}
+
 The above example demonstrate that protocol parameter is a Jolie \emph{data tree}. The parameter \verb|osc| must have a child node with the name of the operation and in turn a child node name \verb|alias| with a string value that represents the alias.\\The modifications made in the \verb|JsonRpcProtocol| class were substantially the following:
 \begin{itemize}
 	\item When \textbf{receiving} a message, after the parsing phase, given the LSP method name contained in the subnode \verb|method|, compute the correspondent operation name in the Jolie program, by visiting the \verb|osc| tree.
@@ -857,7 +866,7 @@ Following the code for aliasing operation names when receiving a message.
 	}
 \end{lstlisting}
 
-Where the variable \textcolor{color:keyword}{operation} contains the name of the LSP method name (e.g. \verb|textDocument/didOpen|), the variable \textcolor{color:keyword}{osc} is the root of the data tree. \textcolor{color:keyword}{Value} and \textcolor{color:keyword}{ValueVector} are the classes used to represent data trees in Jolie. Each single node of a tree in Jolie is a \textcolor{color:keyword}{ValueVector} containing one or more objects \textcolor{color:keyword}of type \textcolor{color:keyword}{Value} which contains basic type value and its children nodes, which in turn are \textcolor{color:keyword}{ValueVector} objects.\\The code for aliasing an outgoing message is analogue.
+The variable \textcolor{color:keyword}{operation} contains the name of the LSP method name (e.g. \verb|textDocument/didOpen|), the variable \textcolor{color:keyword}{osc} is the root of the data tree. \textcolor{color:keyword}{Value} and \textcolor{color:keyword}{ValueVector} are the classes used to represent data trees in Jolie. Each single node of a tree in Jolie is a \textcolor{color:keyword}{ValueVector} containing one or more objects \textcolor{color:keyword}of type \textcolor{color:keyword}{Value} which contains basic type value and its children nodes, which in turn are \textcolor{color:keyword}{ValueVector} objects.\\The code for aliasing an outgoing message is analogue.
 \begin{lstlisting}[language=java]
 	String operationNameAliased = message.operationName();
 		//resolving aliases
@@ -874,7 +883,7 @@ Where the variable \textcolor{color:keyword}{operation} contains the name of the
 	}
 \end{lstlisting}
 \subsection{Improvements for Jolie's jsonrpc protocol}
-JsonRpcProtocol class avails of a utility library, named \verb|jolie.js.JsUtils|, which provides functionalities to convert Jolie values to JSON strings and vice versa. Namely, the method \verb|valueToJsonString(Value value, boolean extendedRoot, Type type, StringBuilder builder)|, given a Jolie value, the type of the value and a \verb|StringBuilder|, generates a JSON string and saves it in the last mentioned argument.\\ The third argument of type \verb|Type|, which, in the Jolie interpreter, represents the full type description of a Jolie message, could accept either an \verb|undefined| type and, in this situation, the method is able to perform its task by using the structure of the first argument, or a type, obtained by the interfaces of the Jolie program. Nonetheless, the aforementioned conversion is not \emph{strict}. Following an example showing the the input an output with argument type as \verb|undefined|.\\
+JsonRpcProtocol class avails of a utility library, named \verb|jolie.js.JsUtils|, which provides functionalities to convert Jolie values to JSON strings and vice versa. Namely, the method\\\verb|valueToJsonString(Value value, boolean extendedRoot, Type type, StringBuilder builder)|, given a Jolie value, the type of the value and a \verb|StringBuilder|, generates a JSON string and saves it in the last mentioned argument.\\ The third argument of type \verb|Type|, which, in the Jolie interpreter, represents the full type description of a Jolie message, could accept either an \verb|undefined| type and, in this situation, the method is able to perform its task by using the structure of the first argument, or a type, obtained by the interfaces of the Jolie program. The first conversion is not \emph{strict}. Following an example showing the the input an output with argument type as \verb|undefined|.\\
 Given the following type of a Jolie value
 \begin{lstlisting}[language=jolie]
 	type T_root {
@@ -899,11 +908,11 @@ while, if the type above described is passed to the method, the result is the fo
 		"node": [1]	
 	}
 \end{lstlisting}
-This behavior is due to the fact that the parser will set \verb|"node"| as an array only if there are at least two elements in the Jolie node. Therefore in order to force the parser to produce the last result listed, the type of the value must be passed as an argument to the method.\\The implementation of the JSON-RPC protocol in Jolie was \emph{always} passing an \verb|undefined| type to the method, despite the Jolie value had a defined type structure in an interface. The fix consisted in extracting the type of the message from the interfaces.
+This behavior is due to the fact that the parser will set \verb|"node"| as an array only if there are at least two elements in the Jolie node. Therefore in order to force the parser to produce the last result listed, the type of the value must be passed as an argument to the method.\\The implementation of the JSON-RPC protocol in Jolie was \emph{always} passing an \verb|undefined| type to the method, despite the Jolie value had a defined type structure in an interface. The fix consisted in extracting the type of the message from the interfaces present in the communication port of the program, and, if present, we pass it to the \verb|valueToJsonString| method, otherwise we pass the type \textcolor{color:keyword}{undefined}.
 \section{Server implementation}
 The server structure is the presented in \hyperref[sec:arch]{Chapter 4}, thus it will be composed by four Jolie programs together with the files with respectively the types definitions and the interfaces used by the various ports. The full implementation of the server can be viewed at the reference \cite{JolieLangSupport}.
 \subsection{Operation types and interfaces}
-Though Jolie operations can be type as \textcolor{color:keyword}{undefined}, I preferred define all the operation types basing on the LSP specification, in order to type check every message to be received and sent. Therefore, \textbf{maintainability} will be affected positively, as changes in the type definitions of LSP messages that might be applied in future releases of the protocol, can be identified immediately as the type check could fail, sending a fault to the invoker or to the server itself.\\Following the interface definitions for all the ports used in the service.
+Though Jolie operations can have type \textcolor{color:keyword}{undefined}, all the operation types have been defined accordingly to the LSP specification, in order to type check every message to be received and sent. Therefore, \textbf{maintainability} will be affected positively, as changes in the type definitions of LSP messages that might be applied in future releases of the protocol, can be identified immediately as the type check could fail, sending a fault to the invoker or to the server itself. Following the interface definitions for all the ports used in the service.
 \begin{lstlisting}[language=Jolie]
 	include "types/lsp.iol"
 
@@ -1035,7 +1044,7 @@ The \emph{deployment} part of this service is imported from another file with th
 \subsection{Utils service}
 Utils service has four input operations:
 \begin{itemize}
-	\item \textbf{insertNewDocument}: after receiving a \verb|textDocument/didOpen| message from the development tool, the document received is inspected through the \emph{Inspector} service, which extracts information like output and input ports, their interfaces with the operation definitions and the type definition of the latters. Nonetheless, if the there is a syntax error in the document received, the \emph{Inspector} provides a string containing all the information related to the aforementioned error, including the position. This is used two build a \verb|diagnosticParam| structure to be sent to the main service previously described, which in turn forwards it to the client. When the latter receives the diagnostics, it will publish them through its UI. If the document does not have any error, the document data, namely the \emph{uri}, the \emph{source code}, the \emph{inspection result} and an array containing the lines of code, are saved normally in a global variable. This variable is an array containing all the documents that opened in the development tool.
+	\item \textbf{insertNewDocument}: after receiving a \verb|textDocument/didOpen| message from the development tool, the document received is inspected through the \emph{Inspector} service, which extracts information like output and input ports, their interfaces with the operation definitions and the type definition of the latters. Nonetheless, if there is a syntax error in the document received, the \emph{Inspector} provides a string containing all the information related to the aforementioned error, including the position. This is used two build a \verb|diagnosticParam| structure to be sent to the main service previously described, which in turn forwards it to the client. When the latter receives the diagnostics, it will publish them through its UI. If the document does not have any error, the document data, namely the \emph{uri}, the \emph{source code}, the \emph{inspection result} and an array containing the lines of code, are saved normally in a global variable. This variable is an array containing all the documents that opened in the development tool.
 	\item \textbf{updateDocument}: the message received through the notification \verb|textDocument/didChange| is forwarded to this input operation, that similarly achieves what \verb|insertDocument| does. Unlikely the latter, \verb|updateDocument| publishes also the empty diagnostics, in order to clear the client's UI when a syntax error is corrected by the user.
 	\item \textbf{deleteDocument}: input operation that receives a document URI and deletes the array element containing the correspondent URI.
 	\item \textbf{getDocument}: request-response operation that sends to the invoker the full data structure with the corresponding URI received. This operation is used by Text Document service in order to perform tasks like \verb|completion| and \verb|hover|.
@@ -1043,7 +1052,7 @@ Utils service has four input operations:
 \subsection{Text Document service}
 The purpose of this service is to handles all the text document messages sent by the development tool, for instance \verb|textDocument/didOpen| or \verb|textDocument/completion|. Two main features has been implemented: \textbf{auto-completion} for operation definitions and keywords, and \textbf{hover} information of both input and output operation definitions.
 \subsubsection{Completion}
-Given a text document position, the server ought to compute a list of possible completion item to integrate what is already present the aforementioned position. I implemented this functionality for auto-completing output statements. For instance, if in the given text document position the server finds "pri", it ought to compute a list of output operations that are found in the interfaces of the outpurt ports of the service. In this case, the server will return the following list: ["print@Console( \$0 )( \$1 )", "println@Console( \$1 )( \$2 )"]. These completion items are in the form of \textbf{snippets}. A \textbf{snippet} is a small and reusable piece of code, in which tab stops and placeholders can be defined with the "\$1", "\$2" and "\$\{3:foo\}". "\$0" identifies the end of the snippet. Placeholders with equal identifiers are linked, that is typing in one will update the others too \cite{LSPSpec}.\\Following the code of the \verb|completion| input operation.
+Given a text document position, the server ought to compute a list of possible completion item to integrate what is already present the aforementioned position. We implemented this functionality for auto-completing output statements. For instance, if in the given text document position the server finds "pri", it ought to compute a list of output operations that are found in the interfaces of the outpurt ports of the service. In this case, the server will return the following list: \texttt{["print@Console( \$0 )( \$1 )", "println@Console( \$1 )( \$2 )"]}. These completion items are in the form of \textbf{snippets}. A \textbf{snippet} is a small and reusable piece of code, in which tab stops and placeholders can be defined with the \texttt{\$1}, \texttt{\$2} and \texttt{\$\{3:foo\}}. \texttt{\$0} identifies the end of the snippet. Placeholders with equal identifiers are linked, that is typing in one will update the others too \cite{LSPSpec}.\\Following the code of the \verb|completion| input operation.
 \begin{lstlisting}[language=Jolie]
 	/*
    * RR sent sent from the client when requesting a completion
@@ -1150,7 +1159,7 @@ Given a text document position, the server ought to compute a list of possible c
   } ]
 \end{lstlisting}
 Given the text document URI and the text document position, retrieve the text document by sending a \verb|getDocument| message to the Utils service, thus extract the code line of interest (lines 9-24). Subsequently, traverse all the operations in each interface for each output port present in the program and each matching element found, a snippet is built and inserted in the response to be sent (lines 26-79). Afterwards, the same search is done inside a data structure containing the keywords' snippets (lines 82-97). If nothing is found, an empty array is sent to the invoker (lines 99-101).\\
-Let $n$ be the number of operations defined in all the output ports present in the program. Let $m$ be the number of elements in the array containing the keywords' snippets. The complexity of this algorithm is therefore $T(n,m) = O(n)+O(m)$. Though, the number of is keywords is constant therefore the time complexity is $T(n) = O(n)$. In order to improve performance in terms of execution time, Jolie parallel constructs could have been used, namely perform a parallel search for each output port. However, this solution is not convenient as Jolie interpreter would spawn a determinant number of threads, and as in a program there would not be more than an hundred operations to be searched, using the sequential linear search is the best solution.
+Let $n$ be the number of operations defined in all the output ports present in the program. Let $m$ be the number of elements in the array containing the keywords' snippets. The complexity of this algorithm is therefore $T(n,m) = O(n)+O(m)$. Though, the number of is keywords is constant therefore the time complexity is $T(n) = O(n)$. In order to improve performance in terms of execution time, Jolie parallel constructs could have been used, namely perform a parallel search for each output port. However, this solution is not convenient as Jolie interpreter would spawn a determinant number of threads, and as in a program there would not be more than a hundred operations to be searched, using the sequential linear search is the simplest solution.
 \subsubsection{Hover}
 The hover request-response operation works similarly to the previously explained.
 \begin{lstlisting}[language=jolie]
@@ -1259,103 +1268,107 @@ The hover request-response operation works similarly to the previously explained
   } ]
 \end{lstlisting}
 Given a text document URI and position, the text document referred is sent by the Utils service, subsequently, the line of code of interest is extract and saved in a variable (lines 9-12). Lines 16-23 permits to extract information from the code line referred by the text document position. Lines 16-23 capture information from the code line. For now, the program captures only if the user is hovering an output or input statement. The first is captured by regular expression \verb|([A-z]+)@([A-z]+)\\(.*| while the second is more complex \verb|\\[? ?( ?[A-z]+ ?)\\( ?[A-z]* ?\\)\\(? ?[A-z]* ?\\)? ?\\]? ?\\{|. The regular expressions aforementioned capture first information (e.g. operation name and port name) permitting to extract the full type signature of the operation of interest (lines 26-38). Afterwards, the program traverses all the input ports or the output ports, depending on what the user is hovering at, in order to extract the type of the statement (lines 40-70). Finally, the  full hover response message is build with the label to be shown, and the position to highlight (lines 72-102).
-\subsection{Workspace service}
-Workspace service is just a skeleton for implementing the workspace related messages (e.g. \verb|workspace/symbols|), as my main objective was to implement the features previously described. Therefore, due to the lack of time, no workspace feature was implemented.
+%\subsection{Workspace service}
+%Workspace service is just a skeleton for implementing the workspace related messages %(e.g. \verb|workspace/symbols|), as my main objective was to implement the features %previously described. Therefore, due to the lack of time, no workspace feature has %been implemented.
 \chapter{Validation}
-Validation is a process in which the software is tested in order to eventually extract new requirements and verify if the already existing ones are satisfied.\\The tests were made on the server itself (hover) or on small services created just for this purpose.\\
+Validation is a process in which the software is tested in order to eventually extract new requirements and verify if the already existing ones are satisfied. The tests were made on the server itself (hover) or on small services created just for this purpose.
 \section{Functional requirements}
-Following the table indicating which functional requirements are met (\textcolor{green}{green}), partially met (\textcolor{yellow}{yellow}) and unmet (\textcolor{red}{red}).
-\begin{table}[H]
+\hyperref[FRVal]{Table 6.1} shows which functional requirements are met (\greenc), partially met (\orangec) and unmet (\redx).
+\begin{table}[t]
 	\caption{Functional Requirements}
-	\begin{tabularx}{\textwidth}{c|X}
+	\begin{tabularx}{\textwidth}{c|c|X}
 		\hline
-		\textbf{Functional r. No.} & \textbf{Description}\\
+		& \textbf{Functional r. No.} & \textbf{Description}\\
 		\hline\hline
-		\rowcolor{yellow}
-		FR 1 & The server must provide information of eventual programming errors and warnings every time a document is opened/modified.\\\hline
-		\rowcolor{green}
-		FR 2 & Every time the user starts typing an operation name, the server returns a list of possible completion items that consists of the full operation name and the output port.\\\hline
-		\rowcolor{green}
-		FR 3 & Every time the user starts typing a keyword, the server provides a list of possible completion items.\\\hline
-		\rowcolor{yellow}
-		FR 4 & Every time a document is opened/modified/closed, the server saves/updates/deletes the information in his memory like the text, URI and a data structure containing all the information regarding the Jolie program (an Abstract Syntax Tree of the \emph{behavior} and data regarding the \emph{deployment}).\\\hline
-		\rowcolor{green}
-		FR 5 & The server provides the type signature to the client every time the latter sends an hover request.\\\hline
-		\rowcolor{red}
-		FR 6 & The server provides a list or hierarchy of symbols of a specific document requested by the client.\\\hline
-		\rowcolor{red}
-		FR 7 & The server computes and performs a go-to definition for a symbol every time it receives a definition request\\\hline
-
-		%FR 8 & Information regarding the workspace are sent to the client and updated every time the client requests them (workspace symbols for example).\\\hline
-		\rowcolor{red}
-		FR 8 & The server resolves project wide references of a given symbol.\\\hline 
+		\orangec & FR 1 & The server must provide information of eventual programming errors and warnings every time a document is opened/modified.\\\hline
+		\greenc & FR 2 & Every time the user starts typing an operation name, the server returns a list of possible completion items that consists of the full operation name and the output port.\\\hline
+		\greenc & FR 3 & Every time the user starts typing a keyword, the server provides a list of possible completion items.\\\hline
+		\orangec & FR 4 & Every time a document is opened/modified/closed, the server saves/updates/deletes the information in his memory like the text, URI and a data structure containing all the information regarding the Jolie program (an Abstract Syntax Tree of the \emph{behavior} and data regarding the \emph{deployment}).\\\hline
+		\greenc & FR 5 & The server provides the type signature to the client every time the latter sends an hover request.\\\hline
+		\redx & FR 6 & The server provides a list or hierarchy of symbols of a specific document requested by the client.\\\hline
+		\redx & FR 7 & The server computes and performs a go-to definition for a symbol every time it receives a definition request\\\hline
+		\redx & FR 8 & The server resolves project wide references of a given symbol.\\\hline 
 	\end{tabularx}
+	\label{FRVal}
 \end{table}
 \subsection{FR 1}
-The FR 1 is partially met as only the errors are displayed. This is due to the fact that the \verb|Inspector| service, when generating a Jolie program returns the stack trace of eventual errors that would prevent the execution of the service. \verb|Inspector| uses the Jolie parser, which is limited at the moment and also not precise when providing the location of the error. Following an example.
-\begin{figure}[H]
+The FR 1 is partially met as only the errors are displayed. This is due to the fact that the \verb|Inspector| service, when generating a Jolie program returns the stack trace of eventual errors that would prevent the execution of the service. \verb|Inspector| uses the Jolie parser, which is limited at the moment and also not precise when providing the location of the error. \hyperref[FR1Val]{Figure 6.1} as an example.
+\begin{figure}[t]
 	\centering
-	\caption{FR 1}
 	\includegraphics[width=\textwidth]{tests/screenshots/diagnostics_cropped.png}
+	\caption{FR 1 diagnostics}
+	\label{FR1Val}
 \end{figure}
 
 \subsection{FR 2 and FR 3}
-FR 2 and 3 are fully met, following two screenshots of the result.
-\begin{figure}[H]
+FR 2 and 3 are fully met. See \hyperref[FR2Val]{figure 6.2} and \hyperref[FR2Val_res]{figure 6.3} for FR2, \hyperref[FR3Val]{figure 6.4} and \hyperref[FR3Val_res]{figure 6.5} for FR3.
+\begin{figure}[t]
 	\centering
-	\caption{FR 2 and result}
 	\includegraphics[width=\textwidth]{tests/screenshots/completion_operation_cropped.png}
-	\includegraphics[width=\textwidth]{tests/screenshots/compl_operation_result_cropped.png}
-	
+	\caption{FR 2 completion list}
+	\label{FR2Val}	
 \end{figure}
-\begin{figure}[H]
+\begin{figure}[t]
 	\centering
-	\caption{Fr 3 and result}
+		\includegraphics[width=\textwidth]{tests/screenshots/compl_operation_result_cropped.png}
+	\caption{FR 2 snippet}
+	\label{FR2Val_res}
+\end{figure}
+\begin{figure}[t]
+	\centering
 	\includegraphics[width=\textwidth]{tests/screenshots/completion_keywords_cropped.png}
+	\caption{FR 3 completion list}
+	\label{FR3Val}
+\end{figure}
+\begin{figure}[t]
+	\centering
 	\includegraphics[width=\textwidth]{tests/screenshots/completion_keywords_result_cropped.png}
+	\caption{FR 3 snippet}
+	\label{FR3Val_res}
 \end{figure}
 \subsection{FR 4}
-This is managed by the Utils service. In order to verify the requirement, URIs of the actual documents saved in the server memory were printed in the console every time a \verb|didOpen| or \verb|didClose| message were received.\\The example below, shows that after opening the third document, the Language Server prints the URIs of the documents in memory
-\begin{figure}[H]
+This is managed by the Utils service. In order to verify the requirement, URIs of the actual documents saved in the server memory were printed in the console every time a \verb|didOpen| or \verb|didClose| message were received. \hyperref[FR4Val_1]{Figure 6.6} shows that after opening the third document, the Language Server prints the URIs of the documents in memory and when the file \emph{utils.iol} is closed, it prints the URIs of the remaining two, as shown in \hyperref[FR4Val_2]{figure 6.7}. Utils uses the \emph{Inspector} service for generating a data structure containing all the information regarding the \textbf{deployment}, and no information regarding the \textbf{behavior}.
+\begin{figure}[t]
 	\centering
 	\includegraphics[width=\textwidth]{tests/screenshots/synch_1.png}
+	\caption{synchronization didOpen}
+	\label{FR4Val_1}
 \end{figure}
-and when the file \emph{utils.iol} is closed, it prints the URIs of the remaining two.
-\begin{figure}[H]
+\begin{figure}[t]
 	\centering
 	\includegraphics[width=\textwidth]{tests/screenshots/synch_2.png}
+	\caption{synchronization didClose}
+	\label{FR4Val_2}
 \end{figure}
-Utils uses the \emph{Inspector} service for generating a data structure containing all the information regarding the \textbf{deployment}, and no information regarding the \textbf{behavior}.
+
 \subsection{FR 5}
-FR 5 is met, as shown below.
-\begin{figure}[H]
+FR 5 is met, as shown by \hyperref[FR5Val]{figure 6.8}.
+\begin{figure}[t]
 	\centering
-	\caption{FR 5}
 	\includegraphics[width=\textwidth]{tests/screenshots/hover_cropped.png}
+	\caption{FR 5 hover information}
+	\label{FR5Val}
 \end{figure}
 \subsection{Unmet Functional requirements: FR 6, 7 and 8}
 Functional requirements 6, 7 and 8 are unmet. This is due to the fact that at the moment it is not possible to provide a hierarchy or symbols to the client and there was not enough time to develop such functionality. The \verb|Inspector| service, provides a syntax check and a full description of the deployment part, but not of the behavior, namely it is not possible to identify the symbols and their location.
 \section{Non-Functional requirements}
-The non-functional requirements defined at \hyperref[sec:NFR]{Chapter 3} are all met, except for NFR 4 (partial) and 5 (unmet).
-\begin{table}[H]
+The non-functional requirements defined at \hyperref[sec:NFR]{Chapter 3} are all met, except for NFR 4 (partial) and 5 (unmet), as \hyperref[NFRVal]{table 6.2} shows.
+\begin{table}[t]
 	\caption{Non-Functional Requirements}
-	\begin{tabularx}{\textwidth}{c|X}
+	\label{NFRVal}
+	\begin{tabularx}{\textwidth}{c|c|X}
 		\hline
-		\textbf{Non-functional r. No.} & \textbf{Description}\\
+		& \textbf{Non-functional r. No.} & \textbf{Description}\\
 		\hline\hline
-		\rowcolor{green}
-		NFR 1 & The server must support the LSP's JSON-RPC protocol.\\\hline
-		\rowcolor{green}
-		NFR 2 & The server must be designed to be modular.\\\hline
-		\rowcolor{green}
-		NFR 3 & The server must be able to respond to a client request as soon as possible.\\\hline
-		\rowcolor{yellow}
-		NFR 4 & The server must work both when deployed in a different machine and when deployed in a local machine, with respect of the client location. As a consequence, it has to support the socket channel of communication.\\\hline
-		\rowcolor{red}
-		NFR 5 & The server if distributed, must be able to handle more clients sending multiple requests at the same time.\\\hline
+		\greenc & NFR 1 & The server must support the LSP's JSON-RPC protocol.\\\hline
+		\greenc & NFR 2 & The server must be designed to be modular.\\\hline
+		\greenc & NFR 3 & The server must be able to respond to a client request as soon as possible.\\\hline
+		\orangec & NFR 4 & The server must work both when deployed in a different machine and when deployed in a local machine, with respect of the client location. As a consequence, it has to support the socket channel of communication.\\\hline
+		\redx & NFR 5 & The server if distributed, must be able to handle more clients sending multiple requests at the same time.\\\hline
 	\end{tabularx}
 \end{table}
-The actual implementation of the server corresponds to the local architecture presented in \hyperref[sec:arch]{Chapter 4}, there was not enough time to develop and test the distributed one. Despite this, it should not be difficult to develop it, as it just require to deploy the local server implementation in a remote machine and create a \emph{Proxy Service} located in the clients machine, which stands in between of the development tool and the server.\\NFR 5 is a direct consequence of the previous requirements. However, setting the execution modality both of the proxy and of the server to \emph{concurrent}.
+
+The actual implementation of the server corresponds to the local architecture presented in \hyperref[sec:arch]{Chapter 4}, there was not enough time to develop and test the distributed one. Despite this, it should not be difficult to develop it, as it just require to deploy the local server implementation in a remote machine and create a \emph{Proxy Service} located in the clients machine, which stands in between of the development tool and the server. NFR 5 is a direct consequence of the previous requirements. However, setting the execution modality both of the proxy and of the server to \emph{concurrent}.
 \chapter{Conclusions: review, what needs to be done}
 I have provided a description of my work done over the four months at the Concurrency and Logic research team, with an introduction to Jolie, an innovative programming language for developing distributed system based on microservice architectures, and the Language Server Protocol, a JSON-RPC-based protocol that standardizes the communication between an IDE and a Language Server.
 \section{Project review}
