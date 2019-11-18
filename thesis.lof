@@ -1,6 +1,7 @@
 \babel@toc {english}{}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Sequence Diagram LSP}}{14}{figure.2.1}% 
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {4.1}{\ignorespaces Architecture in L.S. and dev. tool in a single machine}}{22}{figure.4.1}% 
@@ -8,9 +9,12 @@
 \contentsline {figure}{\numberline {4.3}{\ignorespaces Legenda}}{24}{figure.4.3}% 
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {6.1}{\ignorespaces FR 1}}{42}{figure.6.1}% 
-\contentsline {figure}{\numberline {6.2}{\ignorespaces FR 2 and result}}{43}{figure.6.2}% 
-\contentsline {figure}{\numberline {6.3}{\ignorespaces Fr 3 and result}}{44}{figure.6.3}% 
-\contentsline {figure}{\numberline {6.4}{\ignorespaces FR 5}}{46}{figure.6.4}% 
-\addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces FR 1 diagnostics}}{45}{figure.6.1}% 
+\contentsline {figure}{\numberline {6.2}{\ignorespaces FR 2 completion list}}{46}{figure.6.2}% 
+\contentsline {figure}{\numberline {6.3}{\ignorespaces FR 2 snippet}}{46}{figure.6.3}% 
+\contentsline {figure}{\numberline {6.4}{\ignorespaces FR 3 completion list}}{47}{figure.6.4}% 
+\contentsline {figure}{\numberline {6.5}{\ignorespaces FR 3 snippet}}{47}{figure.6.5}% 
+\contentsline {figure}{\numberline {6.6}{\ignorespaces synchronization didOpen}}{48}{figure.6.6}% 
+\contentsline {figure}{\numberline {6.7}{\ignorespaces synchronization didClose}}{48}{figure.6.7}% 
+\contentsline {figure}{\numberline {6.8}{\ignorespaces FR 5 hover information}}{49}{figure.6.8}% 
 \addvspace {10\p@ }

@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{Bosch:2000:DUS:339362}
 Jan Bosch.
@@ -6,15 +6,38 @@ Jan Bosch.
   a Product-line Approach}.
 \newblock ACM Press/Addison-Wesley Publishing Co., New York, NY, USA, 2000.
 
+\bibitem{msCommunity}
+Micorservices Community.
+\newblock \url{https://www.microservices.community/}.
+
+\bibitem{C&L}
+Concurrency and Logic.
+\newblock \url{https://concurrency.sdu.dk/}.
+
+\bibitem{JAcad}
+Jolie development team.
+\newblock Jolie website - academia.
+\newblock \url{https://www.jolie-lang.org/academia.html}.
+
 \bibitem{Jol}
 {Fabrizio Montesi and Claudio Guidi and Gianluigi Zavattaro}.
 \newblock Service-oriented programming with {Jolie}.
 \newblock \url{https://www.fabriziomontesi.com/files/mgz14.pdf}.
 
+\bibitem{msFowler}
+Martin Fowler.
+\newblock Microservices.
+\newblock \url{https://martinfowler.com/articles/microservices.html}.
+
 \bibitem{JolieDoc}
 {Jolie Development Team}.
 \newblock Jolie documentation.
 \newblock \url{https://jolielang.gitbook.io/docs/}.
+
+\bibitem{LSPIntro}
+Microsoft.
+\newblock Language {Server} {Protocol}.
+\newblock \url{https://microsoft.github.io/language-server-protocol/}.
 
 \bibitem{LSPSpec}
 Microsoft.
@@ -43,5 +66,9 @@ Jolie~Development team.
 \newblock Jolie language support.
 \newblock
   \url{https://marketplace.visualstudio.com/items?itemName=jolie.vscode-jolie&ssr=false}.
+
+\bibitem{MontesiWP}
+Professor Fabrizio~Montesi Webpage.
+\newblock \url{https://www.fabriziomontesi.com/}.
 
 \end{thebibliography}
