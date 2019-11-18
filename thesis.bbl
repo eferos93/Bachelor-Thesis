@@ -27,6 +27,12 @@ Gonzalo Navarro.
 \newblock A guided tour to approximate string matching.
 \newblock {\em ACM COMPUTING SURVEYS}, 33:2001, 1999.
 
+\bibitem{Papazoglou03service-orientedcomputing:}
+Mike~P. Papazoglou.
+\newblock Service-oriented computing: concepts, characteristics and directions.
+\newblock In {\em in International Conference on Web Information Systems
+  Engineering}, pages 3--12. IEEE Press, 2003.
+
 \bibitem{Som11}
 Ian Sommerville.
 \newblock {\em Software Engineering}.
