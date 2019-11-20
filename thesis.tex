@@ -86,6 +86,7 @@
  breaklines=false,
  columns=fullflexible,
  linewidth= 0.8\linewidth,
+ mathescape=false,
  literate=*{\$}{{{\textcolor{black}\$}}}{1}
 }
 
@@ -110,6 +111,7 @@
     string=[s]{"}{"},
     comment=[l]{:\ "},
     morecomment=[l]{:"},
+    mathescape=false,
     literate=
         *{0}{{{\color{numb}0}}}{1}
          {1}{{{\color{numb}1}}}{1}
@@ -121,7 +123,7 @@
          {7}{{{\color{numb}7}}}{1}
          {8}{{{\color{numb}8}}}{1}
          {9}{{{\color{numb}9}}}{1}
-         {\$}{{{\color{numb}\$}}}{1}
+         {\$}{{{\color{numb}\$}}}{1}         
 }
 %\lstdefinelanguage{json}{
 %    basicstyle=\normalfont\ttfamily,
@@ -553,10 +555,9 @@ Content-Length: ...\r\n
 	}
 }
 \end{lstlisting}
-The LS is started by the development tool when certain conditions occur (e.g. when it detects the language in question), therefore the server is required to be spawned as a child process of the client, and the communication between the two can be either via \textit{stdio}, \textit{ipc} or \textit{socket}. More precisely, it is needed to add an extension that must include all the necessary configurations (for which language, conditions that must trigger the extension to start, etc.) in the development tool. This extension must be written in TypeScript/JavaScript and must override the method \textit{activate} of the LSP libraries. This method states all the server and client options, namely the server module, the transport kind (and all the information required accordingly to specific kind of transport), the document selector and other options. This extension is invoked when the triggering conditions occur.\\
-Following a simplified sequence diagram that shows a slice of interaction between a client and a server.
+The LS is started by the development tool when certain conditions occur (e.g. when it detects the language in question), therefore the server is required to be spawned as a child process of the client, and the communication between the two can be either via \textit{stdio}, \textit{ipc} or \textit{socket}. More precisely, it is needed to add an extension that must include all the necessary configurations (for which language, conditions that must trigger the extension to start, etc.) in the development tool. This extension must be written in TypeScript/JavaScript and must override the method \textit{activate} of the LSP libraries. This method states all the server and client options, namely the server module, the transport kind (and all the information required accordingly to specific kind of transport), the document selector and other options. This extension is invoked when the triggering conditions occur. \hyperref[seqDiagLSP]{Figure 2.1} shows a simplified sequence diagram that shows a slice of interaction between a client and a server.
 
-\begin{figure}[H]
+\begin{figure}[t]
 	\includegraphics[width=\textwidth]{lsp.png}
 	\caption{Sequence Diagram LSP}
 	\label{seqDiagLSP}
@@ -566,13 +567,14 @@ Following a simplified sequence diagram that shows a slice of interaction betwee
 	\item \textbf{The user opens a file (referred as a \textit{document})}: the tool notifies the server that a document is open (\verb|textDocument/didOpen|), meaning that it is kept in the tool memory. The server will therefore save the language representation of the document in its memory.
 	\item \textbf{The user edits the document}: the tool notifies the server about a change made by the user on the document (\verb|textDocument/didChange|). The server updates the language representation of the document.
 	\item \textbf{The tool execute the Completion Request}: the request (\verb|textDocument/completion|) is triggered right after the \verb|textDocument/didChange|. The parameter, \textit{completionParams}, is essentially a JSON object with all the necessary information (documentURI, position, triggerKind) that the server needs to compute the response. Note that this call is \textit{asynchronous}: the tool can send other notifications or request while waiting for the completion response, correspondingly the LS can answer asynchronously.
-	\item \textbf{The server publishes errors and warnings}: after the change notification, the server computes and notifies the tool with a list of eventual errors and warnings in the code (\verb|textDocument/publishDiagnostics|). The parameters of this notification contains all the necessary information in order to permit the tool flags errors and warnings.
+	\item \textbf{The server publishes errors and warnings}: after the change notification, the server computes and notifies the tool with a list of eventual errors and warnings in the code\\(\verb|textDocument/publishDiagnostics|). The parameters of this notification contains all the necessary information in order to permit the tool flags errors and warnings.
 	\item \textbf{The server replies to the Completion Request}: the server after computing a list of possible completion items, replies to the completion request made before by the tool. The latter lists the items received in order to let the user decide which suites the best.
 	\item \textbf{The user closes the document}: the tool notifies the server when the user closes the document, which cease to exist in the tool memory. The server erases all the information regarding the document. 
 \end{enumerate}
 
-All the data types illustrated are language agnostic, meaning that can be applied to all the programming languages. This is due to the protocol simplicity: it is simpler to standardize a document URI or a position inside a it, than standardizing an \textit{Abstract Syntax Tree} and compiler symbol across different programming languages.\\This simplicity is shown in the following JSON-RPC objects that refers to the completion request and response:\\
-\textbf{Request}:
+All the data types illustrated are language agnostic, meaning that can be applied to all the programming languages. This is due to the protocol simplicity: it is simpler to standardize a document URI or a position inside a it, than standardizing an \textit{Abstract Syntax Tree} and compiler symbol across different programming languages.\\This simplicity is shown in the following JSON-RPC objects that refers to the completion request and response:
+
+\textbf{Request}
 \begin{lstlisting}[language=json]
 {
 	"jsonrpc": "2.0",
@@ -592,7 +594,8 @@ All the data types illustrated are language agnostic, meaning that can be applie
 	}
 }
 \end{lstlisting}
-\textbf{Response}:
+
+\textbf{Response}
 \begin{lstlisting}[language=json]
 {
 	"jsonrpc": "2.0",
@@ -750,9 +753,9 @@ The service \emph{textDocument} handles all the text document messages. In order
 	\item \verb|textDocument/definition| request. The client requires the server to resolve the definition location of a given document symbol at a given text document position.
 	\item \verb|textDocument/references| request is sent in order to resolve project-wide reference of the symbol denoted by the given text document position.
 \end{itemize}
-For all the text document messages, see reference \cite{LSPSpec}.
+For all the text document messages, see \cite{LSPSpec}.
 \subsection{Workspace service}
-All the workspace messages, are handled by this service. More details regarding this type of messages can be studied at reference \cite{LSPSpec}.
+All the workspace messages, are handled by this service. More details regarding this type of messages can be studied at \cite{LSPSpec}.
 \subsection{Utils service}
 \emph{Utils} service provide functionalities such as syntax checking and document synchronization. For each time a document synchronization message, e.g. \verb|textDocument/didChange|, is received by \emph{textDocument} service, the latter forwards it to \emph{Utils} service that keeps a data structure with all the documents that are open in a specific moment. Subsequently, a syntax check is executed on the updated or newly opened document, and the result is sent to the main service which in turn forwards it to the client.
 \subsection{Proxy service}
@@ -1056,7 +1059,7 @@ Utils service has four input operations:
 \subsection{Text Document service}
 The purpose of this service is to handles all the text document messages sent by the development tool, for instance \verb|textDocument/didOpen| or \verb|textDocument/completion|. Two main features has been implemented: \textbf{auto-completion} for operation definitions and keywords, and \textbf{hover} information of both input and output operation definitions.
 \subsubsection{Completion}
-Given a text document position, the server ought to compute a list of possible completion item to integrate what is already present in that document position. We implemented this functionality for auto-completing output statements. For instance, if in the given text document position the server finds "pri", it ought to compute a list of output operations that are found in the interfaces of the outpurt ports of the service. In this case, the server will return the following list: \texttt{["print@Console( \$0 )( \$1 )", "println@Console( \$1 )( \$2 )"]}. These completion items are in the form of \textbf{snippets}. A \textbf{snippet} is a small and reusable piece of code, in which tab stops and placeholders can be defined with the \texttt{\$1}, \texttt{\$2} and \texttt{\$\{3:foo\}}. \texttt{\$0} identifies the end of the snippet. Placeholders with equal identifiers are linked, that is typing in one will update the others too \cite{LSPSpec}.\\Following the code of the \verb|completion| input operation.
+Given a text document position, the server ought to compute a list of possible completion item to integrate what is already present in that document position. We implemented this functionality for auto-completing output statements. For instance, if in the given text document position the server finds "pri", it ought to compute a list of output operations that are found in the interfaces of the outpurt ports of the service. In this case, the server will return the following list: \texttt{["print@Console( \$1 )( \$2 )", "println@Console( \$1 )( \$2 )"]}. These completion items are in the form of \textbf{snippets}. A \textbf{snippet} is a small and reusable piece of code, in which tab stops and placeholders can be defined with the \texttt{\$1}, \texttt{\$2} and \texttt{\$\{3:foo\}}. \texttt{\$0} identifies the end of the snippet. Placeholders with equal identifiers are linked, that is typing in one will update the others too \cite{LSPSpec}.\\Following the code of the \verb|completion| input operation.
 \begin{lstlisting}[language=Jolie]
 	/*
    * RR sent sent from the client when requesting a completion
@@ -1116,12 +1119,12 @@ Given a text document position, the server ought to compute a list of possible c
                 if ( resVar == NATIVE_TYPE_VOID ) {
                   resVar = ""
                 }
-                snippet += "( {1:" + reqVar + "} )( {2:" + resVar + "} )"
+                snippet += "( ${1:" + reqVar + "} )( ${2:" + resVar + "} )"
               } else {
                 //is a OneWay operation
                 notificationVar = op.requestType.name
                 
-                snippet = "( {1:" + notificationVar + "} )"
+                snippet = "( ${1:" + notificationVar + "} )"
               }
 
               //build the completionItem
@@ -1299,7 +1302,7 @@ Validation is a process in which the software is tested in order to eventually e
 The FR 1 is partially met as only the errors are displayed. This is due to the fact that the \verb|Inspector| service, when generating a Jolie program returns the stack trace of eventual errors that would prevent the execution of the service. \verb|Inspector| uses the Jolie parser, which is limited at the moment and also not precise when providing the location of the error. \hyperref[FR1Val]{Figure 6.1} as an example.
 \begin{figure}[t]
 	\centering
-	\includegraphics[width=\textwidth]{tests/screenshots/diagnostics_cropped.png}
+	\includegraphics[width=\textwidth]{tests/screenshots/diagnostics_final.png}
 	\caption{FR 1 diagnostics}
 	\label{FR1Val}
 \end{figure}
