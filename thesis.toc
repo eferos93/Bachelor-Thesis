@@ -5,30 +5,30 @@
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}% 
 \contentsline {chapter}{\numberline {2}Jolie and the Language Server Protocol}{3}{chapter.2}% 
 \contentsline {section}{\numberline {2.1}Jolie: Java Orchestration Language Interpreter Engine}{3}{section.2.1}% 
-\contentsline {subsection}{\numberline {2.1.1}Behavior}{4}{subsection.2.1.1}% 
-\contentsline {subsubsection}{Communications}{4}{section*.5}% 
-\contentsline {paragraph}{Statment compositions.}{5}{section*.6}% 
-\contentsline {paragraph}{Assignment and aliasing.}{5}{section*.7}% 
-\contentsline {paragraph}{Handling data.}{5}{section*.8}% 
+\contentsline {subsection}{\numberline {2.1.1}Behavior}{3}{subsection.2.1.1}% 
+\contentsline {subsubsection}{Communications}{3}{section*.5}% 
+\contentsline {paragraph}{Statment compositions.}{4}{section*.6}% 
+\contentsline {paragraph}{Assignment and aliasing.}{4}{section*.7}% 
+\contentsline {paragraph}{Handling data.}{4}{section*.8}% 
 \contentsline {subsubsection}{Data Structures}{6}{section*.9}% 
 \contentsline {subsubsection}{Fault handling}{7}{section*.10}% 
 \contentsline {subsection}{\numberline {2.1.2}Deployment}{7}{subsection.2.1.2}% 
-\contentsline {subsubsection}{Communication ports}{8}{section*.11}% 
+\contentsline {subsubsection}{Communication ports}{7}{section*.11}% 
 \contentsline {subsubsection}{Data types and interfaces}{8}{section*.12}% 
 \contentsline {subsubsection}{Behavior instances}{10}{section*.13}% 
-\contentsline {subsubsection}{Architectural composition}{11}{section*.14}% 
-\contentsline {paragraph}{Static embedding.}{11}{section*.15}% 
-\contentsline {paragraph}{Aggregation}{12}{section*.16}% 
+\contentsline {subsubsection}{Architectural composition}{10}{section*.14}% 
+\contentsline {paragraph}{Static embedding.}{10}{section*.15}% 
+\contentsline {paragraph}{Aggregation.}{12}{section*.16}% 
 \contentsline {section}{\numberline {2.2}Language Server Protocol}{13}{section.2.2}% 
 \contentsline {subsection}{\numberline {2.2.1}How LSP works}{13}{subsection.2.2.1}% 
 \contentsline {subsection}{\numberline {2.2.2}Server Protocol features}{16}{subsection.2.2.2}% 
-\contentsline {chapter}{\numberline {3}Analysis of the problem}{19}{chapter.3}% 
-\contentsline {section}{\numberline {3.1}Functional Requirements}{19}{section.3.1}% 
-\contentsline {section}{\numberline {3.2}Non-functional requirements}{20}{section.3.2}% 
-\contentsline {subsection}{\numberline {3.2.1}Complying with the Language Server Protocol specification}{20}{subsection.3.2.1}% 
-\contentsline {subsubsection}{JSON-RPC 2.0 Protocol}{20}{section*.17}% 
-\contentsline {subsection}{\numberline {3.2.2}Distributed architecture}{21}{subsection.3.2.2}% 
-\contentsline {subsection}{\numberline {3.2.3}Modularity}{21}{subsection.3.2.3}% 
+\contentsline {chapter}{\numberline {3}Analysis of the problem}{17}{chapter.3}% 
+\contentsline {section}{\numberline {3.1}Functional Requirements}{17}{section.3.1}% 
+\contentsline {section}{\numberline {3.2}Non-functional requirements}{17}{section.3.2}% 
+\contentsline {subsection}{\numberline {3.2.1}Complying with the Language Server Protocol specification}{17}{subsection.3.2.1}% 
+\contentsline {subsubsection}{JSON-RPC 2.0 Protocol}{19}{section*.17}% 
+\contentsline {subsection}{\numberline {3.2.2}Distributed architecture}{19}{subsection.3.2.2}% 
+\contentsline {subsection}{\numberline {3.2.3}Modularity}{19}{subsection.3.2.3}% 
 \contentsline {chapter}{\numberline {4}System architecture}{23}{chapter.4}% 
 \contentsline {section}{\numberline {4.1}Architecture}{23}{section.4.1}% 
 \contentsline {section}{\numberline {4.2}Services}{24}{section.4.2}% 

@@ -14,11 +14,6 @@ Micorservices Community.
 Concurrency and Logic.
 \newblock \url{https://concurrency.sdu.dk/}.
 
-\bibitem{JAcad}
-Jolie development team.
-\newblock Jolie website - academia.
-\newblock \url{https://www.jolie-lang.org/academia.html}.
-
 \bibitem{Jol}
 {Fabrizio Montesi and Claudio Guidi and Gianluigi Zavattaro}.
 \newblock Service-oriented programming with {Jolie}.
@@ -45,9 +40,13 @@ Microsoft.
 \newblock
   \url{https://microsoft.github.io/language-server-protocol/specification}.
 
+\bibitem{Montesi_coorg2006}
+Fabrizio Montesi, Claudio Guidi, Roberto Lucchi, and Gianluigi Zavattaro.
+\newblock {JOLIE}: a {Java} {Orchestration} language.
+
 \bibitem{Navarro99aguided}
 Gonzalo Navarro.
-\newblock A guided tour to approximate string matching.
+\newblock {A Guided Tour to Approximate String Matching}.
 \newblock {\em ACM COMPUTING SURVEYS}, 33:2001, 1999.
 
 \bibitem{Papazoglou03service-orientedcomputing:}
@@ -62,10 +61,20 @@ Ian Sommerville.
 \newblock Pearson, 2011.
 
 \bibitem{JolieLangSupport}
-Jolie~Development team.
-\newblock Jolie language support.
+Jolie~{Development} {Team}.
+\newblock Jolie {Language} {Support}.
 \newblock
   \url{https://marketplace.visualstudio.com/items?itemName=jolie.vscode-jolie&ssr=false}.
+
+\bibitem{Jolie}
+Jolie~{Development} {Team}.
+\newblock Jolie website.
+\newblock \url{https://www.jolie-lang.org/}.
+
+\bibitem{JAcad}
+Jolie~{Development} {Team}.
+\newblock Jolie website - {Academia}.
+\newblock \url{https://www.jolie-lang.org/academia.html}.
 
 \bibitem{MontesiWP}
 Professor Fabrizio~Montesi Webpage.
