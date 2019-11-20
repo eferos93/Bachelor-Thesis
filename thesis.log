@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2019/dev/Debian) (preloaded format=pdflatex 2019.9.5)  20 NOV 2019 13:12
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2019.10.31)  20 NOV 2019 13:42
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -69,16 +69,16 @@ File: pdftex.def 2018/01/08 v1.0l Graphics/color driver for pdftex
 \Gin@req@width=\dimen104
 )
 (/usr/share/texlive/texmf-dist/tex/generic/babel/babel.sty
-Package: babel 2018/11/13 3.27 The Babel package
+Package: babel 2019/06/03 3.32 The Babel package
 
 (/usr/share/texlive/texmf-dist/tex/generic/babel/switch.def
-File: switch.def 2018/11/13 3.27 Babel switching mechanism
+File: switch.def 2019/06/03 3.32 Babel switching mechanism
 )
 (/usr/share/texlive/texmf-dist/tex/generic/babel-english/english.ldf
 Language: english 2017/06/06 v3.3r English support from the babel system
 
 (/usr/share/texlive/texmf-dist/tex/generic/babel/babel.def
-File: babel.def 2018/11/13 3.27 Babel common definitions
+File: babel.def 2019/06/03 3.32 Babel common definitions
 \babel@savecnt=\count89
 \U@D=\dimen105
 
@@ -338,15 +338,15 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 \lst@maxwidth=\dimen142
 
 (/usr/share/texlive/texmf-dist/tex/latex/listings/lstmisc.sty
-File: lstmisc.sty 2018/09/02 1.7 (Carsten Heinz)
+File: lstmisc.sty 2019/02/27 1.8b (Carsten Heinz)
 \c@lstnumber=\count116
 \lst@skipnumbers=\count117
 \lst@framebox=\box35
 )
 (/usr/share/texlive/texmf-dist/tex/latex/listings/listings.cfg
-File: listings.cfg 2018/09/02 1.7 listings configuration
+File: listings.cfg 2019/02/27 1.8b listings configuration
 ))
-Package: listings 2018/09/02 1.7 (Carsten Heinz)
+Package: listings 2019/02/27 1.8b (Carsten Heinz)
 
 (/usr/share/texlive/texmf-dist/tex/latex/xcolor/xcolor.sty
 Package: xcolor 2016/05/11 v2.12 LaTeX color extensions (UK)
@@ -729,7 +729,7 @@ Package pdftex.def Info: legenda.png  used on input line 727.
 ]
 Chapter 5.
 [29] (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
-File: lstlang1.sty 2018/09/02 1.7 listings language file
+File: lstlang1.sty 2019/02/27 1.8b listings language file
 ) [30]
 [31]
 Overfull \hbox (37.18333pt too wide) in paragraph at lines 867--868
@@ -788,14 +788,14 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
  [36]
 LaTeX Font Info:    Try loading font information for OMS+cmtt on input line 106
 1.
+LaTeX Font Info:    No file OMScmtt.fd. on input line 1061.
 
-(/usr/share/texmf/tex/latex/R/tex/latex/omscmtt.fd
-File: omscmtt.fd 
-)
-LaTeX Font Info:    Font shape `OMS/cmtt/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 1061.
 
- [37]
+LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
+(Font)              using `OMS/cmsy/m/n' instead
+(Font)              for symbol `textbraceleft' on input line 1061.
+
+[37]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [38]
@@ -912,16 +912,20 @@ Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1439.
 
 Package rerunfilecheck Info: File `thesis.out' has not changed.
 (rerunfilecheck)             Checksum: A789A0A899416E888AEBF79DBF4E6B01;3259.
+
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1439.
  ) 
 Here is how much of TeX's memory you used:
- 13015 strings out of 492615
- 188813 string characters out of 6131391
- 500902 words of memory out of 5000000
- 15856 multiletter control sequences out of 15000+600000
+ 13016 strings out of 492609
+ 188757 string characters out of 6131461
+ 502570 words of memory out of 5000000
+ 15867 multiletter control sequences out of 15000+600000
  17605 words of font info for 63 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 36i,12n,72p,1482b,1971s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,12n,72p,1482b,1973s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbxti10.pfb></usr/share/te
@@ -939,7 +943,7 @@ r8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><
 /texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texli
 ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/tex
 mf-dist/fonts/type1/urw/zapfding/uzdr.pfb>
-Output written on thesis.pdf (67 pages, 882957 bytes).
+Output written on thesis.pdf (67 pages, 883645 bytes).
 PDF statistics:
  1598 PDF objects out of 1728 (max. 8388607)
  1480 compressed objects within 15 object streams
