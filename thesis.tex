@@ -19,7 +19,6 @@
 \usepackage{mathtools}
 \usepackage{algorithmicx}
 \usepackage{algorithm}
-%\usepackage{cite}
 
 \usepackage{dirtytalk}
 \usepackage{amssymb}% http://ctan.org/pkg/amssymb
@@ -128,35 +127,6 @@
          {9}{{{\color{numb}9}}}{1}
          {\$}{{{\color{numb}\$}}}{1}         
 }
-%\lstdefinelanguage{json}{
-%    basicstyle=\normalfont\ttfamily,
-%    numbers=left,
-%    numberstyle=\scriptsize,
-%    stepnumber=1,
-%    numbersep=8pt,
-%    showstringspaces=false,
-%    breaklines=true,
-%    frame=lines,
-%    backgroundcolor=\color{background},
-%    literate=
-%     *{0}{{{\color{numb}0}}}{1}
-%      {1}{{{\color{numb}1}}}{1}
-%      {2}{{{\color{numb}2}}}{1}
-%      {3}{{{\color{numb}3}}}{1}
-%      {4}{{{\color{numb}4}}}{1}
-%      {5}{{{\color{numb}5}}}{1}
-%      {6}{{{\color{numb}6}}}{1}
-%      {7}{{{\color{numb}7}}}{1}
-%      {8}{{{\color{numb}8}}}{1}
-%      {9}{{{\color{numb}9}}}{1}
-%      {:}{{{\color{punct}{:}}}}{1}
-%      {,}{{{\color{punct}{,}}}}{1}
-%      {\{}{{{\color{delim}{\{}}}}{1}
-%      {\}}{{{\color{delim}{\}}}}}{1}
-%      {[}{{{\color{delim}{[}}}}{1}
-%      {]}{{{\color{delim}{]}}}}{1},
-%}
-
 
 %% --- Informazioni sulla tesi ---
 %% Per tutti i tipi di tesi
@@ -164,24 +134,6 @@
 \author{Eros Fabrici}
 \course{Tecnologie Web e Multimediali}
 \supervisor{Prof.\ Marino Miculan}
-%% Altri campi disponibili: \reviewer, \tutor, \chair, \date (anno accademico, calcolato in automatico).
-%% Con \supervisor, \cosupervisor, \reviewer e \tutor si possono indicare più nomi separati da \and.
-%% Per le sole tesi di dottorato
-%%\phdnumber{313}
-%%\cycle{XXVIII}
-%%\contacts{Via della Sintassi Astratta, 0/1\\65536 Gigatera --- Italia\\+39 0123 456789\\\texttt{http://www.example.com}\\\texttt{inbox@example.com}}
-%%\rights{Tutti i diritti riservati a me stesso e basta.}
-%% Campi obbligatori: \title, \author e \course.
-
-%% --- Pacchetti consigliati ---
-%% hyperref: Regola le impostazioni della creazione del PDF... più tante altre cose.
-%% tocbibind: Inserisce nell'indice anche la lista delle figure, la bibliografia, ecc.
-
-%% --- Stili di pagina disponibili (comando \pagestyle) ---
-%% sfbig (predefinito): Apertura delle parti e dei capitoli col numero grande; titoli delle parti e dei capitoli e intestazioni di pagina in sans serif.
-%% big: Come "sfbig", solo serif.
-%% plain: Apertura delle parti e dei capitoli tradizionali di LaTeX; intestazioni di pagina come "big".
-
 \begin{document}
 
 %% Il frontespizio prima di tutto!
@@ -246,7 +198,7 @@ A Jolie program defines a service, which is composed by two parts: the \textit{b
 \end{figure}
 \subsection{Behavior}
 Jolie syntax is a combination of the message passing and the imperative programming styles. 
-Figure \ref{Bsyntax} lists a selection of the Jolie behavioral syntax:
+Figure \ref{Bsyntax} lists a selection of the Jolie behavioral syntax.
 \begin{figure}[t]
 \begin{align*}
 	B \quad \Coloneqq&\, \eta \quad (input)\\
