@@ -3,6 +3,8 @@
 \def\thudbabelopt{english}
 %% Valori ammessi per target: bach (tesi triennale), mst (tesi magistrale), phd (tesi di dottorato).
 \documentclass[target=bach]{thud}[2014/03/11]
+%\usepackage[a-1b]{pdfx}
+%\usepackage[pdfa]{hyperref}
 \usepackage{adjustbox}
 \usepackage{tabularx, colortbl}
 \usepackage{float}
@@ -18,8 +20,7 @@
 \usepackage{algorithmicx}
 \usepackage{algorithm}
 %\usepackage{cite}
-\usepackage[a-1b]{pdfx}
-\usepackage[pdfa]{hyperref}
+
 \usepackage{dirtytalk}
 \usepackage{amssymb}% http://ctan.org/pkg/amssymb
 \usepackage{pifont}% http://ctan.org/pkg/pifont
@@ -578,7 +579,7 @@ Content-Length: ...\r\n
 The LS is started by the development tool when certain conditions occur (e.g. when it detects the language in question), therefore the server is required to be spawned as a child process of the client, and the communication between the two can be either via \textit{stdio}, \textit{ipc} or \textit{socket}. More precisely, it is needed to add an extension that must include all the necessary configurations (for which language, conditions that must trigger the extension to start, etc.) in the development tool. This extension must be written in TypeScript/JavaScript and must override the method \textit{activate} of the LSP libraries. This method states all the server and client options, namely the server module, the transport kind (and all the information required accordingly to specific kind of transport), the document selector and other options. This extension is invoked when the triggering conditions occur. Figure \ref{seqDiagLSP} shows a simplified sequence diagram that shows a slice of interaction between a client and a server.
 
 \begin{figure}[t]
-	\includegraphics[width=\textwidth]{lsp.png}
+	\includegraphics[width=\textwidth]{lsp.jpg}
 	\caption{Sequence Diagram LSP}
 	\label{seqDiagLSP}
 \end{figure}
@@ -1325,7 +1326,7 @@ Table \ref{FRVal} shows which functional requirements are met (\greenc), partial
 The FR 1 is partially met as only the errors are displayed. This is due to the fact that the \verb|Inspector| service, when generating a Jolie program returns the stack trace of eventual errors that would prevent the execution of the service. \verb|Inspector| uses the Jolie parser, which is limited at the moment and also not precise when providing the location of the error. See Figure \ref{FR1Val} as an example.
 \begin{figure}[t]
 	\centering
-	\includegraphics[width=\textwidth]{tests/screenshots/diagnostics_final.png}
+	\includegraphics[width=\textwidth]{tests/screenshots/diagnostics_final.jpg}
 	\caption{FR 1 diagnostics}
 	\label{FR1Val}
 \end{figure}
@@ -1334,25 +1335,25 @@ The FR 1 is partially met as only the errors are displayed. This is due to the f
 FR 2 and 3 are fully met. See Figure \ref{FR2Val} and Figure \ref{FR2Val_res} for FR2, Figure \ref{FR3Val} and Figure \ref{FR3Val_res} for FR3.
 \begin{figure}[t]
 	\centering
-	\includegraphics[width=\textwidth]{tests/screenshots/completion_operation_cropped.png}
+	\includegraphics[width=\textwidth]{tests/screenshots/completion_operation_cropped.jpg}
 	\caption{FR 2 completion list}
 	\label{FR2Val}	
 \end{figure}
 \begin{figure}[t]
 	\centering
-		\includegraphics[width=\textwidth]{tests/screenshots/compl_operation_result_cropped.png}
+		\includegraphics[width=\textwidth]{tests/screenshots/compl_operation_result_cropped.jpg}
 	\caption{FR 2 snippet}
 	\label{FR2Val_res}
 \end{figure}
 \begin{figure}[t]
 	\centering
-	\includegraphics[width=\textwidth]{tests/screenshots/completion_keywords_cropped.png}
+	\includegraphics[width=\textwidth]{tests/screenshots/completion_keywords_cropped.jpg}
 	\caption{FR 3 completion list}
 	\label{FR3Val}
 \end{figure}
 \begin{figure}[t]
 	\centering
-	\includegraphics[width=\textwidth]{tests/screenshots/completion_keywords_result_cropped.png}
+	\includegraphics[width=\textwidth]{tests/screenshots/completion_keywords_result_cropped.jpg}
 	\caption{FR 3 snippet}
 	\label{FR3Val_res}
 \end{figure}
@@ -1360,13 +1361,13 @@ FR 2 and 3 are fully met. See Figure \ref{FR2Val} and Figure \ref{FR2Val_res} fo
 This is managed by the Utils service. In order to verify the requirement, URIs of the actual documents saved in the server memory were printed in the console every time a \verb|didOpen| or \verb|didClose| message were received. Figure \ref{FR4Val_1} shows that after opening the third document, the Language Server prints the URIs of the documents in memory and when the file \emph{utils.iol} is closed, it prints the URIs of the remaining two, as shown in \hyperref[FR4Val_2]{figure 6.7}. Utils uses the \emph{Inspector} service for generating a data structure containing all the information regarding the \textbf{deployment}, and no information regarding the \textbf{behavior}.
 \begin{figure}[t]
 	\centering
-	\includegraphics[width=\textwidth]{tests/screenshots/synch_1.png}
+	\includegraphics[width=\textwidth]{tests/screenshots/synch_1.jpg}
 	\caption{synchronization didOpen}
 	\label{FR4Val_1}
 \end{figure}
 \begin{figure}[t]
 	\centering
-	\includegraphics[width=\textwidth]{tests/screenshots/synch_2.png}
+	\includegraphics[width=\textwidth]{tests/screenshots/synch_2.jpg}
 	\caption{synchronization didClose}
 	\label{FR4Val_2}
 \end{figure}
@@ -1375,7 +1376,7 @@ This is managed by the Utils service. In order to verify the requirement, URIs o
 FR 5 is met, as shown by \hyperref[FR5Val]{figure 6.8}.
 \begin{figure}[t]
 	\centering
-	\includegraphics[width=\textwidth]{tests/screenshots/hover_cropped.png}
+	\includegraphics[width=\textwidth]{tests/screenshots/hover_cropped.jpg}
 	\caption{FR 5 hover information}
 	\label{FR5Val}
 \end{figure}
